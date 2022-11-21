@@ -1,45 +1,54 @@
 package model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
 public class Employee {
-    @Id
-    private int id;
-    private String name;
-    private long salary;
 
-    public Employee() {}
-    public Employee(int id) {
-        this.id = id;
-    }
+  @Id
+  @Column(name = "ID")
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private int id;
 
-    public int getId() {
-        return id;
-    }
+  private String name;
+  private long salary;
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  public Employee() {}
 
-    public String getName() {
-        return name;
-    }
+  public Employee(int id) {
+    this.id = id;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public int getId() {
+    return id;
+  }
 
-    public long getSalary() {
-        return salary;
-    }
+  public void setId(int id) {
+    this.id = id;
+  }
 
-    public void setSalary(long salary) {
-        this.salary = salary;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public String toString() {
-        return "Employee id: " + getId() + " name: " + getName() + " salary: " + getSalary();
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public long getSalary() {
+    return salary;
+  }
+
+  public void setSalary(long salary) {
+    this.salary = salary;
+  }
+
+  public String toString() {
+    return "Employee id: " + id + " name: " + name + " salary: " + salary;
+  }
+  
 }

@@ -52,7 +52,6 @@ public class EmployeeRestServlet {
     return mapper.writeValueAsString(emp);
   }
 
-
   @DELETE
   @Path("/{id}")
   @Produces(MediaType.APPLICATION_JSON)
@@ -68,4 +67,5 @@ public class EmployeeRestServlet {
       Employee emp = service.changeEmployeeSalary(id,newSalary);
       return mapper.writeValueAsString(emp);
   }
+  
 }

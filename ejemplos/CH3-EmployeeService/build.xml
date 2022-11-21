@@ -19,11 +19,10 @@
     <target name="compile" depends="init,build_jar" />
     <target name="recompile" depends="init,clean,build_jar" />
 
-
+    <target name="all" depends="init,run_all_sql" />
 
     <target name="delete-domain" depends="init,stop,delete_domain" />
     <target name="create-domain" depends="init,create_domain,start,createdb" />
-
 
     <target name="init">
       <property name="example_name" value="employeeService_ch3" />

@@ -4,6 +4,7 @@
     <class>model.Employee</class>
     <class>model.User</class>
     <class>model.Permission</class>
+    <class>model.Parcel</class>
     <properties>
       <property name="eclipselink.target-database" value="DERBY"/>
       <property name="eclipselink.jdbc.driver" value="org.apache.derby.jdbc.ClientDriver"/>

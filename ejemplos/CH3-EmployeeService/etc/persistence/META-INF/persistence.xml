@@ -6,6 +6,7 @@
     <class>model.Permission</class>
     <class>model.Parcel</class>
     <class>model.PlantingRecord</class>
+    <class>model.ClimateRecord</class>
     <properties>
       <property name="eclipselink.target-database" value="DERBY"/>
       <property name="eclipselink.jdbc.driver" value="org.apache.derby.jdbc.ClientDriver"/>

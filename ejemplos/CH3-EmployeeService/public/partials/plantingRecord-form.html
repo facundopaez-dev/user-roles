@@ -1,0 +1,45 @@
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <strong>Registro de plantacion</strong>
+    </div>
+    <div class="panel-body">
+        <form class="form-horizontal">
+
+            <div class="form-group">
+                <label for="plantingRecord_seedDate" class="col-md-2 control-label">Fecha de siembra</label>
+                <div class="col-md-3">
+                    <input type="date" class="form-control" id="plantingRecord_seedDate"
+                        ng-model="plantingRecord.seedDate" value={{plantingRecord.seedDate}}
+                        ng-disabled="action == 'view'">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="ins_fechaCosecha" class="col-md-2 control-label">Fecha de cosecha</label>
+                <div class="col-md-3">
+                    <input type="date" class="form-control" id="plantingRecord_harvestDate"
+                        ng-model="plantingRecord.harvestDate" value={{plantingRecord.harvestDate}}
+                        ng-disabled="action == 'view'">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="selectParcel">Parcela: </label>
+                <select id="SelectParcel" class="form-control col-md-6" ng-model="plantingRecord.parcel"
+                    data-ng-options="t as ('Id: ' + t.id + ' Nombre: ' + t.name ) for t in parcels track by t.id"
+                    ng-disabled="action == 'view'">
+                </select>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-3">
+                    <button type="submit" class="btn btn-success" ng-click="save()"
+                        ng-show="action == 'new'">Crear</button>
+                    <button type="submit" class="btn btn-success" ng-click="modify()"
+                        ng-show="action == 'edit'">Actualizar</button>
+                    <button type="submit" class="btn btn-success" ng-click="cancel()">Cancelar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

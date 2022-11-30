@@ -45,6 +45,46 @@ app.config(['$routeProvider', function (routeprovider) {
 			templateUrl: 'partials/employee-form.html',
 			controller: 'EmployeeCtrl'
 		})
+
+		.when('/home/parcel', {
+			templateUrl: 'partials/parcel-list.html',
+			controller: 'ParcelsCtrl'
+		})
+		.when('/home/parcel/:action', {
+			templateUrl: 'partials/parcel-form.html',
+			controller: 'ParcelCtrl'
+		})
+		.when('/home/parcel/:action/:id', {
+			templateUrl: 'partials/parcel-form.html',
+			controller: 'ParcelCtrl'
+		})
+
+		.when('/home/plantingRecord', {
+			templateUrl: 'partials/plantingRecord-list.html',
+			controller: 'PlantingRecordsCtrl'
+		})
+		.when('/home/plantingRecord/:action', {
+			templateUrl: 'partials/plantingRecord-form.html',
+			controller: 'PlantingRecordCtrl'
+		})
+		.when('/home/plantingRecord/:action/:id', {
+			templateUrl: 'partials/plantingRecord-form.html',
+			controller: 'PlantingRecordCtrl'
+		})
+
+		.when('/home/climateRecord', {
+			templateUrl: 'partials/climateRecord-list.html',
+			controller: 'ClimateRecordsCtrl'
+		})
+		.when('/home/climateRecord/:action', {
+			templateUrl: 'partials/climateRecord-form.html',
+			controller: 'ClimateRecordCtrl'
+		})
+		.when('/home/climateRecord/:action/:id', {
+			templateUrl: 'partials/climateRecord-form.html',
+			controller: 'ClimateRecordCtrl'
+		})
+
 		.otherwise({
 			templateUrl: 'partials/404.html'
 		})

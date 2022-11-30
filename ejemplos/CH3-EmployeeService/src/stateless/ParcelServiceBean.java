@@ -87,6 +87,7 @@ public class ParcelServiceBean {
       "SELECT p FROM Parcel p ORDER BY p.id"
     );
 
-    return (Collection<Parcel>) query.getResultList();
+    return (Collection) query.getResultList();
   }
+
 }

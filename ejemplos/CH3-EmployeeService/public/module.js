@@ -22,12 +22,12 @@ app.config(['$routeProvider', function (routeprovider) {
 					/*
 					Si el usuario se autentifico correctamente, sus datos estan
 					almacenados en la sesion del navegador web. Por lo tanto, si
-					vuelve a la pantalla de inicio de sesion, se lo redirecciona
-					a la pantalla de inicio
+					vuelve a la pagina de inicio de sesion, se lo redirecciona
+					al home (pagina de inicio)
 					*/
 					if (AccessFactory.isUserLoggedIn()) {
 						console.log("Usuario con sesion ya iniciada");
-						console.log("Retroceso a home");
+						console.log("Redireccionamiento a home (pagina de inicio)");
 						$location.path("/home");
 					}
 				}

@@ -1,7 +1,7 @@
 app.controller(
     "PlantingRecordsCtrl",
-    ["$scope", "$route", "$location", "PlantingRecordSrv", "ParcelSrv",
-        function ($scope, $route, $location, service, parcelSrv) {
+    ["$scope", "$route", "$location", "PlantingRecordSrv", "ParcelSrv", "AccessFactory",
+        function ($scope, $route, $location, service, parcelSrv, AccessFactory) {
             console.log("Cargando PlantingRecordsCtrl...")
 
             function findAll() {
@@ -41,5 +41,19 @@ app.controller(
                 });
             }
 
+            /*
+            Si el usuario no inicio sesion, se lo redirige a la pantalla
+            de inicio de sesion
+            */
+            if (!AccessFactory.isUserLoggedIn()) {
+                $location.path(AccessFactory.getLoginRoute());
+                return;
+            }
+
+            /*
+            Si el flujo de ejecucion llega a este punto, se debe a que
+            el usuario inicio sesion, por lo tanto, se debe mostrar
+            esta lista
+            */
             findAll();
         }]);

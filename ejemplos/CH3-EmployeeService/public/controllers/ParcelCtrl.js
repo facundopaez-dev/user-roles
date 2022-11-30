@@ -1,8 +1,20 @@
 app.controller(
     "ParcelCtrl",
-    ["$scope", "$location", "$routeParams", "ParcelSrv",
-        function ($scope, $location, $params, service) {
-            console.log("ParcelCtrl loaded with action: " + $params.action)
+    ["$scope", "$location", "$routeParams", "ParcelSrv", "AccessFactory",
+        function ($scope, $location, $params, service, AccessFactory) {
+            
+            console.log("ParcelCtrl loaded with action: " + $params.action);
+
+            /*
+            Para crear, editar y ver una parcela, el usuario tiene que
+            iniciar sesion, por lo tanto, si no tiene una sesion abierta,
+            se le debe impedir el acceso a las rutas de creacion, edicion
+            y visualizacion de una parcela
+            */
+            if (!AccessFactory.isUserLoggedIn()) {
+                $location.path(AccessFactory.getLoginRoute());
+                return;
+            }
 
             if (['new', 'edit', 'view'].indexOf($params.action) == -1) {
                 alert("Acción inválida: " + $params.action);

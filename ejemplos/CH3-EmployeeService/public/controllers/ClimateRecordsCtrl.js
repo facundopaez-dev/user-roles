@@ -1,7 +1,7 @@
 app.controller(
     "ClimateRecordsCtrl",
-    ["$scope", "$location", "$route", "ClimateRecordSrv",
-        function ($scope, $location, $route, service) {
+    ["$scope", "$location", "$route", "ClimateRecordSrv", "AccessFactory",
+        function ($scope, $location, $route, service, AccessFactory) {
             console.log("ClimateRecordsCtrl cargado...")
 
             function findAll() {
@@ -29,5 +29,19 @@ app.controller(
                 });
             }
 
+            /*
+            Si el usuario no inicio sesion, se lo redirige a la pantalla
+            de inicio de sesion
+            */
+            if (!AccessFactory.isUserLoggedIn()) {
+                $location.path(AccessFactory.getLoginRoute());
+                return;
+            }
+
+            /*
+            Si el flujo de ejecucion llega a este punto, se debe a que
+            el usuario inicio sesion, por lo tanto, se debe mostrar
+            esta lista
+            */
             findAll();
         }]);

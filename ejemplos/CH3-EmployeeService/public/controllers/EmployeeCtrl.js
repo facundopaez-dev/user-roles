@@ -1,9 +1,20 @@
 app.controller(
   "EmployeeCtrl",
-  ["$scope", "$location", "$routeParams", "EmployeeSrv",
-    function ($scope, $location, $params, servicio) {
+  ["$scope", "$location", "$routeParams", "EmployeeSrv", "AccessFactory",
+    function ($scope, $location, $params, servicio, AccessFactory) {
 
-      console.log("EmployeeCtrl loaded with action: " + $params.action)
+      console.log("EmployeeCtrl loaded with action: " + $params.action);
+
+      /*
+      Para crear, editar y ver un empleado, el usuario tiene que
+      iniciar sesion, por lo tanto, si no tiene una sesion abierta,
+      se le debe impedir el acceso a las rutas de creacion, edicion
+      y visualizacion de un empleado
+      */
+      if (!AccessFactory.isUserLoggedIn()) {
+        $location.path(AccessFactory.getLoginRoute());
+        return;
+      }
 
       if (['new', 'edit', 'view'].indexOf($params.action) == -1) {
         alert("Acción inválida: " + $params.action);

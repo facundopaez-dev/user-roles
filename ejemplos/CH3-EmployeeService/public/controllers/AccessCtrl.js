@@ -15,11 +15,9 @@ app.controller(
                     /*
                     Si el flujo de ejecucion de esta funcion, llego a este punto, la autentificacion
                     del usuario fue exitosa. Por lo tanto, se guarda el usuario en el almacenamiento
-                    de sesion del navegador web y se redirecciona al usuario a la pantalla de inicio
+                    de sesion del navegador web y se redirecciona al usuario a la pagina de inicio de
+                    la aplicacion.
                     */
-                    // console.log("valor de key store: " + accessFactory.getKeyStore());
-
-                    // $window.sessionStorage.setItem("loggedUser", $window.JSON.stringify(data));
                     $window.sessionStorage.setItem(accessFactory.getKeyStore(), $window.JSON.stringify(data));
                     $location.path("/home");
                 });

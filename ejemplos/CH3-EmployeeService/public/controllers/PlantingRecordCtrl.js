@@ -1,8 +1,20 @@
 app.controller(
     "PlantingRecordCtrl",
-    ["$scope", "$route", "$location", "$routeParams", "PlantingRecordSrv", "ParcelSrv",
-        function ($scope, $route, $location, $params, service, parcelService) {
-            console.log("PlantingRecordCtrl cargado, accion: " + $params.action)
+    ["$scope", "$route", "$location", "$routeParams", "PlantingRecordSrv", "ParcelSrv", "AccessFactory",
+        function ($scope, $route, $location, $params, service, parcelService, AccessFactory) {
+            
+            console.log("PlantingRecordCtrl cargado, accion: " + $params.action);
+
+            /*
+            Para crear, editar y ver un registro de plantacion, el usuario tiene que
+            iniciar sesion, por lo tanto, si no tiene una sesion abierta,
+            se le debe impedir el acceso a las rutas de creacion, edicion
+            y visualizacion de un registro de plantacion
+            */
+            if (!AccessFactory.isUserLoggedIn()) {
+                $location.path(AccessFactory.getLoginRoute());
+                return;
+            }
 
             if (['new', 'edit', 'view'].indexOf($params.action) == -1) {
                 alert("Acción inválida: " + $params.action);

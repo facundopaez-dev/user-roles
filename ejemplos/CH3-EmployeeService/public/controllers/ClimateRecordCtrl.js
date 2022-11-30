@@ -1,9 +1,20 @@
 app.controller(
     "ClimateRecordCtrl",
-    ["$scope", "$location", "$routeParams", "ClimateRecordSrv", "ParcelSrv",
-        function ($scope, $location, $params, service, parcelService) {
+    ["$scope", "$location", "$routeParams", "ClimateRecordSrv", "ParcelSrv", "AccessFactory",
+        function ($scope, $location, $params, service, parcelService, AccessFactory) {
 
-            console.log("ClimateRecordCtrl cargado, accion: " + $params.action)
+            console.log("ClimateRecordCtrl cargado, accion: " + $params.action);
+
+            /*
+            Para crear, editar y ver un registro climatico, el usuario tiene que
+            iniciar sesion, por lo tanto, si no tiene una sesion abierta,
+            se le debe impedir el acceso a las rutas de creacion, edicion
+            y visualizacion de un registro climatico
+            */
+            if (!AccessFactory.isUserLoggedIn()) {
+                $location.path(AccessFactory.getLoginRoute());
+                return;
+            }
 
             if (['new', 'edit', 'view'].indexOf($params.action) == -1) {
                 alert("Acción inválida: " + $params.action);

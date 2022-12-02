@@ -1,0 +1,41 @@
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <strong>Cultivos</strong>
+    </div>
+    <div class="panel-body">
+        <a href="#!/crop/new" class="btn btn-success" role="button">Nuevo cultivo</a>
+    </div>
+    <table class="table table-condensed table-hover table-fixed-top">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Coeficiente de cultivo</th>
+                <th>Ciclo de vida</th>
+                <th class="text-right"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="crop in data">
+                <td>{{crop.id}}</td>
+                <td>{{crop.name}}</td>
+                <td>{{crop.cropCoefficient}}</td>
+                <td>{{crop.lifeCycle}}</td>
+                <td class="text-right">
+                    <div class="btn-group" role="group" aria-label="...">
+                        <a href="#!/crop/view/{{crop.id}}" class="btn btn-success" role="button">
+                            <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                        </a>
+                        <a href="#!/crop/edit/{{crop.id}}" class="btn btn-success" role="button">
+                            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                        </a>
+                        <button type="button" class="btn btn-success" aria-label="Eliminar"
+                            ng-click="delete(crop.id)">
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

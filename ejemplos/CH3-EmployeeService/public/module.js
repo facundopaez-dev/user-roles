@@ -91,6 +91,19 @@ app.config(['$routeProvider', function (routeprovider) {
 			templateUrl: 'partials/climateRecord-form.html',
 			controller: 'ClimateRecordCtrl'
 		})
+
+		.when('/crop', {
+			templateUrl: 'partials/crop-list.html',
+			controller: 'CropsCtrl'
+		})
+		.when('/crop/:action', {
+			templateUrl: 'partials/crop-form.html',
+			controller: 'CropCtrl'
+		})
+		.when('/crop/:action/:id', {
+			templateUrl: 'partials/crop-form.html',
+			controller: 'CropCtrl'
+		})
 		
 		.otherwise({
 			templateUrl: 'partials/404.html'

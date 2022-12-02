@@ -55,7 +55,7 @@ app.controller(
                 $route.reload();
             }
 
-            $scope.modify = function (plantingRecord) {
+            $scope.modify = function () {
                 service.modify($scope.plantingRecord, function (error, data) {
                     if (error) {
                         console.log(error);

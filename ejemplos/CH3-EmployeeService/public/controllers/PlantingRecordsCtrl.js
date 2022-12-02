@@ -41,6 +41,18 @@ app.controller(
                 });
             }
 
+            $scope.logout = function () {
+                /*
+                El objeto $scope envia el evento llamado "CallLogout" hacia arriba
+                en la jerarquia de objetos $scope. Esto es necesario para implementar
+                el cierre de sesion del usuario cliente, cierre que es llevado a cabo por el
+                archivo HomeCtrl, en el cual esta suscrito el objeto $rootScope al evento
+                "CallLogout". Cuando el objeto $rootScope escucha el evento "CallLogout",
+                invoca a la funcion logout(), la cual esta definida en el archivo mencionado.
+                */
+                $scope.$emit("CallLogout", {});
+            }
+
             /*
             Si el usuario no inicio sesion, se lo redirige a la pantalla
             de inicio de sesion

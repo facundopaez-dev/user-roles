@@ -104,6 +104,19 @@ app.config(['$routeProvider', function (routeprovider) {
 			templateUrl: 'partials/crop-form.html',
 			controller: 'CropCtrl'
 		})
+
+		.when('/user', {
+			templateUrl: 'partials/user-list.html',
+			controller: 'UsersCtrl'
+		})
+		.when('/user/:action', {
+			templateUrl: 'partials/user-form.html',
+			controller: 'UserCtrl'
+		})
+		.when('/user/:action/:id', {
+			templateUrl: 'partials/user-form.html',
+			controller: 'UserCtrl'
+		})
 		
 		.otherwise({
 			templateUrl: 'partials/404.html'

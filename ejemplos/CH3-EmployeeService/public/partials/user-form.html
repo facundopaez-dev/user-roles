@@ -1,0 +1,38 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<strong>Datos del usuario</strong>
+	</div>
+	<div class="panel-body">
+		<form class="form-horizontal">
+			<div class="form-group">
+				<label for="user_name" class="col-md-2 control-label">Nombre de usuario</label>
+				<div class="col-md-3">
+					<input type="text" class="form-control" id="user_name" ng-model="data.userName"
+						ng-disabled="action == 'view'">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="user_name" class="col-md-2 control-label">C. electrónico</label>
+				<div class="col-md-3">
+					<input type="text" class="form-control" id="user_name" ng-model="data.email"
+						ng-disabled="action == 'view'">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="user_permission" class="col-md-2 control-label">Permiso</label>
+				<div class="col-md-3">
+					<input type="text" class="form-control" id="user_permission" ng-model="data.permission.name"
+						ng-disabled="action == 'view'">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-md-offset-2 col-md-3">
+					<button type="submit" class="btn btn-primary" ng-click="goBack()">Atrás</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>

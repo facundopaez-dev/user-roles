@@ -20,7 +20,7 @@
 				<td>{{currentUser.id}}</td>
 				<td>{{currentUser.userName}}</td>
 				<td>{{currentUser.email}}</td>
-				<td class="text-right">{{currentUser.permission.name}}</td>
+				<td class="text-right">{{currentUser.superuser ? 'Sí' : 'No'}}</td>
 				<td class="text-right">
 					<div class="btn-group" role="group" aria-label="...">
 						<a href="#!/user/view/{{currentUser.id}}" class="btn btn-default btn-xs" role="button">

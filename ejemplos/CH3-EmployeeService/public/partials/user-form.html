@@ -21,9 +21,9 @@
 			</div>
 
 			<div class="form-group">
-				<label for="user_permission" class="col-md-2 control-label">Permiso</label>
+				<label for="user_superuser" class="col-md-2 control-label">Permiso de administrador</label>
 				<div class="col-md-3">
-					<input type="text" class="form-control" id="user_permission" ng-model="data.permission.name"
+					<input type="checkbox" value="False" id="user_superuser" ng-model="data.superuser"
 						ng-disabled="action == 'view'">
 				</div>
 			</div>

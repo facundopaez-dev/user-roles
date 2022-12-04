@@ -5,8 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -27,9 +25,8 @@ public class User {
   @Column(name = "EMAIL")
   private String email;
 
-  @ManyToOne
-  @JoinColumn(name = "FK_PERMISSION", nullable = false)
-  private Permission permission;
+  @Column(name = "SUPERUSER")
+  private boolean superuser;
 
   public User() {}
 
@@ -69,17 +66,17 @@ public class User {
     this.email = email;
   }
 
-  public Permission getPermission() {
-    return permission;
+  public boolean getSuperuser() {
+    return superuser;
   }
 
-  public void setPermission(Permission permission) {
-    this.permission = permission;
+  public void setSuperuser(boolean superuser) {
+    this.superuser = superuser;
   }
 
   public String toString() {
     return "User id: " + id + " user name: " + userName + " password: " + password + " email: " + email
-    + " permission: " + permission.getName();
+    + " superuser: " + superuser;
   }
   
 }

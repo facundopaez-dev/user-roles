@@ -3,7 +3,6 @@
     <jta-data-source>jdbc/employeeService_ch3</jta-data-source>
     <class>model.Employee</class>
     <class>model.User</class>
-    <class>model.Permission</class>
     <class>model.Parcel</class>
     <class>model.PlantingRecord</class>
     <class>model.ClimateRecord</class>

@@ -13,13 +13,34 @@ app.controller(
                     }
 
                     /*
-                    Si el flujo de ejecucion de esta funcion, llego a este punto, la autentificacion
+                    Si el flujo de ejecucion de esta funcion, llego a este punto, la autenticacion
                     del usuario fue exitosa. Por lo tanto, se guarda el usuario en el almacenamiento
                     de sesion del navegador web y se redirecciona al usuario a la pagina de inicio de
                     la aplicacion.
                     */
                     $window.sessionStorage.setItem(accessFactory.getKeyStore(), $window.JSON.stringify(data));
                     $location.path("/home");
+                });
+            }
+
+            $scope.loginAdmin = function () {
+                userService.authenticateAdmin($scope.data, function (error, data) {
+                    /*
+                    Si la autenticacion del administrador falla por uno de los siguientes motivos:
+                    1. No hay una cuenta registrada con el nombre de usuario dado. En otras palabras, no existe el usuario ingresado.
+                    2. Existe el usuario, pero no tiene el permiso de super usuario.
+
+                    No se debe redireccionar al usuario a la pagina de inicio del administrador. En otras palabras, no se le debe
+                    mostrar la pagina de inicio del administrador.
+                    */
+                    if (error) {
+                        alert(error.data.errorMessage);
+                        console.log(error);
+                        return;
+                    }
+
+                    alert("Inicio de sesion satisfactorio [admin]");
+                    $window.sessionStorage.setItem(accessFactory.getKeyStore(), $window.JSON.stringify(data.user));
                 });
             }
 

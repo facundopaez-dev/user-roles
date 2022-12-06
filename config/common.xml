@@ -40,6 +40,7 @@
       <src path="src/model" />
       <src path="src/stateless" />
       <src path="src/util" />
+      <src path="src/utilLogin" />
       <classpath>
         <pathelement path="${CLIENT_CLASSPATH}" />
         <pathelement path="build/model" />

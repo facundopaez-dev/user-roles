@@ -117,6 +117,11 @@ app.config(['$routeProvider', function (routeprovider) {
 			templateUrl: 'partials/user-form.html',
 			controller: 'UserCtrl'
 		})
+
+		.when('/admin', {
+			templateUrl: 'partials/login-admin.html',
+			controller: 'AccessCtrl'
+		})
 		
 		.otherwise({
 			templateUrl: 'partials/404.html'

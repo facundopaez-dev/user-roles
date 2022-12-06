@@ -14,14 +14,14 @@ app.service(
 			}
 
 			this.find = function (id, callback) {
-                $http.get("rest/users/" + id).then(
-                    function (result) {
-                        callback(false, result.data);
-                    },
-                    function (error) {
-                        callback(error);
-                    });
-            }
+				$http.get("rest/users/" + id).then(
+					function (result) {
+						callback(false, result.data);
+					},
+					function (error) {
+						callback(error);
+					});
+			}
 
 			this.authenticateUser = function (username, password, callback) {
 				$http({
@@ -36,6 +36,17 @@ app.service(
 						return callback(response);
 					});
 			}
+
+			this.authenticateAdmin = function (data, callback) {
+				$http.post("rest/users/authenticationAdmin", data)
+					.then(
+						function (result) {
+							callback(false, result.data);
+						},
+						function (error) {
+							callback(error);
+						});
+			};
 
 		}
 	]);

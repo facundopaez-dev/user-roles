@@ -1,9 +1,20 @@
 app.controller(
     "CropCtrl",
-    ["$scope", "$location", "$routeParams", "CropSrv",
-        function ($scope, $location, $params, service) {
+    ["$scope", "$location", "$routeParams", "CropSrv", "AccessFactory",
+        function ($scope, $location, $params, service, AccessFactory) {
 
             console.log("CropCtrl cargado, accion: " + $params.action)
+
+            /*
+            Para crear, editar y ver un cultivo, el administrador tiene que
+            iniciar sesion, por lo tanto, si no tiene una sesion abierta, se
+            le debe impedir el acceso a las paginas de creacion, edicion y
+            visualizacioon de un cultivo
+            */
+            if (!AccessFactory.isUserLoggedIn()) {
+                $location.path(AccessFactory.getAdminLoginRoute());
+                return;
+            }
 
             if (['new', 'edit', 'view'].indexOf($params.action) == -1) {
                 alert("Acción inválida: " + $params.action);

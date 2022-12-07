@@ -1,7 +1,7 @@
 app.controller(
     "CropsCtrl",
-    ["$scope", "$location", "$route", "CropSrv",
-        function ($scope, $location, $route, service) {
+    ["$scope", "$location", "$route", "CropSrv", "AccessFactory",
+        function ($scope, $location, $route, service, AccessFactory) {
             console.log("CropCtrl loaded...");
 
             function findAll() {
@@ -29,5 +29,21 @@ app.controller(
                 });
             }
 
+            /*
+            Para ver el listado de cultivos, el administrador tiene que iniciar sesion,
+            por lo tanto, si no tiene una sesion abierta, se le debe impedir el acceso
+            a la pagina de listado de cultivos y se lo debe redirigir a la pagina de
+            inicio de sesion del administrador
+            */
+            if (!AccessFactory.isUserLoggedIn()) {
+                $location.path(AccessFactory.getAdminLoginRoute());
+                return;
+            }
+
+			/*
+			Si el flujo de ejecucion llega a este punto, se debe a que
+			el administrador inicio sesion, por lo tanto, se debe mostrar
+			esta lista
+			*/
             findAll();
         }]);

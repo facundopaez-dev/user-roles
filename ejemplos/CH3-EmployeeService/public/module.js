@@ -172,6 +172,7 @@ app.factory('AccessFactory', function ($window) {
 	*/
 	let keyStore;
 	const loginRoute = "/";
+	const adminLoginRoute = "/admin";
 
 	return {
 		setKeyStore: function () {
@@ -186,6 +187,10 @@ app.factory('AccessFactory', function ($window) {
 
 		getLoginRoute: function () {
 			return loginRoute;
+		},
+
+		getAdminLoginRoute: function () {
+			return adminLoginRoute;
 		},
 
 		isUserLoggedIn: function () {

@@ -49,8 +49,10 @@ app.controller(
 			}
 
 			/*
-			Si el usuario no inicio sesion, se lo redirige a la pantalla
-			de inicio de sesion
+			Para ver el listado de empleados, el usuario tiene que iniciar sesion,
+			por lo tanto, si no tiene una sesion abierta, se le debe impedir el acceso
+			a la pagina de listado de empleados y se lo debe redirigir a la pagina de
+			inicio de sesion
 			*/
 			if (!AccessFactory.isUserLoggedIn()) {
 				$location.path(AccessFactory.getLoginRoute());

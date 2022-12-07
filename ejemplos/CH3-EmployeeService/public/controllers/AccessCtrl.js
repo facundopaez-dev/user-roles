@@ -13,10 +13,9 @@ app.controller(
                     }
 
                     /*
-                    Si el flujo de ejecucion de esta funcion, llego a este punto, la autenticacion
-                    del usuario fue exitosa. Por lo tanto, se guarda el usuario en el almacenamiento
-                    de sesion del navegador web y se redirecciona al usuario a la pagina de inicio de
-                    la aplicacion.
+                    Si el flujo de ejecucion de esta funcion llega a este punto, la autenticacion
+                    del usuario fue exitosa. Por lo tanto, se almacena el usuario en el almacenamiento
+                    de sesion del navegador web y se redirecciona al usuario a la pagina de inicio.
                     */
                     $window.sessionStorage.setItem(accessFactory.getKeyStore(), $window.JSON.stringify(data));
                     $location.path("/home");
@@ -43,7 +42,7 @@ app.controller(
                     Si el flujo de ejecucion de esta funcion llega a este punto, es porque la autenticacion
                     del administrador fue exitosa. Por lo tanto, se almacena el usuario en el almacenamiento
                     de sesion del navegador web y se redirecciona al administrador a la pagina de inicio del
-                    administrador
+                    administrador.
                     */
                     $window.sessionStorage.setItem(accessFactory.getKeyStore(), $window.JSON.stringify(data.user));
                     $location.path("/adminHome");

@@ -39,8 +39,14 @@ app.controller(
                         return;
                     }
 
-                    alert("Inicio de sesion satisfactorio [admin]");
+                    /*
+                    Si el flujo de ejecucion de esta funcion llega a este punto, es porque la autenticacion
+                    del administrador fue exitosa. Por lo tanto, se almacena el usuario en el almacenamiento
+                    de sesion del navegador web y se redirecciona al administrador a la pagina de inicio del
+                    administrador
+                    */
                     $window.sessionStorage.setItem(accessFactory.getKeyStore(), $window.JSON.stringify(data.user));
+                    $location.path("/adminHome");
                 });
             }
 

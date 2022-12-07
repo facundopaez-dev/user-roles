@@ -7,7 +7,7 @@ app.controller(
 
             if (['view'].indexOf($params.action) == -1) {
                 alert("Acción inválida: " + $params.action);
-                $location.path("/user");
+                $location.path("/adminHome/user");
             }
 
             function find(id) {
@@ -22,7 +22,7 @@ app.controller(
             }
 
             $scope.goBack = function () {
-                $location.path("/user");
+                $location.path("/adminHome/user");
             }
 
             $scope.action = $params.action;

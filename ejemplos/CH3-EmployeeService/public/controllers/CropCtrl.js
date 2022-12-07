@@ -7,7 +7,7 @@ app.controller(
 
             if (['new', 'edit', 'view'].indexOf($params.action) == -1) {
                 alert("Acción inválida: " + $params.action);
-                $location.path("/crop");
+                $location.path("/adminHome/crop");
             }
 
             function find(id) {
@@ -29,7 +29,7 @@ app.controller(
                     }
 
                     $scope.data = data;
-                    $location.path("/crop");
+                    $location.path("/adminHome/crop");
                 });
             }
 
@@ -41,12 +41,12 @@ app.controller(
                     }
 
                     $scope.data = data;
-                    $location.path("/crop")
+                    $location.path("/adminHome/crop")
                 });
             }
 
             $scope.cancel = function () {
-                $location.path("/crop");
+                $location.path("/adminHome/crop");
             }
 
             $scope.action = $params.action;

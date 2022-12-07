@@ -122,6 +122,37 @@ app.config(['$routeProvider', function (routeprovider) {
 			templateUrl: 'partials/login-admin.html',
 			controller: 'AccessCtrl'
 		})
+
+		.when('/adminHome', {
+			templateUrl: 'partials/admin-home.html',
+			controller: 'AdminHomeCtrl'
+		})
+
+		.when('/adminHome/crop', {
+			templateUrl: 'partials/crop-list.html',
+			controller: 'CropsCtrl'
+		})
+		.when('/adminHome/crop/:action', {
+			templateUrl: 'partials/crop-form.html',
+			controller: 'CropCtrl'
+		})
+		.when('/adminHome/crop/:action/:id', {
+			templateUrl: 'partials/crop-form.html',
+			controller: 'CropCtrl'
+		})
+
+		.when('/adminHome/user', {
+			templateUrl: 'partials/user-list.html',
+			controller: 'UsersCtrl'
+		})
+		.when('/adminHome/user/:action', {
+			templateUrl: 'partials/user-form.html',
+			controller: 'UserCtrl'
+		})
+		.when('/adminHome/user/:action/:id', {
+			templateUrl: 'partials/user-form.html',
+			controller: 'UserCtrl'
+		})
 		
 		.otherwise({
 			templateUrl: 'partials/404.html'

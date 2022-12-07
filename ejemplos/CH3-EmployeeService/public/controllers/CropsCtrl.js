@@ -24,7 +24,7 @@ app.controller(
                         return;
                     }
 
-                    $location.path("/crop");
+                    $location.path("/adminHome/crop");
                     $route.reload();
                 });
             }

@@ -95,32 +95,6 @@ app.config(['$routeProvider', function (routeprovider) {
 			controller: 'ClimateRecordCtrl'
 		})
 
-		.when('/crop', {
-			templateUrl: 'partials/crop-list.html',
-			controller: 'CropsCtrl'
-		})
-		.when('/crop/:action', {
-			templateUrl: 'partials/crop-form.html',
-			controller: 'CropCtrl'
-		})
-		.when('/crop/:action/:id', {
-			templateUrl: 'partials/crop-form.html',
-			controller: 'CropCtrl'
-		})
-
-		.when('/user', {
-			templateUrl: 'partials/user-list.html',
-			controller: 'UsersCtrl'
-		})
-		.when('/user/:action', {
-			templateUrl: 'partials/user-form.html',
-			controller: 'UserCtrl'
-		})
-		.when('/user/:action/:id', {
-			templateUrl: 'partials/user-form.html',
-			controller: 'UserCtrl'
-		})
-
 		.when('/admin', {
 			resolve: {
 				check: function ($location, AccessFactory) {

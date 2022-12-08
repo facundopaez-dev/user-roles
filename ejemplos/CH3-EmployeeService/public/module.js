@@ -119,6 +119,25 @@ app.config(['$routeProvider', function (routeprovider) {
 		})
 
 		.when('/admin', {
+			resolve: {
+				check: function ($location, AccessFactory) {
+					/*
+					TODO: Entiendo que esto se puede hacer en el controlador de la
+					pagina de inicio de sesion del administrador
+
+					Si el administrador se autentico correctamente, sus datos estan
+					almacenados en la sesion del navegador web. Por lo tanto, si
+					vuelve a la pagina de inicio de sesion del administrador, se lo
+					redirige a la pagina de inicio del administrador (admin home)
+					*/
+					if (AccessFactory.isUserLoggedIn()) {
+						console.log("Administrador con sesion ya iniciada");
+						console.log("Redireccionamiento al admin home (pagina de inicio del administrador)");
+						$location.path("/adminHome");
+						return;
+					}
+				}
+			},
 			templateUrl: 'partials/login-admin.html',
 			controller: 'AccessCtrl'
 		})
@@ -153,7 +172,7 @@ app.config(['$routeProvider', function (routeprovider) {
 			templateUrl: 'partials/user-form.html',
 			controller: 'UserCtrl'
 		})
-		
+
 		.otherwise({
 			templateUrl: 'partials/404.html'
 		})

@@ -44,6 +44,18 @@ app.controller(
                 $location.path("/adminHome/user");
             }
 
+            $scope.logout = function () {
+                /*
+                El objeto $scope envia el evento llamado "AdminLogoutCall" hacia arriba
+                en la jerarquia de objetos $scope. Esto es necesario para implementar
+                el cierre de sesion del administrador, cierre que es llevado a cabo por el
+                archivo AdminHomeCtrl, en el cual esta suscrito el objeto $rootScope al evento
+                "AdminLogoutCall". Cuando el objeto $rootScope escucha el evento "AdminLogoutCall",
+                invoca a la funcion logout(), la cual esta definida en el archivo mencionado.
+                */
+                $scope.$emit("AdminLogoutCall", {});
+            }
+
             $scope.action = $params.action;
 
             if ($scope.action == 'view') {

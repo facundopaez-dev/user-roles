@@ -22,6 +22,30 @@ app.controller(
                 return;
             }
 
+            $scope.logout = function () {
+                /*
+                Cuando el administrador cierra su sesion, se eliminan sus datos
+                del almacenamiento de sesion del navegador web
+                */
+                $window.sessionStorage.removeItem(AccessFactory.getKeyStore());
+
+                /*
+                Cuando el administrador cierra su sesion, se lo redirige a la pagina de
+                inicio de sesion del administrador
+                */
+                $location.path(AccessFactory.getAdminLoginRoute());
+            }
+
+            /*
+            El objeto $rootScope esta suscrito al evento "AdminLogoutCall". Esto es necesario
+            para implementar el cierre de sesion del administrador. Cuando el objeto $rootScope
+            escucha el evento "AdminLogoutCall", invoca a la funcion logout(), la cual, como su
+            nombre lo indica, realiza el cierre de sesion del administrador.
+            */
+            $rootScope.$on("AdminLogoutCall", function () {
+                $scope.logout();
+            });
+
             /*
             Esta funcion comprueba que el usuario conectado tenga el permiso de super usuario
             (administrador). Si el usuario conectado no tiene dicho permiso, se muestra el mensaje

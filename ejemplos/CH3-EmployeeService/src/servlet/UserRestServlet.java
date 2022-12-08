@@ -19,6 +19,7 @@ import model.User;
 import stateless.UserServiceBean;
 import utilLogin.LoginResponse;
 import utilLogin.LoginStatus;
+import utilPermission.PermissionResponse;
 
 @Path("/users")
 public class UserRestServlet {
@@ -100,6 +101,38 @@ public class UserRestServlet {
     return Response.status(Response.Status.OK)
     .entity(new LoginResponse(userService.findByUsername(givenUser.getUsername())))
     .build();
+  }
+
+  @GET
+  @Path("/checkSuperuserPermission/{username}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response checkSuperuserPermission(@PathParam("username") String username) throws IOException {
+    /*
+     * Si el usuario con el nombre de usuario provisto no existe (en otras palabras, no
+     * esta registrado en el sistema, y, por ende, no esta registrado en la base de datos
+     * subyacente), la aplicacion del lado servidor devuelve a la aplicacion del lado
+     * cliente, el mensaje HTTP 400 (BAD REQUEST)
+     */
+    if (userService.findByUsername(username) == null) {
+      return Response.status(Response.Status.BAD_REQUEST).build();
+    }
+
+    /*
+     * Si el usuario con el nombre de usuario provisto, no tiene el permiso
+     * de super usuario (administrador), la aplicacion del lado servidor
+     * devuelve a la aplicacion del lado cliente, el mensaje HTTP 403 (FORBIDDEN)
+     * con el mensaje "Acceso no autorizado"
+     */
+    if (!userService.checkSuperuserPermission(username)) {
+      return Response.status(Response.Status.FORBIDDEN).entity(new PermissionResponse()).build();
+    }
+
+    /*
+     * Si el usuario con el nombre de usuario provisto, tiene el permiso
+     * de super usuario (administrador), la aplicacion del lado servidor
+     * devuelve a la aplicacion del lado cliente, el mensaje HTTP 200 (OK)
+     */
+    return Response.status(Response.Status.OK).build();
   }
 
 }

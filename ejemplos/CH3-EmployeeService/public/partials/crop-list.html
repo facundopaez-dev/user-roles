@@ -1,4 +1,4 @@
-<nav class="navbar navbar-inverse navbar-fixed-top">
+<nav class="navbar navbar-inverse navbar-fixed-top" ng-hide="!superuserPermission">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
@@ -25,7 +25,7 @@
     </div>
 </nav>
 
-<div class="panel panel-info">
+<div class="panel panel-info" ng-hide="!superuserPermission">
     <div class="panel-heading">
         <strong>Cultivos</strong>
     </div>

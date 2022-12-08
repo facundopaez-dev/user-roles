@@ -20,6 +20,9 @@ app.config(['$routeProvider', function (routeprovider) {
 			resolve: {
 				check: function ($location, AccessFactory) {
 					/*
+					TODO: Entiendo que esto se puede hacer en el controlador de la
+					pagina de inicio de sesion del usuario
+					
 					Si el usuario se autentifico correctamente, sus datos estan
 					almacenados en la sesion del navegador web. Por lo tanto, si
 					vuelve a la pagina de inicio de sesion, se lo redirecciona

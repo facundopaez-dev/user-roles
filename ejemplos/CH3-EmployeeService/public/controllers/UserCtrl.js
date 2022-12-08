@@ -91,5 +91,4 @@ app.controller(
             }
 
             isSuperuser();
-
         }]);

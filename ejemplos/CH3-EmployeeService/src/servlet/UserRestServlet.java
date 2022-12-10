@@ -45,12 +45,36 @@ public class UserRestServlet {
     return mapper.writeValueAsString(givenUser);
   }
 
-  @GET
-  @Path("/authentication/{username}")
+  @POST
+  @Path("/authentication")
   @Produces(MediaType.APPLICATION_JSON)
-  public String find(@PathParam("username") String username, @QueryParam("password") String password) throws IOException {
-    User givenUser = userService.validate(username, password);
-    return mapper.writeValueAsString(givenUser);
+  public Response authenticateUser(String json) throws IOException {
+    /*
+     * Para la autenticacion del usuario se deben hacer las siguientes comprobaciones:
+     * 1. La inexistencia del usuario ingresado. Si el usuario ingresado no existe (debido a que no esta registrado en el sistema), el
+     * servidor debe devolver como respuesta el mensaje HTTP 401 con el mensaje "Nombre de usuario o contraseña incorrectos".
+     * 
+     * 2. La autenticacion del usuario. Si el nombre de usuario y la contraseña no son iguales a los almacenados en la base de datos
+     * subyacente, el servidor debe devolver como respuesta el mensaje HTTP 401 (UNAUTHORIZED) con el mensaje "Nombre de usuario o contraseña incorrectos".
+     * La autenticacion es el proceso por el cual se confirma que algo (en este caso un usuario) es realmente quien dice ser.
+     * 
+     * Estas dos comprobaciones se realizan al hacer la autenticacion del usuario.
+     */
+
+    User givenUser = mapper.readValue(json, User.class);
+
+    if (!userService.authenticate(givenUser.getUsername(), givenUser.getPassword())) {
+      return Response.status(Response.Status.UNAUTHORIZED)
+      .entity(new LoginResponse(LoginStatus.USERNAME_OR_PASSWORD_INCORRECT)).build();
+    }
+
+    /*
+     * Si el usuario ingresado es autentico, el servidor devuelve el mensaje 200 (OK)
+     * junto con el usuario recuperado de la base de datos
+     */
+    return Response.status(Response.Status.OK)
+    .entity(new LoginResponse(userService.findByUsername(givenUser.getUsername())))
+    .build();
   }
 
   @POST

@@ -4,10 +4,17 @@ app.controller(
         function ($scope, $location, $window, userService, accessFactory) {
 
             $scope.login = function () {
-                userService.authenticateUser($scope.username, $scope.password, function (error, data) {
-                    // Si la autenticacion falla, no se le muestra la pantalla de inicio al usuario
+                userService.authenticateUser($scope.data, function (error, data) {
+                    /*
+                    Si la autenticacion del usuario falla por uno de los siguientes motivos:
+                    1. No hay una cuenta registrada con el nombre de usuario dado. En otras palabras, no existe el usuario ingresado.
+                    2. El nombre de usuario y/o la contraseña ingresados son incorrectos.
+
+                    No se debe redirigir al usuario a la pagina de inicio. En otras palabras, no se le debe mostrar la pagina de
+                    inicio.
+                    */
                     if (error) {
-                        alert("Nombre de usuario o contraseña incorrectos");
+                        alert(error.data.errorMessage);
                         console.log(error);
                         return;
                     }

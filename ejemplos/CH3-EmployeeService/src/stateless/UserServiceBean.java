@@ -61,7 +61,7 @@ public class UserServiceBean {
    * Busca un usuario en la base de datos subyacente mediante un nombre de usuario
    *
    * @param username el nombre de usuario que se usa para buscar en la base de datos subyacente, el usuario que tiene el nombre de usuario provisto
-   * @return una referencia a un objeto de tipo User en caso de encontrarse en la base de datos subyacente,
+   * @return referencia a un objeto de tipo User en caso de encontrarse en la base de datos subyacente,
    * el usuario con el nombre de usuario provisto, null en caso contrario
    */
   public User findByUsername(String username) {

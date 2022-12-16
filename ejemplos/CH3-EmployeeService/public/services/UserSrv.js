@@ -35,7 +35,7 @@ app.service(
 			};
 
 			this.authenticateAdmin = function (data, callback) {
-				$http.post("rest/users/authenticationAdmin", data)
+				$http.post("rest/auth/admin", data)
 					.then(
 						function (result) {
 							callback(false, result.data);

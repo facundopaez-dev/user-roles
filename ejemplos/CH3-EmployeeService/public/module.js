@@ -115,8 +115,8 @@ app.config(['$routeProvider', function (routeprovider) {
 					}
 				}
 			},
-			templateUrl: 'partials/login-admin.html',
-			controller: 'AccessCtrl'
+			templateUrl: 'partials/admin/admin-login.html',
+			controller: 'AdminLoginCtrl'
 		})
 
 		.when('/adminHome', {

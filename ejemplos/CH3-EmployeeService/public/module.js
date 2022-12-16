@@ -35,8 +35,8 @@ app.config(['$routeProvider', function (routeprovider) {
 					}
 				}
 			},
-			templateUrl: 'partials/login.html',
-			controller: 'AccessCtrl'
+			templateUrl: 'partials/user/user-login.html',
+			controller: 'UserLoginCtrl'
 		})
 		.when('/home', {
 			templateUrl: 'partials/home.html',

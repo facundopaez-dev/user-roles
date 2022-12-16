@@ -24,7 +24,7 @@ app.service(
 			}
 
 			this.authenticateUser = function (data, callback) {
-				$http.post("rest/users/authentication", data)
+				$http.post("rest/auth/user", data)
 					.then(
 						function (result) {
 							callback(false, result.data);

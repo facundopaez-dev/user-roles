@@ -23,7 +23,7 @@ app.config(['$routeProvider', function (routeprovider) {
 					TODO: Entiendo que esto se puede hacer en el controlador de la
 					pagina de inicio de sesion del usuario
 					
-					Si el usuario se autentifico correctamente, sus datos estan
+					Si el usuario se autentico correctamente, sus datos estan
 					almacenados en la sesion del navegador web. Por lo tanto, si
 					vuelve a la pagina de inicio de sesion, se lo redirecciona
 					al home (pagina de inicio)
@@ -191,7 +191,7 @@ app.factory('AccessFactory', function ($window) {
 
 		isUserLoggedIn: function () {
 			/*
-			Si el usuario se autentifico correctamente, sus datos estan
+			Si el usuario se autentico correctamente, sus datos estan
 			almacenados en la sesion del navegador web (ver funcion login del
 			archivo AccessCtrl.js). Por lo tanto, isUserLoggedIn retorna el valor
 			booleano true.

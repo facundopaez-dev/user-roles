@@ -13,6 +13,7 @@ app.controller(
                 console.log("Usuario con sesion ya iniciada");
                 console.log("Redireccionamiento a home (pagina de inicio)");
                 $location.path("/home");
+                return;
             }
 
             $scope.login = function () {

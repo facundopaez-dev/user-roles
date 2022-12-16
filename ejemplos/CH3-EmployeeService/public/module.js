@@ -191,10 +191,10 @@ app.factory('AccessFactory', function ($window) {
 
 		isUserLoggedIn: function () {
 			/*
-			Si el usuario se autentico correctamente, sus datos estan
-			almacenados en la sesion del navegador web (ver funcion login del
-			archivo AccessCtrl.js). Por lo tanto, isUserLoggedIn retorna el valor
-			booleano true.
+			Si el usuario se autentico correctamente, el JWT asociado a
+			el esta almacenado en el almacenamiento de sesion del navegador
+			web (ver los archivos AdminLoginCtrl.js y UserLoginCtrl.js). Por
+			lo tanto, esta funcion retorna el valor booleano true.
 			*/
 			if ($window.sessionStorage.getItem(keyStore)) {
 				return true;

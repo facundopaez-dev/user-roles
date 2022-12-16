@@ -3,6 +3,20 @@ app.controller(
     ["$scope", "$location", "$window", "UserSrv", "AccessFactory",
         function ($scope, $location, $window, userService, accessFactory) {
 
+            /*
+            Si el administrador se autentico correctamente, su JWT esta
+            almacenado en el almacenamiento de sesion del navegador web.
+            Por lo tanto, si el administrador presiona el boton de retroceso del
+            navegador web, se lo redirecciona a la pagina de inicio del administrador
+            (admin home)
+            */
+            if (accessFactory.isUserLoggedIn()) {
+                console.log("Administrador con sesion ya iniciada");
+                console.log("Redireccionamiento al admin home (pagina de inicio del administrador)");
+                $location.path("/adminHome");
+                return;
+            }
+
             $scope.login = function () {
                 userService.authenticateAdmin($scope.data, function (error, data) {
                     /*

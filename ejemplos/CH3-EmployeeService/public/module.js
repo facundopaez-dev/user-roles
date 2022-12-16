@@ -17,24 +17,6 @@ app.config(['$routeProvider', function (routeprovider) {
 
 	routeprovider
 		.when('/', {
-			resolve: {
-				check: function ($location, AccessFactory) {
-					/*
-					TODO: Entiendo que esto se puede hacer en el controlador de la
-					pagina de inicio de sesion del usuario
-					
-					Si el usuario se autentico correctamente, sus datos estan
-					almacenados en la sesion del navegador web. Por lo tanto, si
-					vuelve a la pagina de inicio de sesion, se lo redirecciona
-					al home (pagina de inicio)
-					*/
-					if (AccessFactory.isUserLoggedIn()) {
-						console.log("Usuario con sesion ya iniciada");
-						console.log("Redireccionamiento a home (pagina de inicio)");
-						$location.path("/home");
-					}
-				}
-			},
 			templateUrl: 'partials/user/user-login.html',
 			controller: 'UserLoginCtrl'
 		})

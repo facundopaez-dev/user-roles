@@ -3,6 +3,18 @@ app.controller(
     ["$scope", "$location", "$window", "UserSrv", "AccessFactory",
         function ($scope, $location, $window, userService, accessFactory) {
 
+            /*
+            Si el usuario se autentico correctamente, su JWT esta
+            almacenado en el almacenamiento de sesion del navegador web.
+            Por lo tanto, si el usuario presiona el boton de retroceso del
+            navegador web, se lo redirecciona a la pagina de inicio (home)
+            */
+            if (accessFactory.isUserLoggedIn()) {
+                console.log("Usuario con sesion ya iniciada");
+                console.log("Redireccionamiento a home (pagina de inicio)");
+                $location.path("/home");
+            }
+
             $scope.login = function () {
                 userService.authenticateUser($scope.data, function (error, data) {
                     /*

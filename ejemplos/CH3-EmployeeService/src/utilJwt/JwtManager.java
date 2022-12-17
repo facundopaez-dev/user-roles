@@ -61,7 +61,8 @@ public class JwtManager {
   }
 
   /**
-   * Crea un JWT con el ID y el permiso de un usuario
+   * Crea un JWT con el ID y el permiso de un usuario, una fecha
+   * de emision y una fecha de expiracion
    * 
    * @param userId ID de un usuario
    * @param superuserPermission permiso de un usuario

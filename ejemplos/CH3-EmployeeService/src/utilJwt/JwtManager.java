@@ -2,7 +2,10 @@ package utilJwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
+import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.Verification;
 import java.util.Date;
 
 /**
@@ -88,6 +91,39 @@ public class JwtManager {
     jwtCreator.withExpiresAt(expirationDate);
 
     return jwtCreator.sign(Algorithm.HMAC256(secretKey));
+  }
+
+  /**
+   * Comprueba que un JWT sea valido, esto es que la firma de un JWT coincide
+   * con los datos de su encabezado y carga util, y que el JWT no ha expirado
+   * 
+   * @param jwt
+   * @param secretKey clave secreta a partir de la cual se firma un JWT
+   * @return true si el JWT dado es valido, false en caso contrario
+   */
+  public boolean validateJwt(String jwt, String secretKey) {
+    JWTVerifier jwtVerifier = buildJwtVerifier(secretKey);
+    boolean result = false;
+
+    try {
+      jwtVerifier.verify(jwt);
+      result = true;      
+    } catch (JWTVerificationException e) {
+      e.printStackTrace();
+    }
+    
+    return result;
+  }
+
+  /**
+   * Crea y retorna una instancia de JWTVerifier
+   * 
+   * @param secretKey clave secreta que se utiliza para firmar un JWT
+   * @return una referencia a un objeto de tipo JWTVerifier
+   */
+  private JWTVerifier buildJwtVerifier(String secretKey) {
+    Verification verification = JWT.require(Algorithm.HMAC256(secretKey));
+    return verification.build();
   }
 
 }

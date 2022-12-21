@@ -32,7 +32,6 @@ public class JwtManagerTest {
   private static EntityManager entityManager;
   private static EntityManagerFactory entityManagerFactory;
   private static Collection<User> users;
-  private static JwtManager jwtManager;
   private static String secretKey;
 
   @BeforeClass
@@ -48,7 +47,6 @@ public class JwtManagerTest {
     
     users = new ArrayList<>();
     secretKey = secretKeyService.find().getValue();
-    jwtManager = JwtManager.getInstance();
   }
 
   @Test
@@ -79,11 +77,11 @@ public class JwtManagerTest {
     users.add(newUser);
 
     // **** Creacion de un JWT con el ID y el permiso del usuario creado ****
-    String jwt = jwtManager.createJwt(newUser.getId(), newUser.getSuperuser(), secretKey);
+    String jwt = JwtManager.createJwt(newUser.getId(), newUser.getSuperuser(), secretKey);
     
     printDecodedPayload(jwt);
 
-    boolean result = jwtManager.validateJwt(jwt, secretKey);
+    boolean result = JwtManager.validateJwt(jwt, secretKey);
 
     assertTrue(result);
 
@@ -123,7 +121,7 @@ public class JwtManagerTest {
     users.add(newUser);
 
     // **** Creacion del primer JWT con el ID y el permiso del usuario creado ****
-    String firstJwt = jwtManager.createJwt(newUser.getId(), newUser.getSuperuser(), secretKey);
+    String firstJwt = JwtManager.createJwt(newUser.getId(), newUser.getSuperuser(), secretKey);
 
     System.out.println("Primer JWT");
     printJwt(firstJwt);
@@ -161,7 +159,7 @@ public class JwtManagerTest {
     System.out.println("Primer JWT con su encabezado reemplazado por el encabezado del segundo JWT");
     printJwt(firstJwt);
 
-    boolean result = jwtManager.validateJwt(firstJwt, secretKey);
+    boolean result = JwtManager.validateJwt(firstJwt, secretKey);
 
     assertFalse(result);
 
@@ -201,7 +199,7 @@ public class JwtManagerTest {
     users.add(newUser);
 
     // **** Creacion del primer JWT con el ID y el permiso del usuario creado ****
-    String firstJwt = jwtManager.createJwt(newUser.getId(), newUser.getSuperuser(), secretKey);
+    String firstJwt = JwtManager.createJwt(newUser.getId(), newUser.getSuperuser(), secretKey);
 
     System.out.println("Primer JWT");
     printJwt(firstJwt);
@@ -236,7 +234,7 @@ public class JwtManagerTest {
     System.out.println("Primer JWT con su encabezado reemplazado por el encabezado del segundo JWT");
     printJwt(firstJwt);
 
-    boolean result = jwtManager.validateJwt(firstJwt, secretKey);
+    boolean result = JwtManager.validateJwt(firstJwt, secretKey);
 
     assertFalse(result);
 
@@ -276,7 +274,7 @@ public class JwtManagerTest {
     users.add(newUser);
 
     // **** Creacion del primer JWT con el ID y el permiso del usuario creado ****
-    String firstJwt = jwtManager.createJwt(newUser.getId(), newUser.getSuperuser(), secretKey);
+    String firstJwt = JwtManager.createJwt(newUser.getId(), newUser.getSuperuser(), secretKey);
 
     System.out.println("Primer JWT");
     printJwt(firstJwt);
@@ -314,7 +312,7 @@ public class JwtManagerTest {
     System.out.println("Primer JWT con su encabezado reemplazado por el encabezado del segundo JWT");
     printJwt(firstJwt);
 
-    boolean result = jwtManager.validateJwt(firstJwt, secretKey);
+    boolean result = JwtManager.validateJwt(firstJwt, secretKey);
 
     assertFalse(result);
 
@@ -360,7 +358,7 @@ public class JwtManagerTest {
     users.add(tony);
 
     // **** Creacion del primer JWT con el ID y el permiso del primer usuario ****
-    String firstJwt = jwtManager.createJwt(jersey.getId(), jersey.getSuperuser(), secretKey);
+    String firstJwt = JwtManager.createJwt(jersey.getId(), jersey.getSuperuser(), secretKey);
 
     System.out.println("Primer JWT");
     printJwt(firstJwt);
@@ -408,7 +406,7 @@ public class JwtManagerTest {
     System.out.println("Primer JWT con su carga util reemplazada por la carga util del segundo JWT");
     printJwt(firstJwt);
 
-    boolean result = jwtManager.validateJwt(firstJwt, secretKey);
+    boolean result = JwtManager.validateJwt(firstJwt, secretKey);
 
     assertFalse(result);
 
@@ -502,7 +500,7 @@ public class JwtManagerTest {
     System.out.println("Primer JWT con su carga util reemplazada por la carga util del segundo JWT");
     printJwt(firstJwt);
 
-    boolean result = jwtManager.validateJwt(firstJwt, secretKey);
+    boolean result = JwtManager.validateJwt(firstJwt, secretKey);
 
     assertFalse(result);
 
@@ -560,7 +558,7 @@ public class JwtManagerTest {
     System.out.println("JWT");
     printJwt(jwt);
 
-    boolean result = jwtManager.validateJwt(jwt, secretKey);
+    boolean result = JwtManager.validateJwt(jwt, secretKey);
 
     assertFalse(result);
 
@@ -606,7 +604,7 @@ public class JwtManagerTest {
     users.add(jerry);
 
     // **** Creacion del primer JWT con el ID y el permiso del primer usuario ****
-    String firstJwt = jwtManager.createJwt(tom.getId(), tom.getSuperuser(), secretKey);
+    String firstJwt = JwtManager.createJwt(tom.getId(), tom.getSuperuser(), secretKey);
 
     System.out.println("Primer JWT");
     printJwt(firstJwt);
@@ -656,7 +654,7 @@ public class JwtManagerTest {
     System.out.println("Primer JWT con su encabezado y su carga util reemplazados por el encabezado y la carga util del segundo JWT");
     printJwt(firstJwt);
 
-    boolean result = jwtManager.validateJwt(firstJwt, secretKey);
+    boolean result = JwtManager.validateJwt(firstJwt, secretKey);
 
     assertFalse(result);
 
@@ -691,7 +689,7 @@ public class JwtManagerTest {
     users.add(newUser);
 
     // **** Creacion de un JWT con el ID y el permiso del usuario creado ****
-    String jwt = jwtManager.createJwt(newUser.getId(), newUser.getSuperuser(), secretKey);
+    String jwt = JwtManager.createJwt(newUser.getId(), newUser.getSuperuser(), secretKey);
 
     System.out.println("JWT");
     printJwt(jwt);
@@ -710,7 +708,7 @@ public class JwtManagerTest {
     System.out.println("JWT con su firma alterada");
     printJwt(jwt);
 
-    boolean result = jwtManager.validateJwt(jwt, secretKey);
+    boolean result = JwtManager.validateJwt(jwt, secretKey);
 
     assertFalse(result);
 

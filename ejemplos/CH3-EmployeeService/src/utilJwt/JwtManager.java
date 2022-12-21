@@ -14,53 +14,36 @@ import java.util.Date;
  */
 public class JwtManager {
 
-  private static JwtManager instance;
-
   /*
    * Estas constantes se utilizan para establecer
    * atributos en la carga util de un JWT
    */
-  private final String USER_ID = "userId";
-  private final String SUPERUSER = "superuser";
+  private static final String USER_ID = "userId";
+  private static final String SUPERUSER = "superuser";
   
   /*
    * La fecha de emision se utiliza para establecer el tiempo en el
    * que se crea un JWT y la fecha de expiracion se utiliza para
    * establecer el tiempo de expiracion de un JWT 
    */
-  private Date dateIssue;
-  private Date expirationDate;
+  private static Date dateIssue = new Date();
+  private static Date expirationDate = new Date();
 
   /*
    * Esta constante se utiliza para calcular la fecha de expiracion
    * de un JWT y su valor representa 15 minutos en milisegundos
    */
-  private final int OFFSET = 900000;
+  private static final int OFFSET = 900000;
 
-  private JwtManager() {
-    /*
-     * Con el patron de diseño Singleton, el metodo constructor
-     * de la clase que lo implementa, se ejecuta una unica vez.
-     * De esta manera, y en este caso, se instancia una unica
-     * vez, dos veces la clase Date. Esto es que se crean una
-     * unica vez, dos objetos de tipo Date. La referencia de
-     * cada uno de los dos se almacena en una variable de tipo
-     * por referencia de tipo Date.
-     */
-    dateIssue = new Date();
-    expirationDate = new Date();
-  }
-
-  /**
-   * @return referencia a un objeto de tipo JwtManager
+  /*
+   * El metodo constructor tiene el modificador de acceso 'private'
+   * para que ningun programador trate de instanciar esta clase
+   * desde afuera, ya que todos los metodos publicos de la misma
+   * son estaticos, con lo cual, no se requiere una instancia de
+   * esta clase para invocar a sus metodos publicos
    */
-  public static JwtManager getInstance() {
-    
-    if (instance == null) {
-      instance = new JwtManager();
-    }
+  private JwtManager() {
 
-    return instance;
   }
 
   /**
@@ -72,7 +55,7 @@ public class JwtManager {
    * @param secretKey clave secreta con la que se firma un JWT
    * @return referencia a un objeto de tipo String que contiene un JWT
    */
-  public String createJwt(int userId, boolean superuserPermission, String secretKey) {
+  public static String createJwt(int userId, boolean superuserPermission, String secretKey) {
     /*
      * Asigna el tiempo actual a la fecha de emision
      */
@@ -101,7 +84,7 @@ public class JwtManager {
    * @param secretKey clave secreta a partir de la cual se firma un JWT
    * @return true si el JWT dado es valido, false en caso contrario
    */
-  public boolean validateJwt(String jwt, String secretKey) {
+  public static boolean validateJwt(String jwt, String secretKey) {
     JWTVerifier jwtVerifier = buildJwtVerifier(secretKey);
     boolean result = false;
 
@@ -121,7 +104,7 @@ public class JwtManager {
    * @param secretKey clave secreta que se utiliza para firmar un JWT
    * @return una referencia a un objeto de tipo JWTVerifier
    */
-  private JWTVerifier buildJwtVerifier(String secretKey) {
+  private static JWTVerifier buildJwtVerifier(String secretKey) {
     Verification verification = JWT.require(Algorithm.HMAC256(secretKey));
     return verification.build();
   }

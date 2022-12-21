@@ -53,8 +53,6 @@ public class LoginRestServlet {
       .entity(new LoginResponse(LoginStatus.USERNAME_OR_PASSWORD_INCORRECT)).build();
     }
 
-    JwtManager jwtManager = JwtManager.getInstance();
-
     /*
      * Recupera de la base de datos subyacente la unica clave
      * secreta que hay para generar un JWT
@@ -75,7 +73,7 @@ public class LoginRestServlet {
      * emision y una fecha de expiracion
      */
     return Response.status(Response.Status.OK)
-    .entity(new Token(jwtManager.createJwt(givenUser.getId(), givenUser.getSuperuser(), secretKey.getValue())))
+    .entity(new Token(JwtManager.createJwt(givenUser.getId(), givenUser.getSuperuser(), secretKey.getValue())))
     .build();
   }
 
@@ -119,8 +117,6 @@ public class LoginRestServlet {
       return Response.status(Response.Status.FORBIDDEN).entity(new LoginResponse(LoginStatus.UNAUTHORIZED_ACCESS)).build();
     }
 
-    JwtManager jwtManager = JwtManager.getInstance();
-
     /*
      * Recupera de la base de datos subyacente la unica clave
      * secreta que hay para generar un JWT
@@ -142,7 +138,7 @@ public class LoginRestServlet {
      * y el permiso del usuario, una fecha de emision y una fecha de expiracion
      */
     return Response.status(Response.Status.OK)
-    .entity(new Token(jwtManager.createJwt(givenUser.getId(), givenUser.getSuperuser(), secretKey.getValue())))
+    .entity(new Token(JwtManager.createJwt(givenUser.getId(), givenUser.getSuperuser(), secretKey.getValue())))
     .build();
   }
 

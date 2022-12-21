@@ -770,6 +770,103 @@ public class JwtManagerTest {
     printSuccessfulMessage();
   }
 
+  @Test
+  public void testOneRetrieveSuperuser() {
+    System.out.println("******************** Prueba uno del metodo retrieveSuperuser() ********************");
+    System.out.println("- En esta prueba se verifica que el metodo retrieveSuperuser() de la clase JwtManager");
+    System.out.println("retorna el permiso de administrador (super usuario) contenido en la carga util de un JWT dado.");
+    System.out.println();
+    System.out.println("En este caso, dicho metodo sera probado con un usuario que NO tiene el permiso de administrador.");
+    System.out.println("Por lo tanto, el valor que debe retornar retrieveSuperuser() es false.");
+    System.out.println();
+
+    // **** Creacion y persistencia de usuario ****
+    User newUser = createUser("luke", "doe");
+    
+    // Se persiste el usuario creado
+    entityManager.getTransaction().begin();
+    newUser = userService.create(newUser);
+    entityManager.getTransaction().commit();
+
+    printUserData(newUser);
+
+    /*
+     * Se agrega el usuario creado a una coleccion para su posterior
+     * eliminacion de la base de datos subyacente, lo cual se hace
+     * para que la misma tenga el estado que tenia antes de la ejecucion
+     * de esta prueba unitaria
+     */
+    users.add(newUser);
+
+    // **** Creacion de un JWT con el ID y el permiso del usuario creado ****
+    String jwt = JwtManager.createJwt(newUser.getId(), newUser.getSuperuser(), secretKey);
+
+    System.out.println("JWT");
+    printJwt(jwt);
+
+    System.out.println("Carga util decodificada del JWT");
+    printDecodedPayload(jwt);
+
+    // **** Seccion de prueba ****
+    boolean retrievedSuperuser = JwtManager.retrieveSuperuser(jwt, secretKey);
+
+    assertTrue(newUser.getSuperuser() == retrievedSuperuser);
+    
+    System.out.println("Permiso de administrador devuelto por el metodo retrieveSuperuser(): " + retrievedSuperuser);
+    System.out.println();
+    
+    printSuccessfulMessage();
+  }
+
+  @Test
+  public void testTwoRetrieveSuperuser() {
+    System.out.println("******************** Prueba dos del metodo retrieveSuperuser() ********************");
+    System.out.println("- En esta prueba se verifica que el metodo retrieveSuperuser() de la clase JwtManager");
+    System.out.println("retorna el permiso de administrador (super usuario) contenido en la carga util de un JWT dado.");
+    System.out.println();
+    System.out.println("En este caso, dicho metodo sera probado con un usuario que tiene el permiso de administrador.");
+    System.out.println("Por lo tanto, el valor que debe retornar retrieveSuperuser() es true.");
+    System.out.println();
+
+    // **** Creacion y persistencia de usuario ****
+    User newUser = createUser("george", "doe");
+    newUser.setSuperuser(true);
+    
+    // Se persiste el usuario creado
+    entityManager.getTransaction().begin();
+    newUser = userService.create(newUser);
+    entityManager.getTransaction().commit();
+
+    printUserData(newUser);
+
+    /*
+     * Se agrega el usuario creado a una coleccion para su posterior
+     * eliminacion de la base de datos subyacente, lo cual se hace
+     * para que la misma tenga el estado que tenia antes de la ejecucion
+     * de esta prueba unitaria
+     */
+    users.add(newUser);
+
+    // **** Creacion de un JWT con el ID y el permiso del usuario creado ****
+    String jwt = JwtManager.createJwt(newUser.getId(), newUser.getSuperuser(), secretKey);
+
+    System.out.println("JWT");
+    printJwt(jwt);
+
+    System.out.println("Carga util decodificada del JWT");
+    printDecodedPayload(jwt);
+
+    // **** Seccion de prueba ****
+    boolean retrievedSuperuser = JwtManager.retrieveSuperuser(jwt, secretKey);
+    
+    assertTrue(newUser.getSuperuser() == retrievedSuperuser);
+    
+    System.out.println("Permiso de administrador devuelto por el metodo retrieveSuperuser(): " + retrievedSuperuser);
+    System.out.println();
+    
+    printSuccessfulMessage();
+  }
+
   @AfterClass
   public static void postTest() {
     entityManager.getTransaction().begin();

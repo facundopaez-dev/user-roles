@@ -40,11 +40,13 @@ public class JwtManager {
 
   /*
    * Estas constantes se utilizan para obtener el ID de usuario
-   * contenido en la carga util de un JWT
+   * y el permiso de administrador (super usuario) contenidos
+   * en la carga util de un JWT
    */
   private static final String COMMA = ",";
   private static final String TWO_POINTS = ":";
   private static final String USER_ID_KEY = "\"userId\"";
+  private static final String SUPERUSER_KEY = "\"superuser\"";
 
   /*
    * El metodo constructor tiene el modificador de acceso 'private'
@@ -167,6 +169,87 @@ public class JwtManager {
   }
 
   /**
+   * Recupera el permiso de administrador (super usuario) contenido en la
+   * carga util de un JWT
+   * 
+   * @param jwt
+   * @param secretKey clave secreta con la que se firma un JWT
+   * @return true si el valor asociado a la clave 'superuser' es true, false
+   * si el valor asociado a la clave 'superuser' es false
+   */
+  public static boolean retrieveSuperuser(String jwt, String secretKey) {
+    String payload = getDecodedPayload(jwt, secretKey);
+    return Boolean.parseBoolean(retrieveValueKey(SUPERUSER_KEY, payload));
+  }
+
+  /**
+   * Obtiene el valor asociado a una clave dada de la carga util de
+   * un JWT
+   * 
+   * @param key clave de la que se quiere obtener su valor asociado
+   * de la carga util de un JWT
+   * @param payload carga util decodificada de un JWT
+   * @return referencia a un objeto de tipo String que contiene el valor
+   * asociado a una clave dada de la carga util decodificada de un JWT
+   */
+  private static String retrieveValueKey(String key, String payload) {
+    /*
+     * Elimina las llaves de apertura y cierre de la carga util
+     * decodificada de un JWT para que las mismas no esten
+     * presentes en el valor devuelto por este metodo.
+     * 
+     * Si no se eliminan las llaves de apertura y cierre, y
+     * la clave provista es 'superuser', el valor devuelto
+     * por este metodo contiene la cadena 'true' o 'false'
+     * seguida de la llave de cierre, lo cual, provoca que
+     * el metodo retrieveSuperuser() retorne valores
+     * booleanos incorrectos.
+     * 
+     * Por lo tanto, eliminar las llaves de apertura y cierre
+     * garantiza el correcto funcionamiento de los metodos
+     * que invoquen a este metodo.
+     */
+    payload = removeBraces(payload);
+
+    /*
+     * Crea un arreglo de tipo String que contiene cada uno de
+     * los pares clave:valor de la carga util de un JWT
+     * dividiendola por la coma
+     */
+    String[] keyValuePairs = payload.split(COMMA);
+    String[] pair = null;
+    String value = null;
+
+    /*
+     * Recorre cada uno de los pares clave:valor de la carga util
+     * de un JWT hasta obtener el valor asociado a la clave dada
+     */
+    for (String currentPair : keyValuePairs) {
+      /*
+       * Crea un arreglo de tipo String que contiene la clave
+       * y el valor de un par clave:valor dividiendolo por los
+       * dos puntos
+       */
+      pair = currentPair.split(TWO_POINTS);
+
+      /*
+       * Si la clave es igual a la clave provista, se obtiene el valor
+       * asociado a la misma, el cual, puede ser el ID de usuario o
+       * el permiso de administrador (super usuario) dependiendo
+       * de lo que se desee recuperar de la carga util, decodificada
+       * de un JWT, mediante la clave provista a este metodo
+       */
+      if (pair[0].equals(key)) {
+        value = pair[1];
+        break;
+      }
+
+    }
+
+    return value;
+  }
+
+  /**
    * Obtiene la carga util decodificada de un JWT
    * 
    * @param jwt
@@ -180,5 +263,21 @@ public class JwtManager {
 
 		return new String(decoded, StandardCharsets.UTF_8);
 	}
+
+  /**
+   * Elimina las llaves de apertura y cierre de la carga util decodificada
+   * de un JWT
+   * 
+   * @param payload carga util decodificada de un JWT
+   * @return referencia a un objeto de tipo String que contiene la carga
+   * util decodificada de un JWT, pero sin las llaves de apertura y cierre
+   */
+  private static String removeBraces(String payload) {
+    /*
+     * Reemplaza las llaves de apertura y cierre de la carga util
+     * decodificada de un JWT, por un espacio en blanco
+     */
+    return payload.replaceAll("[\\{]|[\\}]", "");
+  }
 
 }

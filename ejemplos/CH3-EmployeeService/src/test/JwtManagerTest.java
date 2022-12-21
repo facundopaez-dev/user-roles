@@ -716,6 +716,51 @@ public class JwtManagerTest {
     printSuccessfulMessage();
   }
 
+  @Test
+  public void testRetrieveUserId() {
+    System.out.println("******************** Prueba del metodo retrieveUserId() ********************");
+    System.out.println("- En esta prueba se verifica que el metodo retrieveUserId() de la clase JwtManager");
+    System.out.println("retorna el ID de usuario contenido en la carga util de un JWT dado.");
+    System.out.println();
+
+    // **** Creacion y persistencia de usuario ****
+    User newUser = createUser("leon", "doe");
+    
+    // Se persiste el usuario creado
+    entityManager.getTransaction().begin();
+    newUser = userService.create(newUser);
+    entityManager.getTransaction().commit();
+
+    printUserData(newUser);
+
+    /*
+     * Se agrega el usuario creado a una coleccion para su posterior
+     * eliminacion de la base de datos subyacente, lo cual se hace
+     * para que la misma tenga el estado que tenia antes de la ejecucion
+     * de esta prueba unitaria
+     */
+    users.add(newUser);
+
+    // **** Creacion de un JWT con el ID y el permiso del usuario creado ****
+    String jwt = JwtManager.createJwt(newUser.getId(), newUser.getSuperuser(), secretKey);
+
+    System.out.println("JWT");
+    printJwt(jwt);
+
+    System.out.println("Carga util decodificada del JWT");
+    printDecodedPayload(jwt);
+
+    // **** Seccion de prueba ****
+    int retrievedUserId = JwtManager.retrieveUserId(jwt, secretKey);
+
+    assertEquals(newUser.getId(), retrievedUserId);
+    
+    System.out.println("ID de usuario devuelto por el metodo retrieveUserId(): " + retrievedUserId);
+    System.out.println();
+    
+    printSuccessfulMessage();
+  }
+
   @AfterClass
   public static void postTest() {
     entityManager.getTransaction().begin();

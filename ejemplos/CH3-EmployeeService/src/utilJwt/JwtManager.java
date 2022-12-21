@@ -131,41 +131,7 @@ public class JwtManager {
    */
   public static int retrieveUserId(String jwt, String secretKey) {
     String payload = getDecodedPayload(jwt, secretKey);
-
-    /*
-     * Crea un arreglo de tipo String que contiene cada uno de
-     * los pares clave:valor de la carga util de un JWT
-     * dividiendola por la coma
-     */
-    String[] keyValuePairs = payload.split(COMMA);
-    String[] pair = null;
-    int userId = 0;
-
-    /*
-     * Recorre cada uno de los pares clave:valor de la carga util
-     * de un JWT hasta obtener el ID de usuario
-     */
-    for (String currentPair : keyValuePairs) {
-      /*
-       * Crea un arreglo de tipo String que contiene la clave
-       * y el valor de un par clave:valor dividiendolo por los
-       * dos puntos
-       */
-      pair = currentPair.split(TWO_POINTS);
-
-      /*
-       * Si la clave es 'userId', se obtiene el valor de la misma,
-       * el cual, es el ID de usuario contenido en la carga util
-       * de un JWT
-       */
-      if (pair[0].equals(USER_ID_KEY)) {
-        userId = Integer.parseInt(pair[1]);
-        break;
-      }
-
-    }
-
-    return userId;
+    return Integer.parseInt(retrieveValueKey(USER_ID_KEY, payload));
   }
 
   /**
@@ -245,6 +211,8 @@ public class JwtManager {
       }
 
     }
+
+    System.out.println("Valor: " + value);
 
     return value;
   }

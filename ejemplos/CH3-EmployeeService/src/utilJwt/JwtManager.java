@@ -32,8 +32,8 @@ public class JwtManager {
   private Date expirationDate;
 
   /*
-   * El valor de esta constante se utiliza para calcular la fecha
-   * de expiracion de un JWT
+   * Esta constante se utiliza para calcular la fecha de expiracion
+   * de un JWT y su valor representa 15 minutos en milisegundos
    */
   private final int OFFSET = 900000;
 
@@ -69,7 +69,7 @@ public class JwtManager {
    * 
    * @param userId ID de un usuario
    * @param superuserPermission permiso de un usuario
-   * @param SecretKey clave secreta con la que se firma un JWT
+   * @param secretKey clave secreta con la que se firma un JWT
    * @return referencia a un objeto de tipo String que contiene un JWT
    */
   public String createJwt(int userId, boolean superuserPermission, String secretKey) {

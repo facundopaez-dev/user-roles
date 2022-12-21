@@ -81,6 +81,7 @@ public class JwtManagerTest {
     
     printDecodedPayload(jwt);
 
+    // **** Seccion de prueba ****
     boolean result = JwtManager.validateJwt(jwt, secretKey);
 
     assertTrue(result);
@@ -159,6 +160,7 @@ public class JwtManagerTest {
     System.out.println("Primer JWT con su encabezado reemplazado por el encabezado del segundo JWT");
     printJwt(firstJwt);
 
+    // **** Seccion de prueba ****
     boolean result = JwtManager.validateJwt(firstJwt, secretKey);
 
     assertFalse(result);
@@ -234,6 +236,7 @@ public class JwtManagerTest {
     System.out.println("Primer JWT con su encabezado reemplazado por el encabezado del segundo JWT");
     printJwt(firstJwt);
 
+    // **** Seccion de prueba ****
     boolean result = JwtManager.validateJwt(firstJwt, secretKey);
 
     assertFalse(result);
@@ -312,6 +315,7 @@ public class JwtManagerTest {
     System.out.println("Primer JWT con su encabezado reemplazado por el encabezado del segundo JWT");
     printJwt(firstJwt);
 
+    // **** Seccion de prueba ****
     boolean result = JwtManager.validateJwt(firstJwt, secretKey);
 
     assertFalse(result);
@@ -406,6 +410,7 @@ public class JwtManagerTest {
     System.out.println("Primer JWT con su carga util reemplazada por la carga util del segundo JWT");
     printJwt(firstJwt);
 
+    // **** Seccion de prueba ****
     boolean result = JwtManager.validateJwt(firstJwt, secretKey);
 
     assertFalse(result);
@@ -500,6 +505,7 @@ public class JwtManagerTest {
     System.out.println("Primer JWT con su carga util reemplazada por la carga util del segundo JWT");
     printJwt(firstJwt);
 
+    // **** Seccion de prueba ****
     boolean result = JwtManager.validateJwt(firstJwt, secretKey);
 
     assertFalse(result);
@@ -558,6 +564,7 @@ public class JwtManagerTest {
     System.out.println("JWT");
     printJwt(jwt);
 
+    // **** Seccion de prueba ****
     boolean result = JwtManager.validateJwt(jwt, secretKey);
 
     assertFalse(result);
@@ -654,6 +661,7 @@ public class JwtManagerTest {
     System.out.println("Primer JWT con su encabezado y su carga util reemplazados por el encabezado y la carga util del segundo JWT");
     printJwt(firstJwt);
 
+    // **** Seccion de prueba ****
     boolean result = JwtManager.validateJwt(firstJwt, secretKey);
 
     assertFalse(result);
@@ -708,6 +716,7 @@ public class JwtManagerTest {
     System.out.println("JWT con su firma alterada");
     printJwt(jwt);
 
+    // **** Seccion de prueba ****
     boolean result = JwtManager.validateJwt(jwt, secretKey);
 
     assertFalse(result);

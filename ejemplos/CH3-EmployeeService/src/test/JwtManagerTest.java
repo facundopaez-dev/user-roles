@@ -726,9 +726,9 @@ public class JwtManagerTest {
   }
 
   @Test
-  public void testRetrieveUserId() {
-    System.out.println("******************** Prueba del metodo retrieveUserId() ********************");
-    System.out.println("- En esta prueba se verifica que el metodo retrieveUserId() de la clase JwtManager");
+  public void testGetUserId() {
+    System.out.println("******************** Prueba del metodo getUserId() ********************");
+    System.out.println("- En esta prueba se verifica que el metodo getUserId() de la clase JwtManager");
     System.out.println("retorna el ID de usuario contenido en la carga util de un JWT dado.");
     System.out.println();
 
@@ -760,24 +760,24 @@ public class JwtManagerTest {
     printDecodedPayload(jwt);
 
     // **** Seccion de prueba ****
-    int retrievedUserId = JwtManager.retrieveUserId(jwt, secretKey);
+    int obtainedUserId = JwtManager.getUserId(jwt, secretKey);
 
-    assertEquals(newUser.getId(), retrievedUserId);
+    assertEquals(newUser.getId(), obtainedUserId);
     
-    System.out.println("ID de usuario devuelto por el metodo retrieveUserId(): " + retrievedUserId);
+    System.out.println("ID de usuario devuelto por el metodo getUserId(): " + obtainedUserId);
     System.out.println();
     
     printSuccessfulMessage();
   }
 
   @Test
-  public void testOneRetrieveSuperuser() {
-    System.out.println("******************** Prueba uno del metodo retrieveSuperuser() ********************");
-    System.out.println("- En esta prueba se verifica que el metodo retrieveSuperuser() de la clase JwtManager");
+  public void testOneGetSuperuser() {
+    System.out.println("******************** Prueba uno del metodo getSuperuser() ********************");
+    System.out.println("- En esta prueba se verifica que el metodo getSuperuser() de la clase JwtManager");
     System.out.println("retorna el permiso de administrador (super usuario) contenido en la carga util de un JWT dado.");
     System.out.println();
     System.out.println("En este caso, dicho metodo sera probado con un usuario que NO tiene el permiso de administrador.");
-    System.out.println("Por lo tanto, el valor que debe retornar retrieveSuperuser() es false.");
+    System.out.println("Por lo tanto, el valor que debe retornar getSuperuser() es false.");
     System.out.println();
 
     // **** Creacion y persistencia de usuario ****
@@ -808,24 +808,24 @@ public class JwtManagerTest {
     printDecodedPayload(jwt);
 
     // **** Seccion de prueba ****
-    boolean retrievedSuperuser = JwtManager.retrieveSuperuser(jwt, secretKey);
+    boolean obtainedSuperuser = JwtManager.getSuperuser(jwt, secretKey);
 
-    assertTrue(newUser.getSuperuser() == retrievedSuperuser);
+    assertTrue(newUser.getSuperuser() == obtainedSuperuser);
     
-    System.out.println("Permiso de administrador devuelto por el metodo retrieveSuperuser(): " + retrievedSuperuser);
+    System.out.println("Permiso de administrador devuelto por el metodo getSuperuser(): " + obtainedSuperuser);
     System.out.println();
     
     printSuccessfulMessage();
   }
 
   @Test
-  public void testTwoRetrieveSuperuser() {
-    System.out.println("******************** Prueba dos del metodo retrieveSuperuser() ********************");
-    System.out.println("- En esta prueba se verifica que el metodo retrieveSuperuser() de la clase JwtManager");
+  public void testTwoGetSuperuser() {
+    System.out.println("******************** Prueba dos del metodo getSuperuser() ********************");
+    System.out.println("- En esta prueba se verifica que el metodo getSuperuser() de la clase JwtManager");
     System.out.println("retorna el permiso de administrador (super usuario) contenido en la carga util de un JWT dado.");
     System.out.println();
     System.out.println("En este caso, dicho metodo sera probado con un usuario que tiene el permiso de administrador.");
-    System.out.println("Por lo tanto, el valor que debe retornar retrieveSuperuser() es true.");
+    System.out.println("Por lo tanto, el valor que debe retornar getSuperuser() es true.");
     System.out.println();
 
     // **** Creacion y persistencia de usuario ****
@@ -857,11 +857,11 @@ public class JwtManagerTest {
     printDecodedPayload(jwt);
 
     // **** Seccion de prueba ****
-    boolean retrievedSuperuser = JwtManager.retrieveSuperuser(jwt, secretKey);
+    boolean obtainedSuperuser = JwtManager.getSuperuser(jwt, secretKey);
     
-    assertTrue(newUser.getSuperuser() == retrievedSuperuser);
+    assertTrue(newUser.getSuperuser() == obtainedSuperuser);
     
-    System.out.println("Permiso de administrador devuelto por el metodo retrieveSuperuser(): " + retrievedSuperuser);
+    System.out.println("Permiso de administrador devuelto por el metodo getSuperuser(): " + obtainedSuperuser);
     System.out.println();
     
     printSuccessfulMessage();

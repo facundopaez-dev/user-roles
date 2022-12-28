@@ -129,9 +129,9 @@ public class JwtManager {
    * @return entero que contiene el ID de usuario contenido en la
    * carga util de un JWT
    */
-  public static int retrieveUserId(String jwt, String secretKey) {
+  public static int getUserId(String jwt, String secretKey) {
     String payload = getDecodedPayload(jwt, secretKey);
-    return Integer.parseInt(retrieveValueKey(USER_ID_KEY, payload));
+    return Integer.parseInt(getValueKey(USER_ID_KEY, payload));
   }
 
   /**
@@ -143,9 +143,9 @@ public class JwtManager {
    * @return true si el valor asociado a la clave 'superuser' es true, false
    * si el valor asociado a la clave 'superuser' es false
    */
-  public static boolean retrieveSuperuser(String jwt, String secretKey) {
+  public static boolean getSuperuser(String jwt, String secretKey) {
     String payload = getDecodedPayload(jwt, secretKey);
-    return Boolean.parseBoolean(retrieveValueKey(SUPERUSER_KEY, payload));
+    return Boolean.parseBoolean(getValueKey(SUPERUSER_KEY, payload));
   }
 
   /**
@@ -158,7 +158,7 @@ public class JwtManager {
    * @return referencia a un objeto de tipo String que contiene el valor
    * asociado a una clave dada de la carga util decodificada de un JWT
    */
-  private static String retrieveValueKey(String key, String payload) {
+  private static String getValueKey(String key, String payload) {
     /*
      * Elimina las llaves de apertura y cierre de la carga util
      * decodificada de un JWT para que las mismas no esten
@@ -168,8 +168,8 @@ public class JwtManager {
      * la clave provista es 'superuser', el valor devuelto
      * por este metodo contiene la cadena 'true' o 'false'
      * seguida de la llave de cierre, lo cual, provoca que
-     * el metodo retrieveSuperuser() retorne valores
-     * booleanos incorrectos.
+     * el metodo getSuperuser() retorne valores booleanos
+     * incorrectos.
      * 
      * Por lo tanto, eliminar las llaves de apertura y cierre
      * garantiza el correcto funcionamiento de los metodos
@@ -188,13 +188,15 @@ public class JwtManager {
 
     /*
      * Recorre cada uno de los pares clave:valor de la carga util
-     * de un JWT hasta obtener el valor asociado a la clave dada
+     * de un JWT hasta obtener el valor asociado a la clave provista
+     * como argumento a este metodo
      */
     for (String currentPair : keyValuePairs) {
       /*
        * Crea un arreglo de tipo String que contiene la clave
        * y el valor de un par clave:valor dividiendolo por los
-       * dos puntos
+       * dos puntos. El primer elemento es la clave y el
+       * segundo elemento es el valor.
        */
       pair = currentPair.split(TWO_POINTS);
 
@@ -203,7 +205,8 @@ public class JwtManager {
        * asociado a la misma, el cual, puede ser el ID de usuario o
        * el permiso de administrador (super usuario) dependiendo
        * de lo que se desee recuperar de la carga util, decodificada
-       * de un JWT, mediante la clave provista a este metodo
+       * de un JWT, mediante la clave provista como argumento a este
+       * metodo
        */
       if (pair[0].equals(key)) {
         value = pair[1];
@@ -211,8 +214,6 @@ public class JwtManager {
       }
 
     }
-
-    System.out.println("Valor: " + value);
 
     return value;
   }

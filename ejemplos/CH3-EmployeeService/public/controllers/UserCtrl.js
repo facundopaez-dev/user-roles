@@ -81,7 +81,7 @@ app.controller(
 
                 service.isSuperuser(data, function (error, data) {
                     if (error) {
-                        alert(error.data.errorMessage);
+                        alert(error.data.message);
                         $location.path("/home");
                         return;
                     }

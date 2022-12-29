@@ -27,7 +27,7 @@ app.controller(
                     inicio.
                     */
                     if (error) {
-                        alert(error.data.errorMessage);
+                        alert(error.data.message);
                         console.log(error);
                         return;
                     }

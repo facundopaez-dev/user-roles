@@ -28,7 +28,7 @@ app.controller(
                     mostrar la pagina de inicio del administrador.
                     */
                     if (error) {
-                        alert(error.data.errorMessage);
+                        alert(error.data.message);
                         console.log(error);
                         return;
                     }

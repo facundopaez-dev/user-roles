@@ -181,9 +181,9 @@ app.factory('JwtManager', function ($window) {
 
 	return {
 		/*
-		Esta funcion debe ser invocada cuando el usuario se autentica
-		satisfactoriamente, ya que la aplicacion del lado servidor
-		devuelve un JWT cuando la autenticacion del usuario es exitosa
+		Cuando el usuario se autentica satisfactoriamente, se debe invocar
+		a esta funcion para almacenar el JWT del usuario en el almacenamiento
+		de sesion del navegador web
 		*/
 		setJwt: function (jwt) {
 			$window.sessionStorage.setItem(key, jwt);

@@ -168,4 +168,46 @@ app.factory('AccessFactory', function ($window) {
 	}
 });
 
+/*
+JwtManager es la factory que se utiliza para el almacenamiento,
+obtencion y eliminacion de JWT
+*/
+app.factory('JwtManager', function ($window) {
+	/*
+	Con el valor de esta constante se obtiene el JWT del usuario que se
+	autentica satisfactoriamente
+	*/
+	const key = "loggedUser";
+
+	return {
+		/*
+		Esta funcion debe ser invocada cuando el usuario se autentica
+		satisfactoriamente, ya que la aplicacion del lado servidor
+		devuelve un JWT cuando la autenticacion del usuario es exitosa
+		*/
+		setJwt: function (jwt) {
+			$window.sessionStorage.setItem(key, jwt);
+		},
+
+		/*
+		Esta funcion es necesaria para establecer el JWT (del usuario
+		que se autentica satisfactoriamente) en el encabezado de
+		autorizacion de cada peticion HTTP sea del cliente REST que
+		sea, un navegador web, una aplicacion del estilo POSTMAN, etc.
+		*/
+		getJwt: function () {
+			return $window.sessionStorage.getItem(key);
+		},
+
+		/*
+		Esta funcion debe ser invocada cuando el usuario cierra su
+		sesion, momento en el cual se debe eliminar su JWT del
+		almacenamiento de sesion del navegador web
+		*/
+		removeJwt: function () {
+			$window.sessionStorage.removeItem(key);
+		}
+	}
+});
+
 // TODO: Proteger las peticiones que el usuario no debe realizar sin una sesion iniciada

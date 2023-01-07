@@ -1,7 +1,7 @@
 app.controller(
     "UserLoginCtrl",
-    ["$scope", "$location", "$window", "AuthSrv", "AccessFactory",
-        function ($scope, $location, $window, authService, accessFactory) {
+    ["$scope", "$location", "$window", "AuthSrv", "AccessFactory", "JwtManager",
+        function ($scope, $location, $window, authService, accessFactory, jwtManager) {
 
             /*
             Si el usuario se autentico correctamente, su JWT esta
@@ -38,7 +38,7 @@ app.controller(
                     en el almacenamiento de sesion del navegador web y se redirecciona al usuario a la
                     pagina de inicio.
                     */
-                    $window.sessionStorage.setItem(accessFactory.getKeyStore(), data.jwt);
+                    jwtManager.setJwt(data.jwt);
                     $location.path("/home");
                 });
             }

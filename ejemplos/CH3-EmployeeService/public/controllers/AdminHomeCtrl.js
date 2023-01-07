@@ -1,7 +1,7 @@
 app.controller(
     "AdminHomeCtrl",
-    ["$scope", "$rootScope", "$location", "$window", "UserSrv", "AccessFactory",
-        function ($scope, $rootScope, $location, $window, userService, AccessFactory) {
+    ["$scope", "$rootScope", "$location", "$window", "UserSrv", "AccessFactory", "JwtManager",
+        function ($scope, $rootScope, $location, $window, userService, AccessFactory, jwtManager) {
 
             /*
             Esta variable se utiliza para mostrar u ocultar los botones de la barra de
@@ -25,10 +25,10 @@ app.controller(
 
             $scope.logout = function () {
                 /*
-                Cuando el administrador cierra su sesion, se eliminan sus datos
+                Cuando el administrador cierra su sesion, se elimina su JWT
                 del almacenamiento de sesion del navegador web
                 */
-                $window.sessionStorage.removeItem(AccessFactory.getKeyStore());
+                jwtManager.removeJwt();
 
                 /*
                 Cuando el administrador cierra su sesion, se lo redirige a la pagina de

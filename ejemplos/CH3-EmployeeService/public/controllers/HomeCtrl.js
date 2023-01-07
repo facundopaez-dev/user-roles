@@ -1,7 +1,7 @@
 app.controller(
     "HomeCtrl",
-    ["$scope", "$rootScope", "$location", "$window", "AccessFactory",
-        function ($scope, $rootScope, $location, $window, AccessFactory) {
+    ["$scope", "$rootScope", "$location", "$window", "AccessFactory", "JwtManager",
+        function ($scope, $rootScope, $location, $window, AccessFactory, jwtManger) {
 
             /*
             Para acceder a la pagina de inicio de la aplicacion, el usuario cliente
@@ -16,10 +16,10 @@ app.controller(
 
             $scope.logout = function () {
                 /*
-                Cuando el usuario cliente cierra su sesion, se eliminan sus datos
+                Cuando el usuario cliente cierra su sesion, se elimina su JWT
                 del almacenamiento de sesion del navegador web
                 */
-                $window.sessionStorage.removeItem(AccessFactory.getKeyStore());
+                jwtManger.removeJwt();
 
                 /*
                 Cuando el usuario cliente cierra su sesion, se lo redirige a la pagina de

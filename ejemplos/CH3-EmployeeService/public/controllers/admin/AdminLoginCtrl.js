@@ -1,7 +1,7 @@
 app.controller(
     "AdminLoginCtrl",
-    ["$scope", "$location", "$window", "AuthSrv", "AccessFactory",
-        function ($scope, $location, $window, authService, accessFactory) {
+    ["$scope", "$location", "$window", "AuthSrv", "AccessFactory", "JwtManager",
+        function ($scope, $location, $window, authService, accessFactory, jwtManager) {
 
             /*
             Si el administrador se autentico correctamente, su JWT esta
@@ -39,7 +39,7 @@ app.controller(
                     en el almacenamiento de sesion del navegador web y se redirecciona al administrador a la
                     pagina de inicio del administrador.
                     */
-                    $window.sessionStorage.setItem(accessFactory.getKeyStore(), data.jwt);
+                    jwtManager.setJwt(data.jwt);
                     $location.path("/adminHome");
                 });
             }

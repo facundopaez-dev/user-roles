@@ -1,7 +1,7 @@
 app.controller(
     "AdminLoginCtrl",
-    ["$scope", "$location", "$window", "UserSrv", "AccessFactory",
-        function ($scope, $location, $window, userService, accessFactory) {
+    ["$scope", "$location", "$window", "AuthSrv", "AccessFactory",
+        function ($scope, $location, $window, authService, accessFactory) {
 
             /*
             Si el administrador se autentico correctamente, su JWT esta
@@ -18,7 +18,7 @@ app.controller(
             }
 
             $scope.login = function () {
-                userService.authenticateAdmin($scope.data, function (error, data) {
+                authService.authenticateAdmin($scope.data, function (error, data) {
                     /*
                     Si la autenticacion del administrador falla por uno de los siguientes motivos:
                     1. No hay una cuenta registrada con el nombre de usuario dado. En otras palabras, no existe el usuario ingresado.

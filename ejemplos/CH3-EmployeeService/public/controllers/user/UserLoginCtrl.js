@@ -1,7 +1,7 @@
 app.controller(
     "UserLoginCtrl",
-    ["$scope", "$location", "$window", "UserSrv", "AccessFactory",
-        function ($scope, $location, $window, userService, accessFactory) {
+    ["$scope", "$location", "$window", "AuthSrv", "AccessFactory",
+        function ($scope, $location, $window, authService, accessFactory) {
 
             /*
             Si el usuario se autentico correctamente, su JWT esta
@@ -17,7 +17,7 @@ app.controller(
             }
 
             $scope.login = function () {
-                userService.authenticateUser($scope.data, function (error, data) {
+                authService.authenticateUser($scope.data, function (error, data) {
                     /*
                     Si la autenticacion del usuario falla por uno de los siguientes motivos:
                     1. No hay una cuenta registrada con el nombre de usuario dado. En otras palabras, no existe el usuario ingresado.

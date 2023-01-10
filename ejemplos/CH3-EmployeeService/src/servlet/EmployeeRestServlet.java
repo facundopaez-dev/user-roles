@@ -22,8 +22,7 @@ import javax.ws.rs.core.Response.Status;
 import model.Employee;
 import stateless.EmployeeService;
 import stateless.SecretKeyServiceBean;
-import utilJwt.AuthHeaderManager;
-import utilJwt.JwtManager;
+import util.RequestManager;
 
 @Path("/employees")
 public class EmployeeRestServlet {
@@ -38,54 +37,32 @@ public class EmployeeRestServlet {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public Response findAllEmployees(@Context HttpHeaders request) throws IOException {
-    String authHeaderValue = AuthHeaderManager.getAuthHeaderValue(request);
+    Response givenResponse = RequestManager.validateAuthHeader(request, secretKeyService.find());
 
     /*
-     * Si el encabezado de autorizacion de la peticion HTTP dada,
-     * NO esta presente en la misma, no existe el valor de dicho
-     * encabezado. Por lo tanto, la aplicacion del lado servidor
-     * devuelve el mensaje HTTP 400 (Bad Request).
+     * Si el estado de la respuesta obtenida de validar el
+     * encabezado de autorizacion de una peticion HTTP NO
+     * es ACCEPTED, se devuelve el estado de error de la misma.
+     * 
+     * Que el estado de la respuesta obtenida de validar el
+     * encabezado de autorizacion de una peticion HTTP sea
+     * ACCEPTED, significa que la peticion es valida,
+     * debido a que el encabezado de autorizacion de la misma
+     * cumple las siguientes condiciones:
+     * - Esta presente.
+     * - No esta vacio.
+     * - Cumple con la convencion de JWT.
+     * - Contiene un JWT valido.
      */
-    if (!AuthHeaderManager.isPresent(authHeaderValue)) {
-      return Response.status(Response.Status.BAD_REQUEST).build();
-    }
-
-    /*
-     * Si el encabezado de autorizacion de la peticion HTTP dada,
-     * esta presente en la misma, pero esta vacio, el valor de dicho
-     * encabezado esta vacio. Por lo tanto, la aplicacion del lado
-     * servidor devuelve el mensaje 400 (Bad Request).
-     */
-    if (AuthHeaderManager.isEmpty(authHeaderValue)) {
-      return Response.status(Response.Status.BAD_REQUEST).build();
-    }
-
-    /*
-     * Si el valor del encabezado de autorizacion de la peticion
-     * dada, NO cumple con la convencion de JWT, la aplicacion del
-     * lado servidor devuelve el mensaje HTTP 400 (Bad Request)
-     */
-    if (!AuthHeaderManager.checkJwtConvention(authHeaderValue)) {
-      return Response.status(Response.Status.BAD_REQUEST).build();
-    }
-
-    String jwt = AuthHeaderManager.getJwt(authHeaderValue);
-
-    /*
-     * Si el JWT obtenido del valor del encabezado de autorizacion
-     * de la peticion HTTP dada, NO es valido por algun motivo, la
-     * aplicacion del lado servidor devuelve el mensaje HTTP 401
-     * (Unauthorized)
-     */
-    if (!JwtManager.validateJwt(jwt, secretKeyService.find().getValue())) {
-      return Response.status(Response.Status.UNAUTHORIZED).build();
+    if (!RequestManager.isAccepted(givenResponse)) {
+      return givenResponse;
     }
 
     /*
      * Si el valor del encabezado de autorizacion de la peticion HTTP
      * dada, tiene un JWT valido, la aplicacion del lado servidor
-     * devuelve el mensaje HTTP 200 (Ok) junto con una coleccion
-     * que contiene los datos solicitados
+     * devuelve el mensaje HTTP 200 (Ok) junto con los datos solicitados
+     * por el cliente
      */
     return Response.status(Response.Status.OK).entity(service.findAllEmployees()).build();
   }
@@ -93,33 +70,137 @@ public class EmployeeRestServlet {
   @GET
   @Path("/{id}")
   @Produces(MediaType.APPLICATION_JSON)
-  public String findEmployee(@PathParam("id") int id) throws IOException {
-    Employee emp = service.findEmployee(id);
-    return mapper.writeValueAsString(emp);
+  public Response findEmployee(@Context HttpHeaders request, @PathParam("id") int id) throws IOException {
+    Response givenResponse = RequestManager.validateAuthHeader(request, secretKeyService.find());
+
+    /*
+     * Si el estado de la respuesta obtenida de validar el
+     * encabezado de autorizacion de una peticion HTTP NO
+     * es ACCEPTED, se devuelve el estado de error de la misma.
+     * 
+     * Que el estado de la respuesta obtenida de validar el
+     * encabezado de autorizacion de una peticion HTTP sea
+     * ACCEPTED, significa que la peticion es valida,
+     * debido a que el encabezado de autorizacion de la misma
+     * cumple las siguientes condiciones:
+     * - Esta presente.
+     * - No esta vacio.
+     * - Cumple con la convencion de JWT.
+     * - Contiene un JWT valido.
+     */
+    if (!RequestManager.isAccepted(givenResponse)) {
+      return givenResponse;
+    }
+
+    /*
+     * Si el valor del encabezado de autorizacion de la peticion HTTP
+     * dada, tiene un JWT valido, la aplicacion del lado servidor
+     * devuelve el mensaje HTTP 200 (Ok) junto con los datos solicitados
+     * por el cliente
+     */
+    return Response.status(Response.Status.OK).entity(service.findEmployee(id)).build();
   }
 
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
-  public String createEmployee(String json) throws IOException {
-    Employee emp = mapper.readValue(json, Employee.class);
-    emp = service.createEmployee(emp);
-    return mapper.writeValueAsString(emp);
+  public Response createEmployee(@Context HttpHeaders request, String json) throws IOException {
+    Response givenResponse = RequestManager.validateAuthHeader(request, secretKeyService.find());
+
+    /*
+     * Si el estado de la respuesta obtenida de validar el
+     * encabezado de autorizacion de una peticion HTTP NO
+     * es ACCEPTED, se devuelve el estado de error de la misma.
+     * 
+     * Que el estado de la respuesta obtenida de validar el
+     * encabezado de autorizacion de una peticion HTTP sea
+     * ACCEPTED, significa que la peticion es valida,
+     * debido a que el encabezado de autorizacion de la misma
+     * cumple las siguientes condiciones:
+     * - Esta presente.
+     * - No esta vacio.
+     * - Cumple con la convencion de JWT.
+     * - Contiene un JWT valido.
+     */
+    if (!RequestManager.isAccepted(givenResponse)) {
+      return givenResponse;
+    }
+
+    /*
+     * Si el valor del encabezado de autorizacion de la peticion HTTP
+     * dada, tiene un JWT valido, la aplicacion del lado servidor
+     * devuelve el mensaje HTTP 200 (Ok) junto con los datos que el
+     * cliente solicito persistir
+     */
+    Employee newEmployee = mapper.readValue(json, Employee.class);
+    return Response.status(Response.Status.OK).entity(service.createEmployee(newEmployee)).build();
   }
 
   @DELETE
   @Path("/{id}")
   @Produces(MediaType.APPLICATION_JSON)
-  public String removeEmployee(@PathParam("id") int id) throws IOException {
-    Employee emp = service.removeEmployee(id);
-    return mapper.writeValueAsString(emp);
+  public Response removeEmployee(@Context HttpHeaders request, @PathParam("id") int id) throws IOException {
+    Response givenResponse = RequestManager.validateAuthHeader(request, secretKeyService.find());
+
+    /*
+     * Si el estado de la respuesta obtenida de validar el
+     * encabezado de autorizacion de una peticion HTTP NO
+     * es ACCEPTED, se devuelve el estado de error de la misma.
+     * 
+     * Que el estado de la respuesta obtenida de validar el
+     * encabezado de autorizacion de una peticion HTTP sea
+     * ACCEPTED, significa que la peticion es valida,
+     * debido a que el encabezado de autorizacion de la misma
+     * cumple las siguientes condiciones:
+     * - Esta presente.
+     * - No esta vacio.
+     * - Cumple con la convencion de JWT.
+     * - Contiene un JWT valido.
+     */
+    if (!RequestManager.isAccepted(givenResponse)) {
+      return givenResponse;
+    }
+
+    /*
+     * Si el valor del encabezado de autorizacion de la peticion HTTP
+     * dada, tiene un JWT valido, la aplicacion del lado servidor
+     * devuelve el mensaje HTTP 200 (Ok) junto con los datos que el
+     * cliente solicito eliminar
+     */
+    return Response.status(Response.Status.OK).entity(service.removeEmployee(id)).build();
   }
 
   @PUT
   @Path("/{id}")
   @Produces(MediaType.APPLICATION_JSON)
-  public String changeEmployeeSalary(@PathParam("id") int id, @QueryParam("salary") long newSalary) throws IOException {
-      Employee emp = service.changeEmployeeSalary(id,newSalary);
-      return mapper.writeValueAsString(emp);
+  public Response changeEmployeeSalary(@Context HttpHeaders request, @PathParam("id") int id, @QueryParam("salary") long newSalary) throws IOException {
+    Response givenResponse = RequestManager.validateAuthHeader(request, secretKeyService.find());
+
+    /*
+     * Si el estado de la respuesta obtenida de validar el
+     * encabezado de autorizacion de una peticion HTTP NO
+     * es ACCEPTED, se devuelve el estado de error de la misma.
+     * 
+     * Que el estado de la respuesta obtenida de validar el
+     * encabezado de autorizacion de una peticion HTTP sea
+     * ACCEPTED, significa que la peticion es valida,
+     * debido a que el encabezado de autorizacion de la misma
+     * cumple las siguientes condiciones:
+     * - Esta presente.
+     * - No esta vacio.
+     * - Cumple con la convencion de JWT.
+     * - Contiene un JWT valido.
+     */
+    if (!RequestManager.isAccepted(givenResponse)) {
+      return givenResponse;
+    }
+
+    /*
+     * Si el valor del encabezado de autorizacion de la peticion HTTP
+     * dada, tiene un JWT valido, la aplicacion del lado servidor
+     * devuelve el mensaje HTTP 200 (Ok) junto con los datos que el
+     * cliente solicito actualizar
+     */
+    return Response.status(Response.Status.OK).entity(service.changeEmployeeSalary(id, newSalary)).build();
   }
   
 }

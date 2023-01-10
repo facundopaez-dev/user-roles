@@ -2,7 +2,7 @@ app.controller(
     "CropsCtrl",
     ["$scope", "$location", "$window", "$route", "CropSrv", "UserSrv", "AccessFactory",
         function ($scope, $location, $window, $route, service, userService, AccessFactory) {
-            console.log("CropCtrl loaded...");
+            console.log("CropsCtrl loaded...");
 
             /*
             Esta variable se utiliza para mostrar u ocultar los botones de la barra de
@@ -10,7 +10,7 @@ app.controller(
             tiene el valor false, se ocultan los botones. En cambio, si tiene el valor
             true, se muestran los botones.
             */
-            $scope.superuserPermission = false;
+            $scope.superuserPermission = true;
 
             function findAll() {
                 service.findAll(function (error, data) {
@@ -68,25 +68,25 @@ app.controller(
             los botones de la barra de navegacion del administrador. La manera en la que se
             muestran estos botones es asignando el valor true a la variable superuserPermission.
             */
-            function isSuperuser() {
-                /*
-                El contenido almacenado en el almacenamiento de sesion del navegador web es un string
-                en formato JSON, con lo cual, se lo debe convertir para poder accedr a sus propiedades
-                */
-                let data = JSON.parse($window.sessionStorage.getItem(AccessFactory.getKeyStore()));
+            // function isSuperuser() {
+            //     /*
+            //     El contenido almacenado en el almacenamiento de sesion del navegador web es un string
+            //     en formato JSON, con lo cual, se lo debe convertir para poder accedr a sus propiedades
+            //     */
+            //     let data = JSON.parse($window.sessionStorage.getItem(AccessFactory.getKeyStore()));
 
-                userService.isSuperuser(data, function (error, data) {
-                    if (error) {
-                        alert(error.data.message);
-                        $location.path("/home");
-                        return;
-                    }
+            //     userService.isSuperuser(data, function (error, data) {
+            //         if (error) {
+            //             alert(error.data.message);
+            //             $location.path("/home");
+            //             return;
+            //         }
 
-                    $scope.superuserPermission = true;
-                })
-            }
+            //         $scope.superuserPermission = true;
+            //     })
+            // }
 
-            isSuperuser();
+            // isSuperuser();
 
 			/*
 			Si el flujo de ejecucion llega a este punto, se debe a que

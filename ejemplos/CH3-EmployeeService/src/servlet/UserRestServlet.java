@@ -5,18 +5,20 @@ import java.io.IOException;
 import java.util.Collection;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import model.User;
+import stateless.SecretKeyServiceBean;
 import stateless.UserServiceBean;
+import util.RequestManager;
 import utilLogin.LoginResponse;
 import utilLogin.LoginStatus;
 import utilPermission.PermissionResponse;
@@ -24,25 +26,77 @@ import utilPermission.PermissionResponse;
 @Path("/users")
 public class UserRestServlet {
 
-  @EJB
-  UserServiceBean userService;
+  @EJB UserServiceBean service;
+  @EJB SecretKeyServiceBean secretKeyService;
 
   //mapea lista de pojo a JSON
   ObjectMapper mapper = new ObjectMapper();
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  public String findAll() throws IOException {
-    Collection<User> users = userService.findAll();
-    return mapper.writeValueAsString(users);
+  public Response findAll(@Context HttpHeaders request) throws IOException {
+    Response givenResponse = RequestManager.validateAuthHeader(request, secretKeyService.find());
+
+    /*
+     * Si el estado de la respuesta obtenida de validar el
+     * encabezado de autorizacion de una peticion HTTP NO
+     * es ACCEPTED, se devuelve el estado de error de la misma.
+     * 
+     * Que el estado de la respuesta obtenida de validar el
+     * encabezado de autorizacion de una peticion HTTP sea
+     * ACCEPTED, significa que la peticion es valida,
+     * debido a que el encabezado de autorizacion de la misma
+     * cumple las siguientes condiciones:
+     * - Esta presente.
+     * - No esta vacio.
+     * - Cumple con la convencion de JWT.
+     * - Contiene un JWT valido.
+     */
+    if (!RequestManager.isAccepted(givenResponse)) {
+      return givenResponse;
+    }
+
+    /*
+     * Si el valor del encabezado de autorizacion de la peticion HTTP
+     * dada, tiene un JWT valido, la aplicacion del lado servidor
+     * devuelve el mensaje HTTP 200 (Ok) junto con los datos solicitados
+     * por el cliente
+     */
+    return Response.status(Response.Status.OK).entity(mapper.writeValueAsString(service.findAll())).build();
   }
 
   @GET
   @Path("/{id}")
   @Produces(MediaType.APPLICATION_JSON)
-  public String find(@PathParam("id") int id) throws IOException {
-    User givenUser = userService.find(id);
-    return mapper.writeValueAsString(givenUser);
+  public Response find(@Context HttpHeaders request, @PathParam("id") int id) throws IOException {
+    Response givenResponse = RequestManager.validateAuthHeader(request, secretKeyService.find());
+
+    /*
+     * Si el estado de la respuesta obtenida de validar el
+     * encabezado de autorizacion de una peticion HTTP NO
+     * es ACCEPTED, se devuelve el estado de error de la misma.
+     * 
+     * Que el estado de la respuesta obtenida de validar el
+     * encabezado de autorizacion de una peticion HTTP sea
+     * ACCEPTED, significa que la peticion es valida,
+     * debido a que el encabezado de autorizacion de la misma
+     * cumple las siguientes condiciones:
+     * - Esta presente.
+     * - No esta vacio.
+     * - Cumple con la convencion de JWT.
+     * - Contiene un JWT valido.
+     */
+    if (!RequestManager.isAccepted(givenResponse)) {
+      return givenResponse;
+    }
+
+    /*
+     * Si el valor del encabezado de autorizacion de la peticion HTTP
+     * dada, tiene un JWT valido, la aplicacion del lado servidor
+     * devuelve el mensaje HTTP 200 (Ok) junto con los datos solicitados
+     * por el cliente
+     */
+    return Response.status(Response.Status.OK).entity(mapper.writeValueAsString(service.find(id))).build();
   }
 
   @GET
@@ -55,7 +109,7 @@ public class UserRestServlet {
      * subyacente), la aplicacion del lado servidor devuelve a la aplicacion del lado
      * cliente, el mensaje HTTP 400 (BAD REQUEST)
      */
-    if (userService.findByUsername(username) == null) {
+    if (service.findByUsername(username) == null) {
       return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
@@ -65,7 +119,7 @@ public class UserRestServlet {
      * devuelve a la aplicacion del lado cliente, el mensaje HTTP 403 (FORBIDDEN)
      * con el mensaje "Acceso no autorizado"
      */
-    if (!userService.checkSuperuserPermission(username)) {
+    if (!service.checkSuperuserPermission(username)) {
       return Response.status(Response.Status.FORBIDDEN).entity(new PermissionResponse()).build();
     }
 

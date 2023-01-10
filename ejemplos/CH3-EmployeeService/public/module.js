@@ -209,5 +209,3 @@ app.factory('JwtManager', function ($window) {
 		}
 	}
 });
-
-// TODO: Proteger las peticiones que el usuario no debe realizar sin una sesion iniciada

@@ -48,15 +48,6 @@ public class UserServiceBean {
     return (Collection) query.getResultList();
   }
 
-  // TODO: Borrarlo, ya que el metodo authenticate hace lo mismo
-  public User validate(String username, String password) {
-    Query query = getEntityManager().createQuery("SELECT u FROM User u WHERE UPPER(u.username) = UPPER(:username) AND UPPER(u.password) = UPPER(:password)");
-    query.setParameter("username", username);
-    query.setParameter("password", password);
-
-    return (User) query.getSingleResult();
-  }
-
   /**
    * Busca un usuario en la base de datos subyacente mediante un nombre de usuario
    *

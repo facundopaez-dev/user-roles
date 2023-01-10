@@ -21,6 +21,9 @@ import model.Crop;
 import stateless.CropServiceBean;
 import stateless.SecretKeyServiceBean;
 import util.RequestManager;
+import utilJwt.AuthHeaderManager;
+import utilJwt.JwtManager;
+import utilPermission.PermissionResponse;
 
 @Path("/crop")
 public class CropRestServlet {
@@ -54,6 +57,23 @@ public class CropRestServlet {
      */
     if (!RequestManager.isAccepted(givenResponse)) {
       return givenResponse;
+    }
+
+    /*
+     * Obtiene el JWT del valor del encabezado de autorizacion
+     * de una peticion HTTP
+     */
+    String jwt = AuthHeaderManager.getJwt(AuthHeaderManager.getAuthHeaderValue(request));
+
+    /*
+     * Si el usuario que solicita esta operacion no tiene el permiso de
+     * administrador (superuser), la aplicacion del lado servidor devuelve
+     * el mensaje HTTP 403 (Forbidden) junto con el mensaje "Acceso no
+     * autorizado" (esta contenido en la clase PermissionResponse) y no
+     * se realiza la operacion solicitada
+     */
+    if (!JwtManager.getSuperuser(jwt, secretKeyService.find().getValue())) {
+      return Response.status(Response.Status.FORBIDDEN).entity(mapper.writeValueAsString(new PermissionResponse())).build();
     }
 
     /*
@@ -91,6 +111,23 @@ public class CropRestServlet {
     }
 
     /*
+     * Obtiene el JWT del valor del encabezado de autorizacion
+     * de una peticion HTTP
+     */
+    String jwt = AuthHeaderManager.getJwt(AuthHeaderManager.getAuthHeaderValue(request));
+
+    /*
+     * Si el usuario que solicita esta operacion no tiene el permiso de
+     * administrador (superuser), la aplicacion del lado servidor devuelve
+     * el mensaje HTTP 403 (Forbidden) junto con el mensaje "Acceso no
+     * autorizado" (esta contenido en la clase PermissionResponse) y no
+     * se realiza la operacion solicitada
+     */
+    if (!JwtManager.getSuperuser(jwt, secretKeyService.find().getValue())) {
+      return Response.status(Response.Status.FORBIDDEN).entity(mapper.writeValueAsString(new PermissionResponse())).build();
+    }
+
+    /*
      * Si el valor del encabezado de autorizacion de la peticion HTTP
      * dada, tiene un JWT valido, la aplicacion del lado servidor
      * devuelve el mensaje HTTP 200 (Ok) junto con los datos solicitados
@@ -121,6 +158,23 @@ public class CropRestServlet {
      */
     if (!RequestManager.isAccepted(givenResponse)) {
       return givenResponse;
+    }
+
+    /*
+     * Obtiene el JWT del valor del encabezado de autorizacion
+     * de una peticion HTTP
+     */
+    String jwt = AuthHeaderManager.getJwt(AuthHeaderManager.getAuthHeaderValue(request));
+
+    /*
+     * Si el usuario que solicita esta operacion no tiene el permiso de
+     * administrador (superuser), la aplicacion del lado servidor devuelve
+     * el mensaje HTTP 403 (Forbidden) junto con el mensaje "Acceso no
+     * autorizado" (esta contenido en la clase PermissionResponse) y no
+     * se realiza la operacion solicitada
+     */
+    if (!JwtManager.getSuperuser(jwt, secretKeyService.find().getValue())) {
+      return Response.status(Response.Status.FORBIDDEN).entity(mapper.writeValueAsString(new PermissionResponse())).build();
     }
 
     /*
@@ -159,6 +213,23 @@ public class CropRestServlet {
     }
 
     /*
+     * Obtiene el JWT del valor del encabezado de autorizacion
+     * de una peticion HTTP
+     */
+    String jwt = AuthHeaderManager.getJwt(AuthHeaderManager.getAuthHeaderValue(request));
+
+    /*
+     * Si el usuario que solicita esta operacion no tiene el permiso de
+     * administrador (superuser), la aplicacion del lado servidor devuelve
+     * el mensaje HTTP 403 (Forbidden) junto con el mensaje "Acceso no
+     * autorizado" (esta contenido en la clase PermissionResponse) y no
+     * se realiza la operacion solicitada
+     */
+    if (!JwtManager.getSuperuser(jwt, secretKeyService.find().getValue())) {
+      return Response.status(Response.Status.FORBIDDEN).entity(mapper.writeValueAsString(new PermissionResponse())).build();
+    }
+
+    /*
      * Si el valor del encabezado de autorizacion de la peticion HTTP
      * dada, tiene un JWT valido, la aplicacion del lado servidor
      * devuelve el mensaje HTTP 200 (Ok) junto con los datos que el
@@ -190,6 +261,23 @@ public class CropRestServlet {
      */
     if (!RequestManager.isAccepted(givenResponse)) {
       return givenResponse;
+    }
+
+    /*
+     * Obtiene el JWT del valor del encabezado de autorizacion
+     * de una peticion HTTP
+     */
+    String jwt = AuthHeaderManager.getJwt(AuthHeaderManager.getAuthHeaderValue(request));
+
+    /*
+     * Si el usuario que solicita esta operacion no tiene el permiso de
+     * administrador (superuser), la aplicacion del lado servidor devuelve
+     * el mensaje HTTP 403 (Forbidden) junto con el mensaje "Acceso no
+     * autorizado" (esta contenido en la clase PermissionResponse) y no
+     * se realiza la operacion solicitada
+     */
+    if (!JwtManager.getSuperuser(jwt, secretKeyService.find().getValue())) {
+      return Response.status(Response.Status.FORBIDDEN).entity(mapper.writeValueAsString(new PermissionResponse())).build();
     }
 
     /*

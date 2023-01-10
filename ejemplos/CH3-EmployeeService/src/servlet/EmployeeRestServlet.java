@@ -64,7 +64,7 @@ public class EmployeeRestServlet {
      * devuelve el mensaje HTTP 200 (Ok) junto con los datos solicitados
      * por el cliente
      */
-    return Response.status(Response.Status.OK).entity(service.findAllEmployees()).build();
+    return Response.status(Response.Status.OK).entity(mapper.writeValueAsString(service.findAllEmployees())).build();
   }
 
   @GET
@@ -98,7 +98,7 @@ public class EmployeeRestServlet {
      * devuelve el mensaje HTTP 200 (Ok) junto con los datos solicitados
      * por el cliente
      */
-    return Response.status(Response.Status.OK).entity(service.findEmployee(id)).build();
+    return Response.status(Response.Status.OK).entity(mapper.writeValueAsString(service.findEmployee(id))).build();
   }
 
   @POST
@@ -132,7 +132,7 @@ public class EmployeeRestServlet {
      * cliente solicito persistir
      */
     Employee newEmployee = mapper.readValue(json, Employee.class);
-    return Response.status(Response.Status.OK).entity(service.createEmployee(newEmployee)).build();
+    return Response.status(Response.Status.OK).entity(mapper.writeValueAsString(service.createEmployee(newEmployee))).build();
   }
 
   @DELETE
@@ -166,7 +166,7 @@ public class EmployeeRestServlet {
      * devuelve el mensaje HTTP 200 (Ok) junto con los datos que el
      * cliente solicito eliminar
      */
-    return Response.status(Response.Status.OK).entity(service.removeEmployee(id)).build();
+    return Response.status(Response.Status.OK).entity(mapper.writeValueAsString(service.removeEmployee(id))).build();
   }
 
   @PUT
@@ -200,7 +200,7 @@ public class EmployeeRestServlet {
      * devuelve el mensaje HTTP 200 (Ok) junto con los datos que el
      * cliente solicito actualizar
      */
-    return Response.status(Response.Status.OK).entity(service.changeEmployeeSalary(id, newSalary)).build();
+    return Response.status(Response.Status.OK).entity(mapper.writeValueAsString(service.changeEmployeeSalary(id, newSalary))).build();
   }
-  
+
 }

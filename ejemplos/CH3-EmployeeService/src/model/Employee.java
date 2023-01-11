@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Employee {
@@ -16,6 +18,10 @@ public class Employee {
 
   private String name;
   private long salary;
+
+  @ManyToOne
+  @JoinColumn(name = "FK_USER", nullable = false)
+  private User user;  
 
   public Employee() {}
 
@@ -47,8 +53,16 @@ public class Employee {
     this.salary = salary;
   }
 
+  public User getUser() {
+    return user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
+  }
+
   public String toString() {
     return "Employee id: " + id + " name: " + name + " salary: " + salary;
   }
-  
+
 }

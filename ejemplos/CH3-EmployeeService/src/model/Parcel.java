@@ -41,6 +41,10 @@ public class Parcel {
   @Column(name = "ACTIVE", nullable = false)
   private boolean active;
 
+  @ManyToOne
+  @JoinColumn(name = "FK_USER", nullable = false)
+  private User user;  
+
   public Parcel() {}
 
   public int getId() {
@@ -93,6 +97,14 @@ public class Parcel {
 
   public void setActive(boolean active) {
     this.active = active;
+  }
+
+  public User getUser() {
+    return user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
   }
 
   @Override

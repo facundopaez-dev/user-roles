@@ -36,6 +36,10 @@ public class PlantingRecord {
   private Calendar harvestDate;
 
   @ManyToOne
+  @JoinColumn(name = "FK_CROP", nullable = false)
+  private Crop crop;
+
+  @ManyToOne
   @JoinColumn(name = "FK_PARCEL", nullable = false)
   private Parcel parcel;
 
@@ -61,6 +65,14 @@ public class PlantingRecord {
   public void setHarvestDate(Calendar harvestDate) {
     this.harvestDate = harvestDate;
   }
+
+  public Crop getCrop() {
+    return crop;
+  }
+
+  public void setCrop(Crop crop) {
+    this.crop = crop;
+  }  
 
   public Parcel getParcel() {
     return parcel;

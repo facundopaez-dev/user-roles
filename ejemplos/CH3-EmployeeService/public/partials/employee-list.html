@@ -69,7 +69,8 @@
 			<tr>
 				<th>Id</th>
 				<th>Name</th>
-				<th class="text-right">Salary</th>
+				<th>Salary</th>
+				<th class="text-right">ID usuario</th>
 				<th></th>
 			</tr>
 		</thead>
@@ -77,7 +78,8 @@
 			<tr ng-repeat="e in data">
 				<td>{{e.id}}</td>
 				<td>{{e.name}}</td>
-				<td class="text-right">$ {{e.salary}}</td>
+				<td>${{e.salary}}</td>
+				<td class="text-right">{{e.user.id}}</td>
 				<td class="text-right">
 					<div class="btn-group" role="group" aria-label="...">
 						<a href="#!/home/employee/view/{{e.id}}" class="btn btn-default btn-xs" role="button">

@@ -9,7 +9,7 @@ import javax.persistence.Query;
 import model.Employee;
 
 @Stateless
-public class EmployeeServiceBean implements EmployeeService {
+public class EmployeeServiceBean {
 
   @PersistenceContext(unitName = "EmployeeService")
   protected EntityManager em;
@@ -58,8 +58,10 @@ public class EmployeeServiceBean implements EmployeeService {
     return getEntityManager().find(Employee.class, id);
   }
 
-  public Collection<Employee> findAllEmployees() {
-    Query query = getEntityManager().createQuery("SELECT e FROM Employee e");
+  public Collection<Employee> findAll(int userId) {
+    Query query = getEntityManager().createQuery("SELECT e FROM Employee e WHERE e.user.id = :userId");
+    query.setParameter("userId", userId);
+
     return (Collection) query.getResultList();
   }
   

@@ -209,3 +209,46 @@ app.factory('JwtManager', function ($window) {
 		}
 	}
 });
+
+/*
+AuthHeaderManager es la factory que se utiliza para establecer el
+JWT, del usuario que inicia sesion, en el encabezado de autorizacion
+de HTTP para cada peticion HTTP y eliminar el contenido de dicho
+encabezado cuando el usuario cierra su sesion
+*/
+app.factory('AuthHeaderManager', ['$http', 'JwtManager', function ($http, jwtManager) {
+	return {
+		/*
+		Cuando el usuario se autentica satisfactoriamente, se debe invocar
+		a esta funcion para establecer su JWT en el encabezado de autorizacion
+		HTTP para cada peticion HTTP que se realice, ya que se usa JWT para la
+		autenticacion, la autorizacion y las operaciones con datos.
+
+		Por convencion, se usa la palabra "Bearer" en el encabezado de
+		autorizacion de una peticion HTTP para indicar que se usa un
+		JWT para autenticacion (principalmente), y ademas y opcionalmente,
+		tambien para autorizacion.
+
+		Por lo tanto, si el primer valor del encabezado de autorizacion de
+		una peticion HTTP es la palabra "Bearer", entonces el segundo
+		valor es un JWT.
+		*/
+		setJwtAuthHeader: function () {
+			$http.defaults.headers.common.Authorization = 'Bearer ' + jwtManager.getJwt();
+		},
+
+		/*
+		Cuando el usuario cierra su sesion, se debe invocar a esta funcion
+		para eliminar el contenido del encabezado de autorizacion HTTP, ya
+		que si no se hace esto, cada peticion HTTP se realizara con el
+		mismo JWT independientemente de la cuenta que se utilice para
+		iniciar sesion, lo cual, producira que la aplicacion devuelva
+		datos que no son del usuario que tiene una sesion abierta. Por
+		lo tanto, no eliminar el contenido del encabezado de autorizacion
+		HTTP produce un comportamiento incorrecto por parte de la aplicacion.
+		*/
+		clearAuthHeader: function () {
+			$http.defaults.headers.common.Authorization = '';
+		}
+	}
+}]);

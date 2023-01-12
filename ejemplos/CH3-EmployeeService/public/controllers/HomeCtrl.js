@@ -1,7 +1,7 @@
 app.controller(
     "HomeCtrl",
-    ["$scope", "$rootScope", "$location", "$window", "AccessFactory", "JwtManager",
-        function ($scope, $rootScope, $location, $window, AccessFactory, jwtManger) {
+    ["$scope", "$rootScope", "$location", "AccessFactory", "JwtManager", "AuthHeaderManager",
+        function ($scope, $rootScope, $location, AccessFactory, jwtManger, authHeaderManager) {
 
             /*
             Para acceder a la pagina de inicio de la aplicacion, el usuario cliente
@@ -20,6 +20,16 @@ app.controller(
                 del almacenamiento de sesion del navegador web
                 */
                 jwtManger.removeJwt();
+
+                /*
+                Cuando el usuario cierra su sesion, se elimina el contenido
+                del encabezado de autorizacion HTTP, ya que de no hacerlo la
+                aplicacion usara el mismo JWT para todas las peticiones HTTP,
+                lo cual, producira que la aplicacion del lado servidor
+                devuelva datos que no pertenecen al usuario que tiene una
+                sesion abierta
+                */
+                authHeaderManager.clearAuthHeader();
 
                 /*
                 Cuando el usuario cliente cierra su sesion, se lo redirige a la pagina de

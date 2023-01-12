@@ -58,6 +58,22 @@ public class EmployeeServiceBean {
     return getEntityManager().find(Employee.class, id);
   }
 
+  /**
+   * Retorna el empleado de un usuario
+   * 
+   * @param userId
+   * @param employeeId
+   * @return referencia a un objeto de tipo Employee que contiene
+   * el ID de usuario y el ID de empleado dados
+   */
+  public Employee find(int userId, int employeeId) {
+    Query query = getEntityManager().createQuery("SELECT e FROM Employee e WHERE (e.id = :employeeId AND e.user.id = :userId)");
+    query.setParameter("employeeId", employeeId);
+    query.setParameter("userId", userId);
+
+    return (Employee) query.getSingleResult();
+  }
+
   public Collection<Employee> findAll(int userId) {
     Query query = getEntityManager().createQuery("SELECT e FROM Employee e WHERE e.user.id = :userId");
     query.setParameter("userId", userId);

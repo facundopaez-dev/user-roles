@@ -4,6 +4,7 @@ import java.util.Collection;
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import model.Employee;
@@ -72,6 +73,30 @@ public class EmployeeServiceBean {
     query.setParameter("userId", userId);
 
     return (Employee) query.getSingleResult();
+  }
+
+  /**
+   * Comprueba si un empleado pertenece a un usuario dado.
+   * 
+   * Retorna true si y solo si el empleado pertenece al usuario
+   * dado.
+   * 
+   * @param userId
+   * @param employeeId
+   * @return true si se encuentra el empleado con el ID y el ID
+   * de usuario provistos, false en caso contrario
+   */
+  public boolean checkUserOwnership(int userId, int employeeId) {
+    boolean result = false;
+
+    try {
+      find(userId, employeeId);
+      result = true;
+    } catch (NoResultException e) {
+      e.printStackTrace();
+    }
+
+    return result;
   }
 
   public Collection<Employee> findAll(int userId) {

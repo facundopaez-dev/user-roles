@@ -25,8 +25,11 @@ app.controller(
         servicio.find(id, function (error, data) {
           if (error) {
             console.log(error);
+            alert(error.data.message);
+            $location.path("/home/employee");
             return;
           }
+
           $scope.data = data;
         });
       }

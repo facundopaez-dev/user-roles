@@ -1,7 +1,7 @@
 app.controller(
     "AdminLoginCtrl",
-    ["$scope", "$location", "$window", "AuthSrv", "AccessFactory", "JwtManager",
-        function ($scope, $location, $window, authService, accessFactory, jwtManager) {
+    ["$scope", "$location", "AuthSrv", "AccessFactory", "JwtManager", "AuthHeaderManager",
+        function ($scope, $location, authService, accessFactory, jwtManager, authHeaderManager) {
 
             /*
             Si el administrador se autentico correctamente, su JWT esta
@@ -40,6 +40,13 @@ app.controller(
                     pagina de inicio del administrador.
                     */
                     jwtManager.setJwt(data.jwt);
+
+                    /*
+                    Cuando el administrador inicia sesion satisfactoriamente, se establece su JWT en el
+                    encabezado de autorizacion HTTP para todas las peticiones HTTP, ya que se usa
+                    JWT para la autenticacion, la autorizacion y las operaciones con datos
+                    */
+                    authHeaderManager.setJwtAuthHeader();
                     $location.path("/adminHome");
                 });
             }

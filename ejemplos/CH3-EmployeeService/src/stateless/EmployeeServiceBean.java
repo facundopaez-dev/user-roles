@@ -59,12 +59,24 @@ public class EmployeeServiceBean {
     return null;
   }
 
-  public Employee changeEmployeeSalary(int id, long newSalary) {
-    Employee emp = findEmployee(id);
-    if (emp != null) {
-      emp.setSalary(newSalary);
+  /**
+   * Modifica el salario de un empleado perteneciente a un usuario
+   * dado
+   * 
+   * @param userId
+   * @param employeeId
+   * @param newSalary
+   * @return referencia a un objeto de tipo Employee asociado a
+   * un usuario dado, que contiene el salario actualizado
+   */
+  public Employee modifySalary(int userId, int employeeId, long newSalary) {
+    Employee givenEmployee = find(userId, employeeId);
+
+    if (givenEmployee != null) {
+      givenEmployee.setSalary(newSalary);
     }
-    return emp;
+
+    return givenEmployee;
   }
 
   public Employee findEmployee(int id) {

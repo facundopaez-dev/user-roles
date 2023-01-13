@@ -1,7 +1,7 @@
 app.controller(
     "CropsCtrl",
-    ["$scope", "$location", "$window", "$route", "CropSrv", "UserSrv", "AccessFactory",
-        function ($scope, $location, $window, $route, service, userService, AccessFactory) {
+    ["$scope", "$location", "$route", "CropSrv", "AccessFactory",
+        function ($scope, $location, $route, service, AccessFactory) {
             console.log("CropsCtrl loaded...");
 
             /*
@@ -59,34 +59,6 @@ app.controller(
                 $location.path(AccessFactory.getAdminLoginRoute());
                 return;
             }
-
-            /*
-            Esta funcion comprueba que el usuario conectado tenga el permiso de super usuario
-            (administrador). Si el usuario conectado no tiene dicho permiso, se muestra el mensaje
-            "Acceso no autorizado" y se lo redirige a la pagina de inicio del usuario. En cambio,
-            si lo tiene, se muestra la pagina correspondiente a este controlador y se muestran
-            los botones de la barra de navegacion del administrador. La manera en la que se
-            muestran estos botones es asignando el valor true a la variable superuserPermission.
-            */
-            // function isSuperuser() {
-            //     /*
-            //     El contenido almacenado en el almacenamiento de sesion del navegador web es un string
-            //     en formato JSON, con lo cual, se lo debe convertir para poder accedr a sus propiedades
-            //     */
-            //     let data = JSON.parse($window.sessionStorage.getItem(AccessFactory.getKeyStore()));
-
-            //     userService.isSuperuser(data, function (error, data) {
-            //         if (error) {
-            //             alert(error.data.message);
-            //             $location.path("/home");
-            //             return;
-            //         }
-
-            //         $scope.superuserPermission = true;
-            //     })
-            // }
-
-            // isSuperuser();
 
 			/*
 			Si el flujo de ejecucion llega a este punto, se debe a que

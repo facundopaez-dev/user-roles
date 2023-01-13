@@ -23,15 +23,5 @@ app.service(
 					});
 			}
 
-			this.isSuperuser = function (data, callback) {
-				$http.get("rest/users/checkSuperuserPermission/" + data.username).then(
-					function (result) {
-						callback(false, result.data);
-					},
-					function (error) {
-						callback(error);
-					});
-			}
-
 		}
 	]);

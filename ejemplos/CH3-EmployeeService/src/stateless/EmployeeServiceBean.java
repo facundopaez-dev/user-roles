@@ -39,12 +39,24 @@ public class EmployeeServiceBean {
     return emp;
   }
 
-  public Employee removeEmployee(int id) {
-    Employee emp = findEmployee(id);
-    if (emp != null) {
-      getEntityManager().remove(emp);
-      return emp;
-    } else return null;
+  /**
+   * Elimina el empleado de un usuario dado
+   * 
+   * @param userId
+   * @param employeeId
+   * @return referencia a un ojeto de tipo Employee si el empleado
+   * a eliminar pertenece al usuario con el ID dado, null en caso
+   * contrario
+   */
+  public Employee remove(int userId, int employeeId) {
+    Employee givenEmployee = find(userId, employeeId);
+
+    if (givenEmployee != null) {
+      getEntityManager().remove(givenEmployee);
+      return givenEmployee;    
+    }
+
+    return null;
   }
 
   public Employee changeEmployeeSalary(int id, long newSalary) {

@@ -34,7 +34,7 @@ public class EmployeeServiceBean {
   //     return emp;
   // }
 
-  public Employee createEmployee(Employee emp) {
+  public Employee create(Employee emp) {
     getEntityManager().persist(emp);
     return emp;
   }

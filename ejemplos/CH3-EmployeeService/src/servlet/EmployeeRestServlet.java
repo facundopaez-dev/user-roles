@@ -22,6 +22,7 @@ import javax.ws.rs.core.Response.Status;
 import model.Employee;
 import stateless.EmployeeServiceBean;
 import stateless.SecretKeyServiceBean;
+import stateless.UserServiceBean;
 import util.RequestManager;
 import utilJwt.AuthHeaderManager;
 import utilJwt.JwtManager;
@@ -33,6 +34,7 @@ public class EmployeeRestServlet {
   // inject a reference to the EmployeeServiceBean slsb
   @EJB EmployeeServiceBean service;
   @EJB SecretKeyServiceBean secretKeyService;
+  @EJB UserServiceBean userService;
 
   //mapea lista de pojo a JSON
   ObjectMapper mapper = new ObjectMapper();
@@ -142,7 +144,7 @@ public class EmployeeRestServlet {
 
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
-  public Response createEmployee(@Context HttpHeaders request, String json) throws IOException {
+  public Response create(@Context HttpHeaders request, String json) throws IOException {
     Response givenResponse = RequestManager.validateAuthHeader(request, secretKeyService.find());
 
     /*
@@ -165,13 +167,27 @@ public class EmployeeRestServlet {
     }
 
     /*
+     * Obtiene el JWT del valor del encabezado de autorizacion
+     * de una peticion HTTP
+     */
+    String jwt = AuthHeaderManager.getJwt(AuthHeaderManager.getAuthHeaderValue(request));
+
+    /*
+     * Obtiene el ID de usuario contenido en la carga util del
+     * JWT del encabezado de autorizacion de una peticion HTTP
+     */
+    int userId = JwtManager.getUserId(jwt, secretKeyService.find().getValue());
+
+    /*
      * Si el valor del encabezado de autorizacion de la peticion HTTP
      * dada, tiene un JWT valido, la aplicacion del lado servidor
      * devuelve el mensaje HTTP 200 (Ok) junto con los datos que el
      * cliente solicito persistir
      */
     Employee newEmployee = mapper.readValue(json, Employee.class);
-    return Response.status(Response.Status.OK).entity(mapper.writeValueAsString(service.createEmployee(newEmployee))).build();
+    newEmployee.setUser(userService.find(userId));
+
+    return Response.status(Response.Status.OK).entity(mapper.writeValueAsString(service.create(newEmployee))).build();
   }
 
   @DELETE

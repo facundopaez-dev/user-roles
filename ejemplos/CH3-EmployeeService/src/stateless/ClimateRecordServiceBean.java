@@ -68,10 +68,20 @@ public class ClimateRecordServiceBean {
     return getEntityManager().find(ClimateRecord.class, id);
   }
 
-  public Collection<ClimateRecord> findAll() {
-    Query query = getEntityManager()
-      .createQuery("SELECT c FROM ClimateRecord c ORDER BY c.id");
+  /**
+   * Retorna los registros climaticos de las parcelas de un
+   * usuario
+   * 
+   * @param userId
+   * @return referencia a un objeto de tipo Collection que
+   * contiene los registros climaticos de las parcelas
+   * pertenecientes al usuario con el ID dado
+   */
+  public Collection<ClimateRecord> findAll(int userId) {
+    Query query = getEntityManager().createQuery("SELECT c FROM ClimateRecord c JOIN c.parcel p WHERE (p.user.id = :userId) ORDER BY c.id");
+    query.setParameter("userId", userId);
+
     return (Collection) query.getResultList();
   }
-  
+
 }

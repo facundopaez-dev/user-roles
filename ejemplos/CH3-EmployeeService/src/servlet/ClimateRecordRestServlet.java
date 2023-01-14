@@ -21,6 +21,8 @@ import model.ClimateRecord;
 import stateless.ClimateRecordServiceBean;
 import stateless.SecretKeyServiceBean;
 import util.RequestManager;
+import utilJwt.AuthHeaderManager;
+import utilJwt.JwtManager;
 
 @Path("/climateRecord")
 public class ClimateRecordRestServlet {
@@ -57,12 +59,24 @@ public class ClimateRecordRestServlet {
     }
 
     /*
+     * Obtiene el JWT del valor del encabezado de autorizacion
+     * de una peticion HTTP
+     */
+    String jwt = AuthHeaderManager.getJwt(AuthHeaderManager.getAuthHeaderValue(request));
+
+    /*
+     * Obtiene el ID de usuario contenido en la carga util del
+     * JWT del encabezado de autorizacion de una peticion HTTP
+     */
+    int userId = JwtManager.getUserId(jwt, secretKeyService.find().getValue());
+
+    /*
      * Si el valor del encabezado de autorizacion de la peticion HTTP
      * dada, tiene un JWT valido, la aplicacion del lado servidor
      * devuelve el mensaje HTTP 200 (Ok) junto con los datos solicitados
      * por el cliente
      */
-    return Response.status(Response.Status.OK).entity(mapper.writeValueAsString(service.findAll())).build();
+    return Response.status(Response.Status.OK).entity(mapper.writeValueAsString(service.findAll(userId))).build();
   }
 
   @GET

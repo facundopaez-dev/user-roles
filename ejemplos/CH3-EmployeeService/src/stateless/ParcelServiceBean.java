@@ -82,10 +82,16 @@ public class ParcelServiceBean {
     return entityManager.find(Parcel.class, id);
   }
 
-  public Collection<Parcel> findAll() {
-    Query query = entityManager.createQuery(
-      "SELECT p FROM Parcel p ORDER BY p.id"
-    );
+  /**
+   * Retorna las parcelas de un usuario
+   * 
+   * @param userId
+   * @return referencia a un objeto de tipo Collection que
+   * contiene todas las parcelas del usuario con el ID dado
+   */
+  public Collection<Parcel> findAll(int userId) {
+    Query query = entityManager.createQuery("SELECT p FROM Parcel p WHERE p.user.id = :userId ORDER BY p.id");
+    query.setParameter("userId", userId);
 
     return (Collection) query.getResultList();
   }

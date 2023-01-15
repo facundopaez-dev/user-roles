@@ -3,6 +3,7 @@ package stateless;
 import java.util.Collection;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import model.ClimateRecord;
@@ -69,6 +70,23 @@ public class ClimateRecordServiceBean {
   }
 
   /**
+   * Retorna un registro climatico perteneciente a una de las
+   * parcelas de un usuario
+   * 
+   * @param userId
+   * @param climateRecordId
+   * @return referencia a un objeto de tipo ClimateRecord perteneciente
+   * a una parcela del usuario con el ID dado
+   */
+  public ClimateRecord find(int userId, int climateRecordId) {
+    Query query = getEntityManager().createQuery("SELECT c FROM ClimateRecord c JOIN c.parcel p WHERE (c.id = :climateRecordId AND p.user.id = :userId)");
+    query.setParameter("climateRecordId", climateRecordId);
+    query.setParameter("userId", userId);
+
+    return (ClimateRecord) query.getSingleResult();
+  }
+
+  /**
    * Retorna los registros climaticos de las parcelas de un
    * usuario
    * 
@@ -82,6 +100,32 @@ public class ClimateRecordServiceBean {
     query.setParameter("userId", userId);
 
     return (Collection) query.getResultList();
+  }
+
+  /**
+   * Comprueba si un registro climatico pertenece a un usuario
+   * dado, mediante la relacion muchos a uno que hay entre los
+   * modelos de datos ClimateRecord y Parcel.
+   * 
+   * Retorna true si y solo si el registro climatico pertenece
+   * al usuario dado.
+   * 
+   * @param userId
+   * @param climateRecordId
+   * @return true si se encuentra el registro climatico con el
+   * ID y el ID de usuario provistos, false en caso contrario
+   */
+  public boolean checkUserOwnership(int userId, int climateRecordId) {
+    boolean result = false;
+
+    try {
+      find(userId, climateRecordId);
+      result = true;
+    } catch (NoResultException e) {
+      e.printStackTrace();
+    }
+
+    return result;
   }
 
 }

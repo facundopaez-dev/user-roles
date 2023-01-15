@@ -23,6 +23,7 @@ import stateless.SecretKeyServiceBean;
 import util.RequestManager;
 import utilJwt.AuthHeaderManager;
 import utilJwt.JwtManager;
+import utilPermission.PermissionResponse;
 
 @Path("/climateRecord")
 public class ClimateRecordRestServlet {
@@ -82,7 +83,7 @@ public class ClimateRecordRestServlet {
   @GET
   @Path("/{id}")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response find(@Context HttpHeaders request, @PathParam("id") int id) throws IOException {
+  public Response find(@Context HttpHeaders request, @PathParam("id") int climateRecordId) throws IOException {
     Response givenResponse = RequestManager.validateAuthHeader(request, secretKeyService.find());
 
     /*
@@ -105,12 +106,37 @@ public class ClimateRecordRestServlet {
     }
 
     /*
+     * Obtiene el JWT del valor del encabezado de autorizacion
+     * de una peticion HTTP
+     */
+    String jwt = AuthHeaderManager.getJwt(AuthHeaderManager.getAuthHeaderValue(request));
+
+    /*
+     * Obtiene el ID de usuario contenido en la carga util del
+     * JWT del encabezado de autorizacion de una peticion HTTP
+     */
+    int userId = JwtManager.getUserId(jwt, secretKeyService.find().getValue());
+
+    /*
+     * Si al usuario que hizo esta peticion HTTP, no le pertenece
+     * el registro climatico solicitado (debido a que ninguna de
+     * sus parcelas tiene el registro climatico solicitado), la
+     * aplicacion del lado servidor devuelve el mensaje HTTP 403
+     * (Forbidden) junto con el mensaje "Acceso no autorizado"
+     * (contenido en la clase PermissionResponse) y no se realiza
+     * la operacion solicitada
+     */
+    if (!service.checkUserOwnership(userId, climateRecordId)) {
+      return Response.status(Response.Status.FORBIDDEN).entity(mapper.writeValueAsString(new PermissionResponse())).build();
+    }
+
+    /*
      * Si el valor del encabezado de autorizacion de la peticion HTTP
      * dada, tiene un JWT valido, la aplicacion del lado servidor
      * devuelve el mensaje HTTP 200 (Ok) junto con los datos solicitados
      * por el cliente
      */
-    return Response.status(Response.Status.OK).entity(mapper.writeValueAsString(service.find(id))).build();
+    return Response.status(Response.Status.OK).entity(mapper.writeValueAsString(service.find(userId, climateRecordId))).build();
   }
 
   @POST

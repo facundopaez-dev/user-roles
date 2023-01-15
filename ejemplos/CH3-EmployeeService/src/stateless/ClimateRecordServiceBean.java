@@ -53,15 +53,18 @@ public class ClimateRecordServiceBean {
   }
 
   /**
-   * Modificar los valores de un registro climatico
+   * Modifica un registro climatico perteneciente a una parcela
+   * de un usuario
    *
-   * @param int id [ID del registro climatico a modificar]
-   * @param ClimateRecord modifiedClimateRecord [registro climatico con los valores con los que realizar la modificacion]
-   * @return referencia a un objeto de tipo ClimateRecord en caso de realizarse la modificacion, retorna null en caso no encontrar
-   * el registro climatico con el ID dado
+   * @param userId
+   * @param climateRecordId
+   * @param modifiedClimateRecord
+   * @return referencia a un objeto de tipo ClimateRecord si el registro climatico
+   * a modificar pertenece a una parcela de un usuario con el ID dado, null en caso
+   * contrario
    */
-  public ClimateRecord modify(int id, ClimateRecord modifiedClimateRecord) {
-    ClimateRecord chosenClimateRecord = find(id);
+  public ClimateRecord modify(int userId, int climateRecordId, ClimateRecord modifiedClimateRecord) {
+    ClimateRecord chosenClimateRecord = find(userId, climateRecordId);
 
     if (chosenClimateRecord != null) {
       chosenClimateRecord.setDate(modifiedClimateRecord.getDate());
@@ -73,10 +76,6 @@ public class ClimateRecordServiceBean {
     }
 
     return null;
-  }
-
-  public ClimateRecord find(int id) {
-    return getEntityManager().find(ClimateRecord.class, id);
   }
 
   /**

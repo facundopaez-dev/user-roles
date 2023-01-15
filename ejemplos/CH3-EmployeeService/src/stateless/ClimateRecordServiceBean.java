@@ -31,8 +31,18 @@ public class ClimateRecordServiceBean {
     return newClimateRecord;
   }
 
-  public ClimateRecord remove(int id) {
-    ClimateRecord givenClimateRecord = find(id);
+  /**
+   * Elimina el registro climatico perteneciente a una parcela
+   * de un usuario
+   * 
+   * @param userId
+   * @param climateRecordId
+   * @return referencia a un objeto de tipo ClimateRecord si el
+   * registro climatico a eliminar pertenece a una parcela del
+   * usuario con el ID dado, null en caso contrario
+   */
+  public ClimateRecord remove(int userId, int climateRecordId) {
+    ClimateRecord givenClimateRecord = find(userId, climateRecordId);
 
     if (givenClimateRecord != null) {
       getEntityManager().remove(givenClimateRecord);

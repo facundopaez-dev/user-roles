@@ -35,8 +35,9 @@ public class ParcelServiceBean {
    * 
    * @param userId
    * @param parcelId
-   * @return referencia a un objeto de tipo Parcel en
-   * caso de eliminar una parcela, null en caso contrario
+   * @return referencia a un objeto de tipo Parcel si la parcela
+   * a eliminar pertenece al usuario con el ID dado, null en
+   * caso contrario
    */
   public Parcel remove(int userId, int parcelId) {
     Parcel givenParcel = find(userId, parcelId);

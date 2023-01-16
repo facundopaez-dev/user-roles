@@ -21,6 +21,7 @@ import javax.ws.rs.core.Response.Status;
 import model.Parcel;
 import stateless.ParcelServiceBean;
 import stateless.SecretKeyServiceBean;
+import stateless.UserServiceBean;
 import util.RequestManager;
 import utilJwt.AuthHeaderManager;
 import utilJwt.JwtManager;
@@ -32,6 +33,7 @@ public class ParcelRestServlet {
   // inject a reference to the ParcelServiceBean slsb
   @EJB ParcelServiceBean service;
   @EJB SecretKeyServiceBean secretKeyService;
+  @EJB UserServiceBean userService;
 
   //mapea lista de pojo a JSON
   ObjectMapper mapper = new ObjectMapper();
@@ -164,12 +166,25 @@ public class ParcelRestServlet {
     }
 
     /*
+     * Obtiene el JWT del valor del encabezado de autorizacion
+     * de una peticion HTTP
+     */
+    String jwt = AuthHeaderManager.getJwt(AuthHeaderManager.getAuthHeaderValue(request));
+
+    /*
+     * Obtiene el ID de usuario contenido en la carga util del
+     * JWT del encabezado de autorizacion de una peticion HTTP
+     */
+    int userId = JwtManager.getUserId(jwt, secretKeyService.find().getValue());
+
+    /*
      * Si el valor del encabezado de autorizacion de la peticion HTTP
      * dada, tiene un JWT valido, la aplicacion del lado servidor
      * devuelve el mensaje HTTP 200 (Ok) junto con los datos que el
      * cliente solicito persistir
      */
     Parcel newParcel = mapper.readValue(json, Parcel.class);
+    newParcel.setUser(userService.find(userId));
 
     /*
      * La fecha de registro de la nueva parcela es la fecha

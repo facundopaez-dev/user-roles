@@ -3,6 +3,7 @@ package stateless;
 import java.util.Collection;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import model.Parcel;
@@ -80,6 +81,46 @@ public class ParcelServiceBean {
 
   public Parcel find(int id) {
     return entityManager.find(Parcel.class, id);
+  }
+
+  /**
+   * Retorna una parcela de un usuario
+   * 
+   * @param userId
+   * @param parcelId
+   * @return referencia a un objeto de tipo Parcel perteneciente
+   * al usuario con el ID dado
+   */
+  public Parcel find(int userId, int parcelId) {
+    Query query = entityManager.createQuery("SELECT p FROM Parcel p WHERE (p.id = :parcelId AND p.user.id = :userId)");
+    query.setParameter("parcelId", parcelId);
+    query.setParameter("userId", userId);
+
+    return (Parcel) query.getSingleResult();
+  }
+
+  /**
+   * Comprueba si una parcela pertenece a un usuario.
+   * 
+   * Retorna true si y solo si una parcela pertenece a un
+   * usuario.
+   * 
+   * @param userId
+   * @param parcelId
+   * @return true si se encuentra la parcela con el ID y el
+   * ID de usuario provistos, false en caso contrario
+   */
+  public boolean checkUserOwnership(int userId, int parcelId) {
+    boolean result = false;
+
+    try {
+      find(userId, parcelId);
+      result = true;
+    } catch (NoResultException e) {
+      e.printStackTrace();
+    }
+
+    return result;
   }
 
   /**

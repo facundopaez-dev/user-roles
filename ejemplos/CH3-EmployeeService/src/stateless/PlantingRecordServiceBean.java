@@ -76,8 +76,19 @@ public class PlantingRecordServiceBean {
     return null;
   }
 
-  public Collection<PlantingRecord> findAll() {
-    Query query = getEntityManager().createQuery("SELECT p FROM PlantingRecord p");
+  /**
+   * Retorna los registros de plantacion de las parcelas
+   * de un usuario
+   * 
+   * @param userId
+   * @return referencia a un objeto de tipo Collection que
+   * contiene los registros de plantacion de las parcelas
+   * del usuario con el ID dado
+   */
+  public Collection<PlantingRecord> findAll(int userId) {
+    Query query = getEntityManager().createQuery("SELECT r FROM PlantingRecord r JOIN r.parcel p WHERE (p.user.id = :userId) ORDER BY r.id");
+    query.setParameter("userId", userId);
+
     return (Collection) query.getResultList();
   }
 

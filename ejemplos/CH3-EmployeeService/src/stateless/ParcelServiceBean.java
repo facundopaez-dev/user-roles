@@ -50,15 +50,17 @@ public class ParcelServiceBean {
   }
 
   /**
-   * Actualiza o modifica la entidad asociada al id dado
+   * Modifica una parcela de un usuario
    *
-   * @param  id
-   * @param  modifiedParcel
-   * @return un valor no nulo en caso de modificar la entidad solicitada
-   * mediante el id, en caso contrario retorna un valor nulo
+   * @param userId
+   * @param parcelId
+   * @param modifiedParcel
+   * @return referencia a un objeto de tipo Parcel si se modifica
+   * la parcela con el ID y el ID de usuario provistos, null en
+   * caso contrario
    */
-  public Parcel modify(int id, Parcel modifiedParcel) {
-    Parcel choosenParcel = find(id);
+  public Parcel modify(int userId, int parcelId, Parcel modifiedParcel) {
+    Parcel choosenParcel = find(userId, parcelId);
 
     if (choosenParcel != null) {
       /*
@@ -78,10 +80,6 @@ public class ParcelServiceBean {
     }
 
     return null;
-  }
-
-  public Parcel find(int id) {
-    return entityManager.find(Parcel.class, id);
   }
 
   /**

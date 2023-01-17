@@ -169,6 +169,76 @@ app.factory('AccessFactory', function ($window) {
 });
 
 /*
+AccessManager es la factory que se utiliza para controlar el acceso a
+las paginas web dependiendo si el usuario tiene una sesion abierta o no,
+y si tiene permiso de administrador o no
+*/
+app.factory('AccessManager', ['JwtManager', function (jwtManager) {
+	/*
+	Esta variable se utiliza para evitar que un administrador con una sesion
+	abierta como administrador, acceda a las paginas web a las que accede
+	un usuario. De esta manera, un administrador debe cerra la sesion que
+	abrio a traves de la pagina web de inicio de sesion de administrador, y
+	luego abrir una sesion a traves de la pagina web de inicio de sesion de
+	usuario, para acceder a las paginas web a las que accede un usuario.
+	*/
+	var loggedAsSuperuser = false;
+
+	return {
+		/**
+		 * Cuando el usuario inicia sesion satisfactoriamente, la aplicacion
+		 * del lado servidor devuelve un JWT, el cual, es almacenado en el
+		 * almacenamiento de sesion del navegador web por la funcion setJwt
+		 * de la factory JwtManager
+		 * 
+		 * @returns true si el usuario tiene una sesion abierta, false
+		 * en caso contrario
+		 */
+		isUserLoggedIn: function () {
+			/*
+			Si el valor devuelto por getJwt NO es null, se retorna
+			el valor booleano true
+			*/
+			if (jwtManager.getJwt()) {
+				return true;
+			}
+
+			return false;
+		},
+
+		/**
+		 * Cuando el usuario que inicia sesion tiene permiso de administrador,
+		 * la variable booleana loggedAsSuperuser se establece en true.
+		 * 
+		 * Cuando el usuario que cierra su sesion tiene permiso de administrador,
+		 * la variable booleana loggedAsSuperuser se establece en false.
+		 * 
+		 * @returns true si el usuario que tiene una sesion abierta tiene
+		 * permiso de administrador, false en caso contrario
+		 */
+		loggedAsAdmin: function () {
+			return loggedAsSuperuser;
+		},
+
+		/**
+		 * Esta funcion debe ser invocada cuando el usuario que inicia sesion,
+		 * tiene permiso de administrador
+		 */
+		setAsAdmin: function () {
+			loggedAsSuperuser = true;
+		},
+
+		/**
+		 * Esta funcion debe ser invocada cuando el usuario que cierra su sesion,
+		 * tiene permiso de administrador
+		 */
+		clearAsAdmin: function () {
+			loggedAsSuperuser = false;
+		}
+	}
+}]);
+
+/*
 JwtManager es la factory que se utiliza para el almacenamiento,
 obtencion y eliminacion de JWT
 */

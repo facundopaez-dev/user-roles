@@ -68,6 +68,7 @@
         <thead>
             <tr>
                 <th>Id</th>
+                <th>Cultivo</th>
                 <th>Fecha de siembra</th>
                 <th>Fecha de cosecha</th>
                 <th>Parcela</th>
@@ -77,6 +78,7 @@
         <tbody>
             <tr ng-repeat="plantingRecord in plantingRecords">
                 <td>{{plantingRecord.id}}</td>
+                <td>{{plantingRecord.crop.name}}</td>
                 <td>{{plantingRecord.seedDate | date:'dd/MM/yyyy'}}</td>
                 <td>{{plantingRecord.harvestDate | date:'dd/MM/yyyy'}}</td>
                 <td>{{plantingRecord.parcel.name}}</td>

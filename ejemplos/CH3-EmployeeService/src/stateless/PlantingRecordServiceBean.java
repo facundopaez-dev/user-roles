@@ -55,24 +55,24 @@ public class PlantingRecordServiceBean {
   }
 
   /**
-   * Modifica los valores de un registro de plantacion identificado con el ID dado
-   * @param  id
-   * @param  modifiedPlantingRecord
-   * @return referencia a un objeto de tipo PlantingRecord con los datos modificados si se
-   * encuentra el registro de plantacion con el identificador dado, en caso contrario retorna null
+   * Modifica un registro de plantacion perteneciente a una parcela
+   * de un usuario
+   * 
+   * @param userId
+   * @param plantingRecordId
+   * @param modifiedPlantingRecord
+   * @return referencia a un objeto de tipo PlantingRecord si el registro de plantacion
+   * a modificar pertenece a una parcela del usuario con el ID dado, null en caso
+   * contrario
    */
-  public PlantingRecord modify(int id, PlantingRecord modifiedPlantingRecord) {
-    PlantingRecord choosenInstance = find(id);
+  public PlantingRecord modify(int userId, int plantingRecordId, PlantingRecord modifiedPlantingRecord) {
+    PlantingRecord choosenPlantingRecord = find(userId, plantingRecordId);
 
-    if (choosenInstance != null) {
-      if (choosenInstance.getId() != modifiedPlantingRecord.getId()) {
-        return null;
-      }
-
-      choosenInstance.setSeedDate(modifiedPlantingRecord.getSeedDate());
-      choosenInstance.setHarvestDate(modifiedPlantingRecord.getHarvestDate());
-      choosenInstance.setParcel(modifiedPlantingRecord.getParcel());
-      return choosenInstance;
+    if (choosenPlantingRecord != null) {
+      choosenPlantingRecord.setSeedDate(modifiedPlantingRecord.getSeedDate());
+      choosenPlantingRecord.setHarvestDate(modifiedPlantingRecord.getHarvestDate());
+      choosenPlantingRecord.setParcel(modifiedPlantingRecord.getParcel());
+      return choosenPlantingRecord;
     }
 
     return null;
@@ -92,16 +92,6 @@ public class PlantingRecordServiceBean {
     query.setParameter("userId", userId);
 
     return (Collection) query.getResultList();
-  }
-
-  /**
-   * @param  id [ID de un registro de plantacion]
-   * @return referencia a un objeto de tipo PlantingRecord en caso de encontrar
-   * en la base de datos subyacente el registro de plantacion con el ID dado, en caso
-   * contrario retorna null
-   */
-  public PlantingRecord find(int id) {
-    return entityManager.find(PlantingRecord.class, id);
   }
 
   /**

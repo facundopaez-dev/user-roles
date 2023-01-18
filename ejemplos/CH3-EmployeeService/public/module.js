@@ -114,7 +114,7 @@ app.factory('AccessManager', ['JwtManager', function (jwtManager) {
 	/*
 	Esta variable se utiliza para evitar que un administrador con una sesion
 	abierta como administrador, acceda a las paginas web a las que accede
-	un usuario. De esta manera, un administrador debe cerra la sesion que
+	un usuario. De esta manera, un administrador debe cerrar la sesion que
 	abrio a traves de la pagina web de inicio de sesion de administrador, y
 	luego abrir una sesion a traves de la pagina web de inicio de sesion de
 	usuario, para acceder a las paginas web a las que accede un usuario.

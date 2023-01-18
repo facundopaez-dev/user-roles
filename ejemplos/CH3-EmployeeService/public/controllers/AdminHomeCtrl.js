@@ -1,7 +1,7 @@
 app.controller(
     "AdminHomeCtrl",
-    ["$scope", "$rootScope", "$location", "AccessFactory", "JwtManager", "AuthHeaderManager",
-        function ($scope, $rootScope, $location, AccessFactory, jwtManager, authHeaderManager) {
+    ["$scope", "$rootScope", "$location", "JwtManager", "AuthHeaderManager", "AccessManager",
+        function ($scope, $rootScope, $location, jwtManager, authHeaderManager, accessManager) {
 
             /*
             Esta variable se utiliza para mostrar u ocultar los botones de la barra de
@@ -13,13 +13,12 @@ app.controller(
             $scope.superuserPermission = true;
 
             /*
-            Para acceder a la pagina de inicio del administrador, este tiene que
-            iniciar sesion, por lo tanto, si no tiene una sesion abierta, se le
-            debe impedir el acceso a esta pagina y se lo debe redirigir a la pagina
+            Si el administrador no tiene una sesion abierta, no se le da acceso
+            a la pagina de inicio del administrador y se lo redirige a la pagina
             de inicio de sesion del administrador
             */
-            if (!AccessFactory.isUserLoggedIn()) {
-                $location.path(AccessFactory.getAdminLoginRoute());
+            if (!accessManager.isUserLoggedIn()) {
+                $location.path("/admin");
                 return;
             }
 
@@ -40,7 +39,7 @@ app.controller(
                 Cuando el administrador cierra su sesion, se lo redirige a la pagina de
                 inicio de sesion del administrador
                 */
-                $location.path(AccessFactory.getAdminLoginRoute());
+                $location.path("/admin");
             }
 
             /*

@@ -1,18 +1,20 @@
 app.controller(
     "PlantingRecordCtrl",
-    ["$scope", "$route", "$location", "$routeParams", "PlantingRecordSrv", "ParcelSrv", "AccessFactory",
-        function ($scope, $route, $location, $params, service, parcelService, AccessFactory) {
+    ["$scope", "$route", "$location", "$routeParams", "PlantingRecordSrv", "ParcelSrv", "AccessManager",
+        function ($scope, $route, $location, $params, service, parcelService, accessManager) {
 
             console.log("PlantingRecordCtrl cargado, accion: " + $params.action);
 
             /*
-            Para crear, editar y ver un registro de plantacion, el usuario tiene que
-            iniciar sesion, por lo tanto, si no tiene una sesion abierta,
-            se le debe impedir el acceso a las rutas de creacion, edicion
-            y visualizacion de un registro de plantacion
+            Con el uso de JWT se evita que el usuario cree, edite o visualice
+            un dato, correspondiente a este controller, sin tener una sesion
+            abierta, pero sin este control, el usuario puede acceder la pagina
+            de inicio sin tener una sesion abierta. Por lo tanto, si el
+            usuario NO tiene una sesion abierta, se le impide el acceso a la
+            pagina de inicio y se lo redirige a la pagina de inicio de sesion.
             */
-            if (!AccessFactory.isUserLoggedIn()) {
-                $location.path(AccessFactory.getLoginRoute());
+            if (!accessManager.isUserLoggedIn()) {
+                $location.path("/");
                 return;
             }
 

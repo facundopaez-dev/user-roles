@@ -1,7 +1,7 @@
 app.controller(
     "CropsCtrl",
-    ["$scope", "$location", "$route", "CropSrv", "AccessFactory",
-        function ($scope, $location, $route, service, AccessFactory) {
+    ["$scope", "$location", "$route", "CropSrv", "AccessManager",
+        function ($scope, $location, $route, service, accessManager) {
             console.log("CropsCtrl loaded...");
 
             /*
@@ -50,13 +50,15 @@ app.controller(
             }
 
             /*
-            Para ver el listado de cultivos, el administrador tiene que iniciar sesion,
-            por lo tanto, si no tiene una sesion abierta, se le debe impedir el acceso
-            a la pagina de listado de cultivos y se lo debe redirigir a la pagina de
-            inicio de sesion del administrador
+            Con el uso de JWT se evita que el administrador visualice el listado de
+            los datos correspondientes a este controller sin tener una sesion
+            abierta, pero sin este control, el administrador puede acceder a la pagina
+            de inicio sin tener una sesion abierta. Por lo tanto, si el administrador
+            NO tiene una sesion abierta, se le impide el acceso a la pagina de inicio
+            y se lo redirige a la pagina de inicio de sesion del administrador.
             */
-            if (!AccessFactory.isUserLoggedIn()) {
-                $location.path(AccessFactory.getAdminLoginRoute());
+            if (!accessManager.isUserLoggedIn()) {
+                $location.path("/admin");
                 return;
             }
 

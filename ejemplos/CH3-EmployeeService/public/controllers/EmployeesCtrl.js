@@ -1,7 +1,7 @@
 app.controller(
 	"EmployeesCtrl",
-	["$scope", "$location", "$route", "EmployeeSrv", "AccessFactory",
-		function ($scope, $location, $route, servicio, AccessFactory) {
+	["$scope", "$location", "$route", "EmployeeSrv", "AccessManager",
+		function ($scope, $location, $route, servicio, accesManager) {
 			console.log("EmployeesCtrl loaded...")
 
 			function findAll() {
@@ -40,14 +40,16 @@ app.controller(
 				$scope.$emit("CallLogout", {});
 			}
 
-			/*
-			Para ver el listado de empleados, el usuario tiene que iniciar sesion,
-			por lo tanto, si no tiene una sesion abierta, se le debe impedir el acceso
-			a la pagina de listado de empleados y se lo debe redirigir a la pagina de
-			inicio de sesion
-			*/
-			if (!AccessFactory.isUserLoggedIn()) {
-				$location.path(AccessFactory.getLoginRoute());
+            /*
+            Con el uso de JWT se evita que el usuario visualice el listado de
+            los datos correspondientes a este controller sin tener una sesion
+            abierta, pero sin este control, el usuario puede acceder a la pagina
+            de inicio sin tener una sesion abierta. Por lo tanto, si el usuario
+            NO tiene una sesion abierta, se le impide el acceso a la pagina de
+            inicio y se lo redirige a la pagina de inicio de sesion.
+            */
+			if (!accesManager.isUserLoggedIn()) {
+				$location.path("/");
 				return;
 			}
 

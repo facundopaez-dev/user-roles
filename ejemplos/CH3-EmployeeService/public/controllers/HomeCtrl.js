@@ -1,16 +1,16 @@
 app.controller(
     "HomeCtrl",
-    ["$scope", "$rootScope", "$location", "AccessFactory", "JwtManager", "AuthHeaderManager",
-        function ($scope, $rootScope, $location, AccessFactory, jwtManger, authHeaderManager) {
+    ["$scope", "$rootScope", "$location", "JwtManager", "AuthHeaderManager", "AccessManager",
+        function ($scope, $rootScope, $location, jwtManger, authHeaderManager, accessManager) {
+
 
             /*
-            Para acceder a la pagina de inicio de la aplicacion, el usuario cliente
-            tiene que iniciar sesion, por lo tanto, si no tiene una sesion abierta,
-            se le debe impedir el acceso a esta pagina y se lo debe redigir a la
-            pagina de inicio de sesion
+            Si el usuario no tiene una sesion abierta, no se le da acceso
+            a la pagina de inicio y se lo redirige a la pagina de inicio
+            de sesion
             */
-            if (!AccessFactory.isUserLoggedIn()) {
-                $location.path(AccessFactory.getLoginRoute());
+            if (!accessManager.isUserLoggedIn()) {
+                $location.path("/");
                 return;
             }
 
@@ -35,7 +35,7 @@ app.controller(
                 Cuando el usuario cliente cierra su sesion, se lo redirige a la pagina de
                 inicio de sesion
                 */
-                $location.path(AccessFactory.getLoginRoute());
+                $location.path("/");
             }
 
             /*

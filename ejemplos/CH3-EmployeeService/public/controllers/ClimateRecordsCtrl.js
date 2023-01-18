@@ -1,7 +1,7 @@
 app.controller(
     "ClimateRecordsCtrl",
-    ["$scope", "$location", "$route", "ClimateRecordSrv", "AccessFactory",
-        function ($scope, $location, $route, service, AccessFactory) {
+    ["$scope", "$location", "$route", "ClimateRecordSrv", "AccessManager",
+        function ($scope, $location, $route, service, accessManager) {
             console.log("ClimateRecordsCtrl cargado...")
 
             function findAll() {
@@ -41,14 +41,16 @@ app.controller(
                 $scope.$emit("CallLogout", {});
             }
 
-			/*
-			Para ver el listado de registros climaticos, el usuario tiene que iniciar sesion,
-			por lo tanto, si no tiene una sesion abierta, se le debe impedir el acceso
-			a la pagina de listado de registros climaticos y se lo debe redirigir a la pagina de
-			inicio de sesion
-			*/
-            if (!AccessFactory.isUserLoggedIn()) {
-                $location.path(AccessFactory.getLoginRoute());
+            /*
+            Con el uso de JWT se evita que el usuario visualice el listado de
+            los datos correspondientes a este controller sin tener una sesion
+            abierta, pero sin este control, el usuario puede acceder a la pagina
+            de inicio sin tener una sesion abierta. Por lo tanto, si el usuario
+            NO tiene una sesion abierta, se le impide el acceso a la pagina de
+            inicio y se lo redirige a la pagina de inicio de sesion.
+            */
+            if (!accessManager.isUserLoggedIn()) {
+                $location.path("/");
                 return;
             }
 

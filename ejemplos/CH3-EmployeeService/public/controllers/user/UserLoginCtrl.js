@@ -1,17 +1,17 @@
 app.controller(
     "UserLoginCtrl",
-    ["$scope", "$location", "AuthSrv", "AccessFactory", "JwtManager", "AuthHeaderManager",
-        function ($scope, $location, authService, accessFactory, jwtManager, authHeaderManager) {
+    ["$scope", "$location", "AuthSrv", "JwtManager", "AuthHeaderManager", "AccessManager",
+        function ($scope, $location, authService, jwtManager, authHeaderManager, accessManager) {
 
             /*
-            Si el usuario se autentico correctamente, su JWT esta
-            almacenado en el almacenamiento de sesion del navegador web.
-            Por lo tanto, si el usuario presiona el boton de retroceso del
-            navegador web, se lo redirecciona a la pagina de inicio (home)
+            Este control es para evitar que el usuario que tiene una
+            sesion abierta, vuelva a la pagina de inicio de sesion al
+            presionar el boton de retroceso.
+
+            Si el usuario tiene una sesion abierta y presiona el boton de
+            retroceso, se lo redirige a la pagina de inicio (home).
             */
-            if (accessFactory.isUserLoggedIn()) {
-                console.log("Usuario con sesion ya iniciada");
-                console.log("Redireccionamiento a home (pagina de inicio)");
+            if (accessManager.isUserLoggedIn()) {
                 $location.path("/home");
                 return;
             }

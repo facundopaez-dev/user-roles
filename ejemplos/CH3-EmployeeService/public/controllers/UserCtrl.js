@@ -1,7 +1,7 @@
 app.controller(
     "UserCtrl",
-    ["$scope", "$location", "$routeParams", "UserSrv", "AccessFactory",
-        function ($scope, $location, $params, service, AccessFactory) {
+    ["$scope", "$location", "$routeParams", "UserSrv", "AccessManager",
+        function ($scope, $location, $params, service, accessManager) {
 
             console.log("UserCtrl cargado, accion: " + $params.action);
 
@@ -14,13 +14,16 @@ app.controller(
             $scope.superuserPermission = true;
 
             /*
-            Para ver un usuario y modificar su permiso, el administrador tiene que
-            iniciar sesion, por lo tanto, si no tiene una sesion abierta, se le debe
-            impedir el acceso a las paginas de visualizacion de un usuario y modificacion
-            del permiso del mismo
+            Con el uso de JWT se evita que el administrador cree, edite o visualice
+            un dato, correspondiente a este controller, sin tener una sesion
+            abierta, pero sin este control, el administrador puede acceder la pagina
+            de inicio sin tener una sesion abierta. Por lo tanto, si el
+            administrador NO tiene una sesion abierta, se le impide el acceso a la
+            pagina de inicio y se lo redirige a la pagina de inicio de sesion del
+            administrador.
             */
-            if (!AccessFactory.isUserLoggedIn()) {
-                $location.path(AccessFactory.getAdminLoginRoute());
+            if (!accessManager.isUserLoggedIn()) {
+                $location.path("/admin");
                 return;
             }
 

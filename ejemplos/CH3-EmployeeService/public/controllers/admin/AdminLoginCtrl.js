@@ -1,18 +1,18 @@
 app.controller(
     "AdminLoginCtrl",
-    ["$scope", "$location", "AuthSrv", "AccessFactory", "JwtManager", "AuthHeaderManager",
-        function ($scope, $location, authService, accessFactory, jwtManager, authHeaderManager) {
+    ["$scope", "$location", "AuthSrv", "JwtManager", "AuthHeaderManager", "AccessManager",
+        function ($scope, $location, authService, jwtManager, authHeaderManager, accessManager) {
 
             /*
-            Si el administrador se autentico correctamente, su JWT esta
-            almacenado en el almacenamiento de sesion del navegador web.
-            Por lo tanto, si el administrador presiona el boton de retroceso del
-            navegador web, se lo redirecciona a la pagina de inicio del administrador
-            (admin home)
+            Este control es para evitar que el administrador que tiene una
+            sesion abierta, vuelva a la pagina de inicio de sesion de
+            administrador al presionar el boton de retroceso.
+
+            Si el administrador tiene una sesion abierta y presiona el boton de
+            retroceso, se lo redirige a la pagina de inicio del administrador
+            (admin-home).
             */
-            if (accessFactory.isUserLoggedIn()) {
-                console.log("Administrador con sesion ya iniciada");
-                console.log("Redireccionamiento al admin home (pagina de inicio del administrador)");
+            if (accessManager.isUserLoggedIn()) {
                 $location.path("/adminHome");
                 return;
             }

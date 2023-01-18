@@ -1,18 +1,20 @@
 app.controller(
     "ParcelCtrl",
-    ["$scope", "$location", "$routeParams", "ParcelSrv", "AccessFactory",
-        function ($scope, $location, $params, service, AccessFactory) {
+    ["$scope", "$location", "$routeParams", "ParcelSrv", "AccessManager",
+        function ($scope, $location, $params, service, accessManager) {
 
             console.log("ParcelCtrl loaded with action: " + $params.action);
 
             /*
-            Para crear, editar y ver una parcela, el usuario tiene que
-            iniciar sesion, por lo tanto, si no tiene una sesion abierta,
-            se le debe impedir el acceso a las rutas de creacion, edicion
-            y visualizacion de una parcela
+            Con el uso de JWT se evita que el usuario cree, edite o visualice
+            un dato, correspondiente a este controller, sin tener una sesion
+            abierta, pero sin este control, el usuario puede acceder la pagina
+            de inicio sin tener una sesion abierta. Por lo tanto, si el
+            usuario NO tiene una sesion abierta, se le impide el acceso a la
+            pagina de inicio y se lo redirige a la pagina de inicio de sesion.
             */
-            if (!AccessFactory.isUserLoggedIn()) {
-                $location.path(AccessFactory.getLoginRoute());
+            if (!accessManager.isUserLoggedIn()) {
+                $location.path("/");
                 return;
             }
 

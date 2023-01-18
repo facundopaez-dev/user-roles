@@ -1,7 +1,7 @@
 app.controller(
 	"UsersCtrl",
-	["$scope", "$location", "UserSrv", "AccessFactory",
-		function ($scope, $location, service, AccessFactory) {
+	["$scope", "$location", "UserSrv", "AccessManager",
+		function ($scope, $location, service, accessManager) {
 			console.log("UsersCtrl loaded...")
 
             /*
@@ -36,13 +36,15 @@ app.controller(
             }
 
             /*
-            Para ver el listado de usuarios registrados en el sistema, el administrador
-			tiene que iniciar sesion, por lo tanto, si no tiene una sesion abierta, se le
-			debe impedir el acceso a la pagina de listado de usuarios registrados en el
-			sistema y se lo debe redirigir a la pagina de inicio de sesion del administrador
+            Con el uso de JWT se evita que el administrador visualice el listado de
+            los datos correspondientes a este controller sin tener una sesion
+            abierta, pero sin este control, el administrador puede acceder a la pagina
+            de inicio sin tener una sesion abierta. Por lo tanto, si el administrador
+            NO tiene una sesion abierta, se le impide el acceso a la pagina de inicio
+            y se lo redirige a la pagina de inicio de sesion del administrador.
             */
-            if (!AccessFactory.isUserLoggedIn()) {
-                $location.path(AccessFactory.getAdminLoginRoute());
+            if (!accessManager.isUserLoggedIn()) {
+                $location.path("/admin");
                 return;
             }
 

@@ -79,7 +79,24 @@ app.controller(
 
       $scope.action = $params.action;
 
-      if ($scope.action == 'edit' || $scope.action == 'view') {
+      if ($scope.action == 'new' || $scope.action == 'edit' || $scope.action == 'view') {
+        /*
+        Si el usuario que tiene una sesion abierta tiene permiso de
+        administrador, se lo redirige a la pagina de inicio del
+        administrador. De esta manera, un administrador debe cerrar
+        la sesion que abrio a traves de la pagina web de inicio de sesion
+        del administrador, y luego abrir una sesion a traves de la pagina
+        web de inicio de sesion del usuario para poder acceder a la pagina web
+        de creacion, edicion o visualizacion de un dato correspondiente
+        a este controller.
+        */
+        if (accessManager.isUserLoggedIn() && accessManager.loggedAsAdmin()) {
+            $location.path("/adminHome");
+            return;
+        }
+    }
+
+    if ($scope.action == 'edit' || $scope.action == 'view') {
         find($params.id);
       }
 

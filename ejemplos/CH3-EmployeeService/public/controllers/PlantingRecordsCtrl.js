@@ -67,6 +67,20 @@ app.controller(
             }
 
             /*
+            Si el usuario que tiene una sesion abierta tiene permiso de
+            administrador, se lo redirige a la pagina de inicio del
+            administrador. De esta manera, un administrador debe cerrar
+            la sesion que abrio a traves de la pagina web de inicio de sesion
+            del administrador, y luego abrir una sesion a traves de la pagina
+            web de inicio de sesion del usuario para poder acceder a la pagina web
+            de listado de los datos correspondientes a este controller.
+            */
+            if (accessManager.isUserLoggedIn() && accessManager.loggedAsAdmin()) {
+                $location.path("/adminHome");
+                return;
+            }
+
+            /*
             Si el flujo de ejecucion llega a este punto, se debe a que
             el usuario inicio sesion, por lo tanto, se debe mostrar
             esta lista

@@ -14,6 +14,20 @@ app.controller(
                 return;
             }
 
+            /*
+            Si el usuario que tiene una sesion abierta tiene permiso de
+            administrador, se lo redirige a la pagina de inicio del
+            administrador. De esta manera, un administrador debe cerrar
+            la sesion que abrio a traves de la pagina web de inicio de sesion
+            del administrador, y luego abrir una sesion a traves de la pagina
+            web de inicio de sesion del usuario para poder acceder a la pagina
+            de inicio del usuario.
+            */
+            if (accessManager.isUserLoggedIn() && accessManager.loggedAsAdmin()) {
+                $location.path("/adminHome");
+                return;
+            }
+
             $scope.logout = function () {
                 /*
                 Cuando el usuario cliente cierra su sesion, se elimina su JWT

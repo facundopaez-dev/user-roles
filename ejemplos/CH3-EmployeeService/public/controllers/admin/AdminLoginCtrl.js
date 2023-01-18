@@ -47,6 +47,12 @@ app.controller(
                     JWT para la autenticacion, la autorizacion y las operaciones con datos
                     */
                     authHeaderManager.setJwtAuthHeader();
+
+                    /*
+                    Cuando un administrador inicia sesion, se establece una variable booleana en true
+                    para controlar su acceso a las paginas web a las que accede un usuario
+                    */
+                    accessManager.setAsAdmin();
                     $location.path("/adminHome");
                 });
             }

@@ -36,6 +36,15 @@ app.controller(
                 authHeaderManager.clearAuthHeader();
 
                 /*
+                Cuando un administrador cierra su sesion, la variable booleana que se utiliza
+                para controlar su acceso a las paginas web a las que accede un usuario, se
+                establece en false, ya que de no hacerlo dicha variable tendria el valor
+                true y se le impediria el acceso a dichas paginas web a un administrador
+                cuando inicie sesion a traves de la pagina de inicio de sesion del usuario
+                */
+                accessManager.clearAsAdmin();
+
+                /*
                 Cuando el administrador cierra su sesion, se lo redirige a la pagina de
                 inicio de sesion del administrador
                 */

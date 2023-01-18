@@ -1,7 +1,7 @@
 app.controller(
 	"EmployeesCtrl",
 	["$scope", "$location", "$route", "EmployeeSrv", "AccessManager",
-		function ($scope, $location, $route, servicio, accesManager) {
+		function ($scope, $location, $route, servicio, accessManager) {
 			console.log("EmployeesCtrl loaded...")
 
 			function findAll() {
@@ -48,7 +48,7 @@ app.controller(
             NO tiene una sesion abierta, se le impide el acceso a la pagina de
             inicio y se lo redirige a la pagina de inicio de sesion.
             */
-			if (!accesManager.isUserLoggedIn()) {
+			if (!accessManager.isUserLoggedIn()) {
 				$location.path("/");
 				return;
 			}

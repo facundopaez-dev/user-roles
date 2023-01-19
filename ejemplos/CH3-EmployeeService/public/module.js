@@ -184,7 +184,7 @@ app.factory('JwtManager', function ($window) {
 	Con el valor de esta constante se obtiene el JWT del usuario que se
 	autentica satisfactoriamente
 	*/
-	const key = "loggedUser";
+	const KEY = "loggedUser";
 
 	return {
 		/*
@@ -193,7 +193,7 @@ app.factory('JwtManager', function ($window) {
 		de sesion del navegador web
 		*/
 		setJwt: function (jwt) {
-			$window.sessionStorage.setItem(key, jwt);
+			$window.sessionStorage.setItem(KEY, jwt);
 		},
 
 		/*
@@ -203,7 +203,7 @@ app.factory('JwtManager', function ($window) {
 		sea, un navegador web, una aplicacion del estilo POSTMAN, etc.
 		*/
 		getJwt: function () {
-			return $window.sessionStorage.getItem(key);
+			return $window.sessionStorage.getItem(KEY);
 		},
 
 		/*
@@ -212,7 +212,7 @@ app.factory('JwtManager', function ($window) {
 		almacenamiento de sesion del navegador web
 		*/
 		removeJwt: function () {
-			$window.sessionStorage.removeItem(key);
+			$window.sessionStorage.removeItem(KEY);
 		}
 	}
 });

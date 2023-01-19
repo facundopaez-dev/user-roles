@@ -4,21 +4,22 @@ app.controller(
         function ($scope, $rootScope, $location, jwtManager, authHeaderManager, accessManager) {
 
             /*
-            Esta variable se utiliza para mostrar u ocultar los botones de la barra de
-            navegacion de la pagina de inicio del administrador. Si esta variable
-            tiene el valor false, se ocultan los botones. En cambio, si tiene el valor
-            true, se muestran los botones.
-            */
-            // $scope.superuserPermission = false;
-            $scope.superuserPermission = true;
-
-            /*
             Si el administrador no tiene una sesion abierta, no se le da acceso
             a la pagina de inicio del administrador y se lo redirige a la pagina
             de inicio de sesion del administrador
             */
             if (!accessManager.isUserLoggedIn()) {
                 $location.path("/admin");
+                return;
+            }
+
+            /*
+            Si el usuario que tiene una sesion abierta no tiene permiso de administrador,
+            no se le da acceso a la pagina correspondiente a este controller y se lo redirige
+            a la pagina de inicio del usuario
+             */
+            if (accessManager.isUserLoggedIn() && !accessManager.loggedAsAdmin()) {
+                $location.path("/home");
                 return;
             }
 

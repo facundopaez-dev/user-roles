@@ -6,14 +6,6 @@ app.controller(
             console.log("CropCtrl cargado, accion: " + $params.action)
 
             /*
-            Esta variable se utiliza para mostrar u ocultar los botones de la barra de
-            navegacion de la pagina de inicio del administrador. Si esta variable
-            tiene el valor false, se ocultan los botones. En cambio, si tiene el valor
-            true, se muestran los botones.
-            */
-            $scope.superuserPermission = true;
-
-            /*
             Con el uso de JWT se evita que el administrador cree, edite o visualice
             un dato, correspondiente a este controller, sin tener una sesion
             abierta, pero sin este control, el administrador puede acceder la pagina
@@ -24,6 +16,16 @@ app.controller(
             */
             if (!accessManager.isUserLoggedIn()) {
                 $location.path("/admin");
+                return;
+            }
+
+            /*
+            Si el usuario que tiene una sesion abierta no tiene permiso de administrador,
+            no se le da acceso a la pagina correspondiente a este controller y se lo redirige
+            a la pagina de inicio del usuario
+            */
+            if (accessManager.isUserLoggedIn() && !accessManager.loggedAsAdmin()) {
+                $location.path("/home");
                 return;
             }
 

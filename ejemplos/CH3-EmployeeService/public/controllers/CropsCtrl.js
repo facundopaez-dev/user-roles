@@ -4,14 +4,6 @@ app.controller(
         function ($scope, $location, $route, service, accessManager) {
             console.log("CropsCtrl loaded...");
 
-            /*
-            Esta variable se utiliza para mostrar u ocultar los botones de la barra de
-            navegacion de la pagina de inicio del administrador. Si esta variable
-            tiene el valor false, se ocultan los botones. En cambio, si tiene el valor
-            true, se muestran los botones.
-            */
-            $scope.superuserPermission = true;
-
             function findAll() {
                 service.findAll(function (error, data) {
                     if (error) {
@@ -62,7 +54,17 @@ app.controller(
                 return;
             }
 
-			/*
+            /*
+            Si el usuario que tiene una sesion abierta no tiene permiso de administrador,
+            no se le da acceso a la pagina correspondiente a este controller y se lo redirige
+            a la pagina de inicio del usuario
+            */
+            if (accessManager.isUserLoggedIn() && !accessManager.loggedAsAdmin()) {
+                $location.path("/home");
+                return;
+            }
+
+            /*
 			Si el flujo de ejecucion llega a este punto, se debe a que
 			el administrador inicio sesion, por lo tanto, se debe mostrar
 			esta lista

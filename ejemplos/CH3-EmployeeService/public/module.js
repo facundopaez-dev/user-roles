@@ -259,3 +259,139 @@ app.factory('AuthHeaderManager', ['$http', 'JwtManager', function ($http, jwtMan
 		}
 	}
 }]);
+
+/*
+ErrorResponseManager es la factory que se utiliza para el control de
+las respuestas HTTP 401 (Unauthorized) y 403 (Forbidden) devueltas
+por la aplicacion del lado servidor
+*/
+app.factory('ErrorResponseManager', ['$location', 'AccessManager', 'JwtManager', function ($location, accessManager, jwtManager) {
+
+	const UNAUTHORIZED = 401;
+	const FORBIDDEN = 403;
+	const NOT_FOUND = 404;
+	const USER_HOME_ROUTE = "/home";
+	const ADMIN_HOME_ROUTE = "/adminHome";
+	const USER_LOGIN_ROUTE = "/";
+	const ADMIN_LOGIN_ROUTE = "/admin";
+
+	return {
+		/**
+		 * Evalua la respuesta HTTP de error devuelta por la aplicacion del lador servidor.
+		 * 
+		 * Si la respuesta devuelta es el mensaje HTTP 401 (Unauthorized), redirige
+		 * al usuario a la pagina web de inicio de sesion correspondiente. Si el
+		 * usuario NO inicio sesion como administrador, lo redirige a la pagina
+		 * web de inicio de sesion del usuario. Si el usuario inicio sesion como
+		 * administrador (siempre y cuando tenga permiso de administrador), lo
+		 * redirige a la pagina web de inicio de sesion del administrador.
+		 * 
+		 * Si la respuesta devuelta es el mensaje HTTP 403 (Forbidden) o el mensaje
+		 * 404 (Not found), redirige al usuario a la pagina web de inicio correspondiente.
+		 * Si el usuario NO tiene su sesion abierta como administrador, lo redirige a la
+		 * pagina web de inicio del usuario. Si el usuario tiene su sesion abierta como
+		 * administrador (siempre y cuando tenga permiso de  administrador), lo redirige
+		 * a la pagina web de inicio del administrador.
+		 * 
+		 * @param {*} error este parametro es la respuesta HTTP de error devuelta por
+		 * la aplicacion del lado servidor
+		 */
+		checkResponse: function (error) {
+			/*
+			Se imprime por pantalla la causa de la respuesta de error
+			*/
+			alert(error.data.message);
+
+			/*
+			Si el usuario para el cual la aplicacion del lado servidor devuelve el mensaje
+			HTTP 401 (Unauthorized), NO inicio sesion como administrador, se lo redirige a la
+			pagina web de inicio de sesion del usuario.
+
+			El motivo por el cual la aplicacion del lado del servidor devuelve el mensaje
+			HTTP 401 (Unauthorized) es que el JWT utilizado en las peticiones HTTP NO es
+			valido. En consecuencia, el JWT no sirve, y, por lo tanto, se lo elimina del
+			almacenamiento en el que se lo guarde. Si no se realiza esta eliminacion, la
+			aplicacion del lado del navegador web tendra un comportamiento incorrecto, el
+			cual, consiste en que mostrara al usuario la pagina de inicio del usuario o
+			la pagina de inicio del administrador, dependiendo de si abrio su sesion como
+			usuario o como administrador (siempre y cuando tenga permiso de administrador).
+			Este comportamiento es incorrecto porque un JWT no valido corresponde a no tener
+			una sesion abierta, y si no se tiene una sesion abierta, no se debe mostrar
+			ningun menu al usuario tenga este o no permiso de administrador.
+			*/
+			if (error.status == UNAUTHORIZED && !accessManager.loggedAsAdmin()) {
+				jwtManager.removeJwt();
+				$location.path(USER_LOGIN_ROUTE);
+				return;
+			}
+
+			/*
+			Si el usuario para el cual la aplicacion del lado servidor devuelve el mensaje
+			HTTP 401 (Unauthorized), inicio sesion como administrador (siempre y cuando
+			tenga permiso de administrador), se lo redirige a la pagina web de inicio
+			de sesion del administrador.
+
+			El motivo por el cual la aplicacion del lado del servidor devuelve el mensaje
+			HTTP 401 (Unauthorized) es que el JWT utilizado en las peticiones HTTP NO es
+			valido. En consecuencia, el JWT no sirve, y, por lo tanto, se lo elimina del
+			almacenamiento en el que se lo guarde. Si no se realiza esta eliminacion, la
+			aplicacion del lado del navegador web tendra un comportamiento incorrecto, el
+			cual, consiste en que mostrara al usuario la pagina de inicio del usuario o
+			la pagina de inicio del administrador, dependiendo de si abrio su sesion como
+			usuario o como administrador (siempre y cuando tenga permiso de administrador).
+			Este comportamiento es incorrecto porque un JWT no valido corresponde a no tener
+			una sesion abierta, y si no se tiene una sesion abierta, no se debe mostrar
+			ningun menu al usuario tenga este o no permiso de administrador.
+			*/
+			if (error.status == UNAUTHORIZED && accessManager.loggedAsAdmin()) {
+				jwtManager.removeJwt();
+				$location.path(ADMIN_LOGIN_ROUTE);
+				return;
+			}
+
+			/*
+			Si el usuario para el cual la aplicacion del lado servidor devuelve el mensaje
+			HTTP 403 (Forbidden), NO tiene su sesion abierta como administrador, se lo
+			redirige a la pagina web de inicio del usuario
+			*/
+			if (error.status == FORBIDDEN && !accessManager.loggedAsAdmin()) {
+				$location.path(USER_HOME_ROUTE);
+				return;
+			}
+
+			/*
+			Si el usuario para el cual la aplicacion del lado servidor devuelve el mensaje
+			HTTP 403 (Forbidden), tiene su sesion abierta como administrador, se lo
+			redirige a la pagina web de inicio del administrador.
+
+			Aunque este codigo no sea ejecutado debido a la instruccion if que evalua
+			si el usuario inicio sesion como administrador en el controller de cada
+			pagina web que es accedida por el usuario (tarea #73), lo mismo queda
+			escrito, ya que dicha instruccion puede ser eliminada.
+			*/
+			if (error.status == FORBIDDEN && accessManager.loggedAsAdmin()) {
+				$location.path(ADMIN_HOME_ROUTE);
+				return;
+			}
+
+			/*
+			Si el usuario para el cual la aplicacion del lado servidor devuelve el mensaje
+			HTTP 404 (Not found), NO tiene su sesion abierta como administrador, se lo
+			redirige a la pagina web de inicio del usuario
+			*/
+			if (error.status == NOT_FOUND && !accessManager.loggedAsAdmin()) {
+				$location.path(USER_HOME_ROUTE);
+				return;
+			}
+
+			/*
+			Si el usuario para el cual la aplicacion del lado servidor devuelve el mensaje
+			HTTP 404 (Not found), tiene su sesion abierta como administrador, se lo
+			redirige a la pagina web de inicio del administrador
+			*/
+			if (error.status == NOT_FOUND && accessManager.loggedAsAdmin()) {
+				$location.path(ADMIN_HOME_ROUTE);
+			}
+		}
+	}
+}]);

@@ -21,8 +21,6 @@ import stateless.UserServiceBean;
 import util.RequestManager;
 import utilJwt.AuthHeaderManager;
 import utilJwt.JwtManager;
-import utilLogin.LoginResponse;
-import utilLogin.LoginStatus;
 import utilPermission.PermissionResponse;
 
 @Path("/users")

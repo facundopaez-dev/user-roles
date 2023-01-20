@@ -9,14 +9,14 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import model.User;
 import model.SecretKey;
+import model.User;
 import stateless.SecretKeyServiceBean;
 import stateless.UserServiceBean;
+import util.ErrorResponse;
+import util.ReasonError;
 import utilJwt.JwtManager;
 import utilJwt.Token;
-import utilLogin.LoginResponse;
-import utilLogin.LoginStatus;
 
 @Path("/auth")
 public class LoginRestServlet {
@@ -50,7 +50,7 @@ public class LoginRestServlet {
 
     if (!userService.authenticate(givenUser.getUsername(), givenUser.getPassword())) {
       return Response.status(Response.Status.UNAUTHORIZED)
-      .entity(new LoginResponse(LoginStatus.USERNAME_OR_PASSWORD_INCORRECT)).build();
+      .entity(new ErrorResponse(ReasonError.USERNAME_OR_PASSWORD_INCORRECT)).build();
     }
 
     /*
@@ -100,7 +100,7 @@ public class LoginRestServlet {
 
     if (!userService.authenticate(givenUser.getUsername(), givenUser.getPassword())) {
       return Response.status(Response.Status.UNAUTHORIZED)
-      .entity(new LoginResponse(LoginStatus.USERNAME_OR_PASSWORD_INCORRECT)).build();
+      .entity(new ErrorResponse(ReasonError.USERNAME_OR_PASSWORD_INCORRECT)).build();
     }
 
     /*
@@ -114,7 +114,7 @@ public class LoginRestServlet {
      * nunca va a fallar en caso de que se ingrese un usuario inexistente.
      */
     if (!userService.checkSuperuserPermission(givenUser.getUsername())) {
-      return Response.status(Response.Status.FORBIDDEN).entity(new LoginResponse(LoginStatus.UNAUTHORIZED_ACCESS)).build();
+      return Response.status(Response.Status.FORBIDDEN).entity(new ErrorResponse(ReasonError.UNAUTHORIZED_ACCESS)).build();
     }
 
     /*

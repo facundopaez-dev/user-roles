@@ -88,9 +88,20 @@ public class RequestManager {
 
     /*
      * Si el JWT obtenido del valor del encabezado de autorizacion
-     * de la peticion HTTP dada, NO es valido por algun motivo, la
-     * aplicacion del lado servidor devuelve el mensaje HTTP 401
-     * (Unauthorized)
+     * de la peticion HTTP dada, expiro, la aplicacion del lado
+     * servidor devuelve el mensaje HTTP 401 (Unauthorized) junto
+     * con el motivo "Sesion expirada", el cual, esta contenido
+     * en el enum ReasonError
+     */
+    if (JwtManager.isExpired(jwt, secretKey.getValue())) {
+      return Response.status(Response.Status.UNAUTHORIZED).entity(new ErrorResponse(ReasonError.SESSION_EXPIRED)).build();
+    }
+
+    /*
+     * Si la firma del JWT, obtenido del valor del encabezado de
+     * autorizacion de la peticion HTTP, no coincide con los datos
+     * de su encabezado y carga util, la aplicacion del lado
+     * servidor devuelve el mensaje HTTP 401 (Unauthorized)
      */
     if (!JwtManager.validateJwt(jwt, secretKey.getValue())) {
       return Response.status(Response.Status.UNAUTHORIZED).build();

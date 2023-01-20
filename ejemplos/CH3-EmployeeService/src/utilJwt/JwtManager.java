@@ -4,7 +4,11 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.exceptions.AlgorithmMismatchException;
+import com.auth0.jwt.exceptions.IncorrectClaimException;
+import com.auth0.jwt.exceptions.MissingClaimException;
+import com.auth0.jwt.exceptions.SignatureVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.Verification;
 import java.nio.charset.StandardCharsets;
@@ -90,11 +94,38 @@ public class JwtManager {
   }
 
   /**
-   * Comprueba que un JWT sea valido, esto es que la firma de un JWT coincide
-   * con los datos de su encabezado y carga util, y que el JWT no ha expirado
+   * Comprueba la expiracion de un JWT. Retorna true si y solo si
+   * un JWT expiro.
+   * 
+   * Un JWT es creado con una cantidad de tiempo para ser usado.
+   * Cuando pasa esa cantidad de tiempo, un JWT expira, con lo
+   * cual, no es valido, y, en consecuencia, no sirve para
+   * realizar peticiones HTTP.
    * 
    * @param jwt
-   * @param secretKey clave secreta a partir de la cual se firma un JWT
+   * @param secretKey clave secreta con la que se firma un JWT
+   * @return true si el JWT dado expiro, false en caso contrario
+   */
+  public static boolean isExpired(String jwt, String secretKey) {
+    JWTVerifier jwtVerifier = buildJwtVerifier(secretKey);
+    boolean result = false;
+
+    try {
+      jwtVerifier.verify(jwt);
+      result = true;      
+    } catch (TokenExpiredException e) {
+      e.printStackTrace();
+    }
+
+    return result;
+  }
+
+  /**
+   * Comprueba que un JWT sea valido, esto es que la firma de un JWT coincide
+   * con los datos de su encabezado y carga util
+   * 
+   * @param jwt
+   * @param secretKey clave secreta con la que se firma un JWT
    * @return true si el JWT dado es valido, false en caso contrario
    */
   public static boolean validateJwt(String jwt, String secretKey) {
@@ -104,7 +135,13 @@ public class JwtManager {
     try {
       jwtVerifier.verify(jwt);
       result = true;      
-    } catch (JWTVerificationException e) {
+    } catch (AlgorithmMismatchException e) {
+      e.printStackTrace();
+    } catch (IncorrectClaimException e) {
+      e.printStackTrace();
+    } catch (MissingClaimException e) {
+      e.printStackTrace();
+    } catch (SignatureVerificationException e) {
       e.printStackTrace();
     }
     

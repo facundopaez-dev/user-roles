@@ -20,10 +20,11 @@ import javax.ws.rs.core.Response.Status;
 import model.PlantingRecord;
 import stateless.PlantingRecordServiceBean;
 import stateless.SecretKeyServiceBean;
+import util.ErrorResponse;
+import util.ReasonError;
 import util.RequestManager;
 import utilJwt.AuthHeaderManager;
 import utilJwt.JwtManager;
-import utilPermission.PermissionResponse;
 
 @Path("/plantingRecord")
 public class PlantingRecordRestServlet {
@@ -121,12 +122,11 @@ public class PlantingRecordRestServlet {
      * Si al usuario que hizo esta peticion HTTP, no le pertenece
      * el dato solicitado, la aplicacion del lado servidor
      * devuelve el mensaje HTTP 403 (Forbidden) junto con el
-     * mensaje "Acceso no autorizado" (contenido en la clase
-     * PermissionResponse) y no se realiza la operacion
-     * solicitada
+     * mensaje "Acceso no autorizado" (contenido en el enum
+     * ReasonError) y no se realiza la operacion solicitada
      */
     if (!service.checkUserOwnership(userId, plantingRecordId)) {
-      return Response.status(Response.Status.FORBIDDEN).entity(mapper.writeValueAsString(new PermissionResponse())).build();
+      return Response.status(Response.Status.FORBIDDEN).entity(mapper.writeValueAsString(new ErrorResponse(ReasonError.UNAUTHORIZED_ACCESS))).build();
     }
 
     /*
@@ -213,12 +213,11 @@ public class PlantingRecordRestServlet {
      * Si al usuario que hizo esta peticion HTTP, no le pertenece
      * el dato solicitado, la aplicacion del lado servidor
      * devuelve el mensaje HTTP 403 (Forbidden) junto con el
-     * mensaje "Acceso no autorizado" (contenido en la clase
-     * PermissionResponse) y no se realiza la operacion
-     * solicitada
+     * mensaje "Acceso no autorizado" (contenido en el enum
+     * ReasonError) y no se realiza la operacion solicitada
      */
     if (!service.checkUserOwnership(userId, plantingRecordId)) {
-      return Response.status(Response.Status.FORBIDDEN).entity(mapper.writeValueAsString(new PermissionResponse())).build();
+      return Response.status(Response.Status.FORBIDDEN).entity(mapper.writeValueAsString(new ErrorResponse(ReasonError.UNAUTHORIZED_ACCESS))).build();
     }
 
     /*
@@ -271,12 +270,11 @@ public class PlantingRecordRestServlet {
      * Si al usuario que hizo esta peticion HTTP, no le pertenece
      * el dato solicitado, la aplicacion del lado servidor
      * devuelve el mensaje HTTP 403 (Forbidden) junto con el
-     * mensaje "Acceso no autorizado" (contenido en la clase
-     * PermissionResponse) y no se realiza la operacion
-     * solicitada
+     * mensaje "Acceso no autorizado" (contenido en el enum
+     * ReasonError) y no se realiza la operacion solicitada
      */
     if (!service.checkUserOwnership(userId, plantingRecordId)) {
-      return Response.status(Response.Status.FORBIDDEN).entity(mapper.writeValueAsString(new PermissionResponse())).build();
+      return Response.status(Response.Status.FORBIDDEN).entity(mapper.writeValueAsString(new ErrorResponse(ReasonError.UNAUTHORIZED_ACCESS))).build();
     }
 
     /*

@@ -20,10 +20,11 @@ import javax.ws.rs.core.Response.Status;
 import model.ClimateRecord;
 import stateless.ClimateRecordServiceBean;
 import stateless.SecretKeyServiceBean;
+import util.ErrorResponse;
+import util.ReasonError;
 import util.RequestManager;
 import utilJwt.AuthHeaderManager;
 import utilJwt.JwtManager;
-import utilPermission.PermissionResponse;
 
 @Path("/climateRecord")
 public class ClimateRecordRestServlet {
@@ -123,11 +124,11 @@ public class ClimateRecordRestServlet {
      * sus parcelas tiene el registro climatico solicitado), la
      * aplicacion del lado servidor devuelve el mensaje HTTP 403
      * (Forbidden) junto con el mensaje "Acceso no autorizado"
-     * (contenido en la clase PermissionResponse) y no se realiza
-     * la operacion solicitada
+     * (contenido en el enum ReasonError) y no se realiza la
+     * operacion solicitada
      */
     if (!service.checkUserOwnership(userId, climateRecordId)) {
-      return Response.status(Response.Status.FORBIDDEN).entity(mapper.writeValueAsString(new PermissionResponse())).build();
+      return Response.status(Response.Status.FORBIDDEN).entity(mapper.writeValueAsString(new ErrorResponse(ReasonError.UNAUTHORIZED_ACCESS))).build();
     }
 
     /*
@@ -216,11 +217,11 @@ public class ClimateRecordRestServlet {
      * sus parcelas tiene el registro climatico solicitado), la
      * aplicacion del lado servidor devuelve el mensaje HTTP 403
      * (Forbidden) junto con el mensaje "Acceso no autorizado"
-     * (contenido en la clase PermissionResponse) y no se realiza
-     * la operacion solicitada
+     * (contenido en el enum ReasonError) y no se realiza la
+     * operacion solicitada
      */
     if (!service.checkUserOwnership(userId, climateRecordId)) {
-      return Response.status(Response.Status.FORBIDDEN).entity(mapper.writeValueAsString(new PermissionResponse())).build();
+      return Response.status(Response.Status.FORBIDDEN).entity(mapper.writeValueAsString(new ErrorResponse(ReasonError.UNAUTHORIZED_ACCESS))).build();
     }
 
     /*
@@ -275,11 +276,11 @@ public class ClimateRecordRestServlet {
      * sus parcelas tiene el registro climatico solicitado), la
      * aplicacion del lado servidor devuelve el mensaje HTTP 403
      * (Forbidden) junto con el mensaje "Acceso no autorizado"
-     * (contenido en la clase PermissionResponse) y no se realiza
-     * la operacion solicitada
+     * (contenido en el enum ReasonError) y no se realiza la
+     * operacion solicitada
      */
     if (!service.checkUserOwnership(userId, climateRecordId)) {
-      return Response.status(Response.Status.FORBIDDEN).entity(mapper.writeValueAsString(new PermissionResponse())).build();
+      return Response.status(Response.Status.FORBIDDEN).entity(mapper.writeValueAsString(new ErrorResponse(ReasonError.UNAUTHORIZED_ACCESS))).build();
     }
 
     /*

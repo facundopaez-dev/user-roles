@@ -41,7 +41,6 @@
       <src path="src/stateless" />
       <src path="src/util" />
       <src path="src/utilJwt" />
-      <src path="src/utilPermission" />
       <classpath>
         <pathelement path="${CLIENT_CLASSPATH}" />
         <pathelement path="build/model" />

@@ -7,6 +7,7 @@ package util;
  */
 public enum ResponseErrorMessage {
   USERNAME_OR_PASSWORD_INCORRECT("Nombre de usuario o contraseña incorrectos"),
+  SESSION_EXPIRED("Sesión expirada"),
   UNAUTHORIZED_ACCESS("Acceso no autorizado"),
   RESOURCE_NOT_FOUND("Recurso no encontrado");
 

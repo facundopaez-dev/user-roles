@@ -108,11 +108,11 @@ public class JwtManager {
    */
   public static boolean isExpired(String jwt, String secretKey) {
     JWTVerifier jwtVerifier = buildJwtVerifier(secretKey);
-    boolean result = false;
+    boolean result = true;
 
     try {
       jwtVerifier.verify(jwt);
-      result = true;      
+      result = false;      
     } catch (TokenExpiredException e) {
       e.printStackTrace();
     }

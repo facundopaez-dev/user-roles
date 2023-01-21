@@ -303,6 +303,37 @@ app.factory('ErrorResponseManager', ['$location', 'AccessManager', 'JwtManager',
 			alert(error.data.message);
 
 			/*
+			Si el usuario NO tiene una sesion abierta, si esta en la pagina web de
+			inicio de sesion del usuario y si la respuesta HTTP de error devuelta por
+			la aplicacion del lado servidor es la 401 (Unauthorized), se redirige al
+			usuario a la pagina web de inicio de sesion mencionada.
+
+			Este control es para el caso de un fallido intento de inicio de sesion
+			a traves de la pagina web de inicio de sesion del usuario.
+			*/
+			if ((!accessManager.isUserLoggedIn()) && ($location.url() === USER_LOGIN_ROUTE) && (error.status == UNAUTHORIZED)) {
+				$location.path(USER_LOGIN_ROUTE);
+				return;
+			}
+
+			/*
+			Si el usuario NO tiene una sesion abierta, si esta en la pagina web de
+			inicio de sesion del administrador y si la respuesta HTTP de error
+			devuelta por la aplicacion del lado servidor es la 401 (Unauthorized)
+			o la 403 (Forbidden), se redirige al usuario a la pagina web de inicio
+			de sesion mencionada.
+
+			Este control es para el caso de un fallido intento de inicio de sesion
+			a traves de la pagina web de inicio de sesion del administrador. Este
+			control cubre tanto el caso en el que el usuario NO tiene permiso de
+			administrador como el caso en el que si lo tiene.
+			*/
+			if ((!accessManager.isUserLoggedIn()) && ($location.url() === ADMIN_LOGIN_ROUTE) && (error.status == UNAUTHORIZED || error.status == FORBIDDEN)) {
+				$location.path(ADMIN_LOGIN_ROUTE);
+				return;
+			}
+
+			/*
 			Si el usuario para el cual la aplicacion del lado servidor devuelve el mensaje
 			HTTP 401 (Unauthorized), NO inicio sesion como administrador, se lo redirige a la
 			pagina web de inicio de sesion del usuario.

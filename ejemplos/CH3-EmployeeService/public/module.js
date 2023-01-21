@@ -298,7 +298,8 @@ app.factory('ErrorResponseManager', ['$location', 'AccessManager', 'JwtManager',
 		 */
 		checkResponse: function (error) {
 			/*
-			Se imprime por pantalla la causa de la respuesta de error
+			Se imprime por pantalla la causa de la respuesta HTTP de error devuelta
+			por la aplicacion del lado servidor
 			*/
 			alert(error.data.message);
 
@@ -334,21 +335,38 @@ app.factory('ErrorResponseManager', ['$location', 'AccessManager', 'JwtManager',
 			}
 
 			/*
+			************************************************************************************
+			Los siguientes controles se ocupan de manejar las respuestas HTTP de error devueltas
+			por la aplicacion del lado servidor, para el caso en el que usuario SI tiene una
+			sesion abierta, y lo hacen tanto para los casos en los que el usuario NO tiene permiso
+			de administrador como para los casos en los que el usuario SI tiene dicho permiso
+			************************************************************************************
+			*/
+
+			/*
 			Si el usuario para el cual la aplicacion del lado servidor devuelve el mensaje
 			HTTP 401 (Unauthorized), NO inicio sesion como administrador, se lo redirige a la
 			pagina web de inicio de sesion del usuario.
 
-			El motivo por el cual la aplicacion del lado del servidor devuelve el mensaje
-			HTTP 401 (Unauthorized) es que el JWT utilizado en las peticiones HTTP NO es
-			valido. En consecuencia, el JWT no sirve, y, por lo tanto, se lo elimina del
-			almacenamiento en el que se lo guarde. Si no se realiza esta eliminacion, la
-			aplicacion del lado del navegador web tendra un comportamiento incorrecto, el
-			cual, consiste en que mostrara al usuario la pagina de inicio del usuario o
-			la pagina de inicio del administrador, dependiendo de si abrio su sesion como
-			usuario o como administrador (siempre y cuando tenga permiso de administrador).
-			Este comportamiento es incorrecto porque un JWT no valido corresponde a no tener
-			una sesion abierta, y si no se tiene una sesion abierta, no se debe mostrar
-			ningun menu al usuario tenga este o no permiso de administrador.
+			Este control es para el caso en el que el JWT del usuario que tiene una sesion
+			abierta, expira. Ante un intento de inicio de sesion satisfactorio, la
+			aplicacion del lado servidor retorna un JWT, el cual, tiene una cantidad
+			de tiempo en el que se lo debe utilizar. Por lo tanto, cuando pasa esa
+			cantidad de tiempo, un JWT expira. En consecuencia, un JWT NO es valido y
+			al no ser valido, se lo debe eliminar del almacenamiento en el que se lo guarde.
+			Si no se realiza esta eliminacion, la aplicacion del lado del navegador web
+			tendra un comportamiento incorrecto, el cual, consiste en que mostrara al usuario
+			la pagina de inicio del usuario o la pagina de inicio del administrador,
+			dependiendo de si la sesion se abrio como usuario o como administrador (siempre y
+			cuando el usuario tenga permiso de administrador). Este comportamiento es incorrecto
+			porque un JWT no valido corresponde a no tener una sesion abierta, y si no se tiene
+			una sesion abierta, no se debe mostrar ningun menu al usuario tenga este o no permiso
+			de administrador.
+
+			Cuando se realiza una peticion HTTP con un JWT expirado, la aplicacion del
+			lado servidor retorna el mensaje HTTP 401 (Unauthorized) junto con el
+			mensaje "Sesion expirada". Este caso es el motivo por el cual se realiza
+			este control.
 			*/
 			if (error.status == UNAUTHORIZED && !accessManager.loggedAsAdmin()) {
 				jwtManager.removeJwt();
@@ -362,17 +380,25 @@ app.factory('ErrorResponseManager', ['$location', 'AccessManager', 'JwtManager',
 			tenga permiso de administrador), se lo redirige a la pagina web de inicio
 			de sesion del administrador.
 
-			El motivo por el cual la aplicacion del lado del servidor devuelve el mensaje
-			HTTP 401 (Unauthorized) es que el JWT utilizado en las peticiones HTTP NO es
-			valido. En consecuencia, el JWT no sirve, y, por lo tanto, se lo elimina del
-			almacenamiento en el que se lo guarde. Si no se realiza esta eliminacion, la
-			aplicacion del lado del navegador web tendra un comportamiento incorrecto, el
-			cual, consiste en que mostrara al usuario la pagina de inicio del usuario o
-			la pagina de inicio del administrador, dependiendo de si abrio su sesion como
-			usuario o como administrador (siempre y cuando tenga permiso de administrador).
-			Este comportamiento es incorrecto porque un JWT no valido corresponde a no tener
-			una sesion abierta, y si no se tiene una sesion abierta, no se debe mostrar
-			ningun menu al usuario tenga este o no permiso de administrador.
+			Este control es para el caso en el que el JWT del administrador que tiene una
+			sesion abierta, expira. Ante un intento de inicio de sesion satisfactorio, la
+			aplicacion del lado servidor retorna un JWT, el cual, tiene una cantidad
+			de tiempo en el que se lo debe utilizar. Por lo tanto, cuando pasa esa
+			cantidad de tiempo, un JWT expira. En consecuencia, un JWT NO es valido y
+			al no ser valido, se lo debe eliminar del almacenamiento en el que se lo guarde.
+			Si no se realiza esta eliminacion, la aplicacion del lado del navegador web
+			tendra un comportamiento incorrecto, el cual, consiste en que mostrara al usuario
+			la pagina de inicio del usuario o la pagina de inicio del administrador,
+			dependiendo de si la sesion se abrio como usuario o como administrador (siempre y
+			cuando el usuario tenga permiso de administrador). Este comportamiento es incorrecto
+			porque un JWT no valido corresponde a no tener una sesion abierta, y si no se tiene
+			una sesion abierta, no se debe mostrar ningun menu al usuario tenga este o no permiso
+			de administrador.
+
+			Cuando se realiza una peticion HTTP con un JWT expirado, la aplicacion del
+			lado servidor retorna el mensaje HTTP 401 (Unauthorized) junto con el
+			mensaje "Sesion expirada". Este caso es el motivo por el cual se realiza
+			este control.
 			*/
 			if (error.status == UNAUTHORIZED && accessManager.loggedAsAdmin()) {
 				jwtManager.removeJwt();
@@ -383,7 +409,17 @@ app.factory('ErrorResponseManager', ['$location', 'AccessManager', 'JwtManager',
 			/*
 			Si el usuario para el cual la aplicacion del lado servidor devuelve el mensaje
 			HTTP 403 (Forbidden), NO tiene su sesion abierta como administrador, se lo
-			redirige a la pagina web de inicio del usuario
+			redirige a la pagina web de inicio del usuario.
+
+			Este control es para los siguientes casos:
+			- un usuario que NO tiene permiso de administrador, intenta acceder a un
+			recurso para el cual se requiere dicho permiso.
+			- un usuario que NO tiene permiso de administrador, intenta acceder a un
+			recurso de otro usuario, como una parcela, por ejemplo.
+
+			Cuando ocurren estos casos, la aplicacion del lado servidor retorna el
+			mensaje HTTP 403 (Forbidden) junto con el mensaje "Acceso no autorizado".
+			Estos casos son el motivo por el cual se realiza este control.
 			*/
 			if (error.status == FORBIDDEN && !accessManager.loggedAsAdmin()) {
 				$location.path(USER_HOME_ROUTE);
@@ -394,6 +430,13 @@ app.factory('ErrorResponseManager', ['$location', 'AccessManager', 'JwtManager',
 			Si el usuario para el cual la aplicacion del lado servidor devuelve el mensaje
 			HTTP 403 (Forbidden), tiene su sesion abierta como administrador, se lo
 			redirige a la pagina web de inicio del administrador.
+
+			Este control es para el caso en el que un usuario con permiso de administrador,
+			intenta acceder a un recurso de otro usuario, como una parcela, por ejemplo.
+
+			Cuando ocurre este caso, la aplicacion del lado servidor retorna el mensaje
+			HTTP 403 (Forbidden) junto con el mensaje "Acceso no autorizado". Este caso
+			es el motivo por el cual se realiza este control.
 
 			Aunque este codigo no sea ejecutado debido a la instruccion if que evalua
 			si el usuario inicio sesion como administrador en el controller de cada
@@ -408,7 +451,15 @@ app.factory('ErrorResponseManager', ['$location', 'AccessManager', 'JwtManager',
 			/*
 			Si el usuario para el cual la aplicacion del lado servidor devuelve el mensaje
 			HTTP 404 (Not found), NO tiene su sesion abierta como administrador, se lo
-			redirige a la pagina web de inicio del usuario
+			redirige a la pagina web de inicio del usuario.
+
+			Este control es para el caso en el que un usuario que NO tiene permiso de
+			administrador, intenta acceder a un recurso inexistente en la base de datos
+			subyacente del sistema.
+
+			Cuando ocurre este caso, la aplicacion del lado servidor retorna el mensaje
+			HTTP 404 (Not found) junto con el mensaje "Recurso no encontrado". Este
+			caso es el motivo por el cual se realiza este control.
 			*/
 			if (error.status == NOT_FOUND && !accessManager.loggedAsAdmin()) {
 				$location.path(USER_HOME_ROUTE);
@@ -418,7 +469,15 @@ app.factory('ErrorResponseManager', ['$location', 'AccessManager', 'JwtManager',
 			/*
 			Si el usuario para el cual la aplicacion del lado servidor devuelve el mensaje
 			HTTP 404 (Not found), tiene su sesion abierta como administrador, se lo
-			redirige a la pagina web de inicio del administrador
+			redirige a la pagina web de inicio del administrador.
+
+			Este control es para el caso en el que un usuario que tiene permiso de
+			administrador, intenta acceder a un recurso inexistente en la base de datos
+			subyacente del sistema.
+
+			Cuando ocurre este caso, la aplicacion del lado servidor retorna el mensaje
+			HTTP 404 (Not found) junto con el mensaje "Recurso no encontrado". Este
+			caso es el motivo por el cual se realiza este control.
 			*/
 			if (error.status == NOT_FOUND && accessManager.loggedAsAdmin()) {
 				$location.path(ADMIN_HOME_ROUTE);

@@ -137,4 +137,17 @@ public class ClimateRecordServiceBean {
     return result;
   }
 
+  /**
+   * Comprueba la existencia de un registro climatico en la base
+   * de datos subyacente. Retorna true si y solo si existe el
+   * registro climatico con el ID dado.
+   * 
+   * @param id
+   * @return true si el registro climatico con el ID dado existe
+   * en la base de datos subyacente, false en caso contrario
+   */
+  public boolean checkExistence(int id) {
+    return (getEntityManager().find(ClimateRecord.class, id) != null);
+  }
+
 }

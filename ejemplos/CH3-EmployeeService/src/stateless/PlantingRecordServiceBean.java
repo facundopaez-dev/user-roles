@@ -137,4 +137,17 @@ public class PlantingRecordServiceBean {
     return result;
   }
 
+  /**
+   * Comprueba la existencia de un registro de plantacion en la
+   * base de datos subyacente. Retorna true si y solo si existe
+   * el registro de plantacion con el ID dado.
+   * 
+   * @param id
+   * @return true si el registro de plantacion con el ID dado
+   * existe en la base de datos subyacente, false en caso contrario
+   */
+  public boolean checkExistence(int id) {
+    return (getEntityManager().find(PlantingRecord.class, id) != null);
+  }
+
 }

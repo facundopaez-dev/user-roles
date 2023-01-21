@@ -129,5 +129,18 @@ public class EmployeeServiceBean {
 
     return (Collection) query.getResultList();
   }
-  
+
+  /**
+   * Comprueba la existencia de un empleado en la base de datos
+   * subyacente. Retorna true si y solo si existe el empleado
+   * con el ID dado.
+   * 
+   * @param id
+   * @return true si el empleado con el ID dado existe en la
+   * base de datos subyacente, false en caso contrario
+   */
+  public boolean checkExistence(int id) {
+    return (getEntityManager().find(Employee.class, id) != null);
+  }
+
 }

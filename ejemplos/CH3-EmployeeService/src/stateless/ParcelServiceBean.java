@@ -137,4 +137,17 @@ public class ParcelServiceBean {
     return (Collection) query.getResultList();
   }
 
+  /**
+   * Comprueba la existencia de una parcela en la base de datos
+   * subyacente. Retorna true si y solo si existe la parcela
+   * con el ID dado.
+   * 
+   * @param id
+   * @return true si la parcela con el ID dado existe en la
+   * base de datos subyacente, false en caso contrario
+   */
+  public boolean checkExistence(int id) {
+    return (getEntityManager().find(Parcel.class, id) != null);
+  }
+
 }

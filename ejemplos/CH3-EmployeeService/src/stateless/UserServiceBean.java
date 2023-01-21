@@ -106,5 +106,18 @@ public class UserServiceBean {
 
     return result;
   }
-  
+
+  /**
+   * Comprueba la existencia de un usuario en la base de datos
+   * subyacente. Retorna true si y solo si existe el usuario
+   * con el ID dado.
+   * 
+   * @param id
+   * @return true si el usuario con el ID dado existe en la
+   * base de datos subyacente, false en caso contrario
+   */
+  public boolean checkExistence(int id) {
+    return (getEntityManager().find(User.class, id) != null);
+  }
+
 }

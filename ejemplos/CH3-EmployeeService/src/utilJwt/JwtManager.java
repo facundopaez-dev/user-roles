@@ -4,10 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.AlgorithmMismatchException;
-import com.auth0.jwt.exceptions.IncorrectClaimException;
-import com.auth0.jwt.exceptions.MissingClaimException;
-import com.auth0.jwt.exceptions.SignatureVerificationException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.Verification;
@@ -122,7 +119,7 @@ public class JwtManager {
 
   /**
    * Comprueba que un JWT sea valido, esto es que la firma de un JWT coincide
-   * con los datos de su encabezado y carga util
+   * con los datos de su encabezado y carga util, y que un JWT no ha expirado
    * 
    * @param jwt
    * @param secretKey clave secreta con la que se firma un JWT
@@ -135,16 +132,10 @@ public class JwtManager {
     try {
       jwtVerifier.verify(jwt);
       result = true;      
-    } catch (AlgorithmMismatchException e) {
-      e.printStackTrace();
-    } catch (IncorrectClaimException e) {
-      e.printStackTrace();
-    } catch (MissingClaimException e) {
-      e.printStackTrace();
-    } catch (SignatureVerificationException e) {
+    } catch (JWTVerificationException e) {
       e.printStackTrace();
     }
-    
+
     return result;
   }
 

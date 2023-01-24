@@ -1,7 +1,21 @@
 app.controller(
     "AdminHomeCtrl",
-    ["$scope", "$rootScope", "$location", "JwtManager", "AuthHeaderManager", "AccessManager",
-        function ($scope, $rootScope, $location, jwtManager, authHeaderManager, accessManager) {
+    ["$scope", "$rootScope", "$location", "ExpirationSrv", "JwtManager", "AuthHeaderManager", "AccessManager", "ErrorResponseManager",
+        function ($scope, $rootScope, $location, expirationSrv, jwtManager, authHeaderManager, accessManager, errorResponseManager) {
+
+            /*
+            Se comprueba si el JWT del administrador que tiene una sesion abierta, expiro
+            o no. En el caso en el que JWT expiro, se redirige al administrador a la
+            pagina web de inicio de sesion del administrador. En caso contrario,
+            se realizan controles y el administrador puede cerrar su sesion, siempre
+            y cuando dichos controles lo permitan.
+            */
+            expirationSrv.checkExpiration(function (error) {
+                if (error) {
+                    console.log(error);
+                    errorResponseManager.checkResponse(error);
+                }
+            });
 
             /*
             Si el administrador no tiene una sesion abierta, no se le da acceso

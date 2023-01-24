@@ -1,13 +1,14 @@
 app.controller(
 	"EmployeesCtrl",
-	["$scope", "$location", "$route", "EmployeeSrv", "AccessManager",
-		function ($scope, $location, $route, servicio, accessManager) {
+	["$scope", "$location", "$route", "EmployeeSrv", "AccessManager", "ErrorResponseManager",
+		function ($scope, $location, $route, servicio, accessManager, errorResponseManager) {
 			console.log("EmployeesCtrl loaded...")
 
 			function findAll() {
 				servicio.findAll(function (error, data) {
 					if (error) {
-						alert("Ocurrió un error: " + error);
+						console.log(error);
+						errorResponseManager.checkResponse(error);
 						return;
 					}
 					$scope.data = data;
@@ -20,6 +21,7 @@ app.controller(
 				servicio.delete(id, function (error, data) {
 					if (error) {
 						console.log(error);
+						errorResponseManager.checkResponse(error);
 						return;
 					}
 
@@ -40,32 +42,32 @@ app.controller(
 				$scope.$emit("CallLogout", {});
 			}
 
-            /*
-            Con el uso de JWT se evita que el usuario visualice el listado de
-            los datos correspondientes a este controller sin tener una sesion
-            abierta, pero sin este control, el usuario puede acceder a la pagina
-            de inicio sin tener una sesion abierta. Por lo tanto, si el usuario
-            NO tiene una sesion abierta, se le impide el acceso a la pagina de
-            inicio y se lo redirige a la pagina de inicio de sesion.
-            */
+			/*
+			Con el uso de JWT se evita que el usuario visualice el listado de
+			los datos correspondientes a este controller sin tener una sesion
+			abierta, pero sin este control, el usuario puede acceder a la pagina
+			de inicio sin tener una sesion abierta. Por lo tanto, si el usuario
+			NO tiene una sesion abierta, se le impide el acceso a la pagina de
+			inicio y se lo redirige a la pagina de inicio de sesion.
+			*/
 			if (!accessManager.isUserLoggedIn()) {
 				$location.path("/");
 				return;
 			}
 
 			/*
-            Si el usuario que tiene una sesion abierta tiene permiso de
-            administrador, se lo redirige a la pagina de inicio del
-            administrador. De esta manera, un administrador debe cerrar
-            la sesion que abrio a traves de la pagina web de inicio de sesion
-            del administrador, y luego abrir una sesion a traves de la pagina
-            web de inicio de sesion del usuario para poder acceder a la pagina web
-            de listado de los datos correspondientes a este controller.
-            */
-            if (accessManager.isUserLoggedIn() && accessManager.loggedAsAdmin()) {
-                $location.path("/adminHome");
-                return;
-            }
+			Si el usuario que tiene una sesion abierta tiene permiso de
+			administrador, se lo redirige a la pagina de inicio del
+			administrador. De esta manera, un administrador debe cerrar
+			la sesion que abrio a traves de la pagina web de inicio de sesion
+			del administrador, y luego abrir una sesion a traves de la pagina
+			web de inicio de sesion del usuario para poder acceder a la pagina web
+			de listado de los datos correspondientes a este controller.
+			*/
+			if (accessManager.isUserLoggedIn() && accessManager.loggedAsAdmin()) {
+				$location.path("/adminHome");
+				return;
+			}
 
 			/*
 			Si el flujo de ejecucion llega a este punto, se debe a que

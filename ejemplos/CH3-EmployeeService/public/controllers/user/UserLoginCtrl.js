@@ -1,7 +1,7 @@
 app.controller(
     "UserLoginCtrl",
-    ["$scope", "$location", "AuthSrv", "JwtManager", "AuthHeaderManager", "AccessManager",
-        function ($scope, $location, authService, jwtManager, authHeaderManager, accessManager) {
+    ["$scope", "$location", "AuthSrv", "JwtManager", "AuthHeaderManager", "AccessManager", "ErrorResponseManager",
+        function ($scope, $location, authService, jwtManager, authHeaderManager, accessManager, errorResponseManager) {
 
             /*
             Este control es para evitar que el usuario que tiene una
@@ -27,8 +27,8 @@ app.controller(
                     inicio.
                     */
                     if (error) {
-                        alert(error.data.message);
                         console.log(error);
+                        errorResponseManager.checkResponse(error);
                         return;
                     }
 

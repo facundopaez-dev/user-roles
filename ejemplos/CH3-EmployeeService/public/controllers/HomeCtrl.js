@@ -1,8 +1,21 @@
 app.controller(
     "HomeCtrl",
-    ["$scope", "$rootScope", "$location", "JwtManager", "AuthHeaderManager", "AccessManager",
-        function ($scope, $rootScope, $location, jwtManger, authHeaderManager, accessManager) {
+    ["$scope", "$rootScope", "$location", "ExpirationSrv", "JwtManager", "AuthHeaderManager", "AccessManager", "ErrorResponseManager",
+        function ($scope, $rootScope, $location, expirationSrv, jwtManger, authHeaderManager, accessManager, errorResponseManager) {
 
+            /*
+            Se comprueba si el JWT del usuario que tiene una sesion abierta, expiro
+            o no. En el caso en el que JWT expiro, se redirige al usuario a la
+            pagina web de inicio de sesion del usuario. En caso contrario,
+            se realizan controles y el usuario puede cerrar su sesion, siempre
+            y cuando dichos controles lo permitan.
+            */
+            expirationSrv.checkExpiration(function (error) {
+                if (error) {
+                    console.log(error);
+                    errorResponseManager.checkResponse(error);
+                }
+            });
 
             /*
             Si el usuario no tiene una sesion abierta, no se le da acceso

@@ -1,13 +1,14 @@
 app.controller(
     "ClimateRecordsCtrl",
-    ["$scope", "$location", "$route", "ClimateRecordSrv", "AccessManager",
-        function ($scope, $location, $route, service, accessManager) {
+    ["$scope", "$location", "$route", "ClimateRecordSrv", "AccessManager", "ErrorResponseManager",
+        function ($scope, $location, $route, service, accessManager, errorResponseManager) {
             console.log("ClimateRecordsCtrl cargado...")
 
             function findAll() {
                 service.findAll(function (error, data) {
                     if (error) {
-                        alert("Ocurrió un error: " + error);
+                        console.log(error);
+                        errorResponseManager.checkResponse(error);
                         return;
                     }
 
@@ -21,6 +22,7 @@ app.controller(
                 service.delete(id, function (error, data) {
                     if (error) {
                         console.log(error);
+                        errorResponseManager.checkResponse(error);
                         return;
                     }
 

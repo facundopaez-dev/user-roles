@@ -1,10 +1,9 @@
 app.controller(
     "ClimateRecordCtrl",
-    ["$scope", "$location", "$routeParams", "ClimateRecordSrv", "ParcelSrv", "AccessManager",
-        function ($scope, $location, $params, service, parcelService, accessManager) {
+    ["$scope", "$location", "$routeParams", "ExpirationSrv", "ClimateRecordSrv", "ParcelSrv", "AccessManager", "ErrorResponseManager",
+        function ($scope, $location, $params, expirationSrv, service, parcelService, accessManager, errorResponseManager) {
 
             console.log("ClimateRecordCtrl cargado, accion: " + $params.action);
-
 
             /*
             Con el uso de JWT se evita que el usuario cree, edite o visualice
@@ -28,8 +27,6 @@ app.controller(
                 service.find(id, function (error, data) {
                     if (error) {
                         console.log(error);
-                        alert(error.data.message);
-                        $location.path("/home/climateRecord");
                         return;
                     }
 
@@ -46,6 +43,7 @@ app.controller(
                 service.create($scope.data, function (error, data) {
                     if (error) {
                         console.log(error);
+                        errorResponseManager.checkResponse(error);
                         return;
                     }
 
@@ -58,6 +56,7 @@ app.controller(
                 service.modify($scope.data, function (error, data) {
                     if (error) {
                         console.log(error);
+                        errorResponseManager.checkResponse(error);
                         return;
                     }
 
@@ -74,7 +73,7 @@ app.controller(
             function findAllParcels() {
                 parcelService.findAll(function (error, parcels) {
                     if (error) {
-                        alert(error);
+                        console.log(error);
                         return;
                     }
 
@@ -101,6 +100,26 @@ app.controller(
             $scope.action = $params.action;
 
             if ($scope.action == 'new' || $scope.action == 'edit' || $scope.action == 'view') {
+                /*
+                Cada vez que el usuario presiona los botones para crear, editar o
+                ver un dato correspondiente a este controller, se debe comprobar
+                si su JWT expiro o no. En el caso en el que JWT expiro, se redirige
+                al usuario a la pagina web de inicio de sesion correspondiente. En caso
+                contrario, se realiza la accion solicitada por el usuario mediante
+                el boton pulsado.
+
+                De esta manera, este control tambien se realiza para las funciones
+                find y findAllParcels. Este es el motivo por el cual no se invoca
+                la funcion checkResponse de la factory ErrorResponseManager, en
+                dichas funciones.
+                */
+                expirationSrv.checkExpiration(function (error) {
+                    if (error) {
+                        console.log(error);
+                        errorResponseManager.checkResponse(error);
+                    }
+                });
+
                 /*
                 Si el usuario que tiene una sesion abierta tiene permiso de
                 administrador, se lo redirige a la pagina de inicio del

@@ -1,13 +1,14 @@
 app.controller(
     "UsersCtrl",
-    ["$scope", "$location", "UserSrv", "AccessManager",
-        function ($scope, $location, service, accessManager) {
+    ["$scope", "$location", "UserSrv", "AccessManager", "ErrorResponseManager",
+        function ($scope, $location, service, accessManager, errorResponseManager) {
             console.log("UsersCtrl loaded...")
 
             function findAll() {
                 service.findAll(function (error, data) {
                     if (error) {
-                        alert("Ocurrió un error: " + error);
+                        console.log(error),
+                        errorResponseManager.checkResponse(error);
                         return;
                     }
 

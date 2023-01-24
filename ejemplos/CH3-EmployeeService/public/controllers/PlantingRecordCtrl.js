@@ -1,7 +1,7 @@
 app.controller(
     "PlantingRecordCtrl",
-    ["$scope", "$route", "$location", "$routeParams", "PlantingRecordSrv", "ParcelSrv", "AccessManager",
-        function ($scope, $route, $location, $params, service, parcelService, accessManager) {
+    ["$scope", "$route", "$location", "$routeParams", "PlantingRecordSrv", "ParcelSrv", "ExpirationSrv", "AccessManager", "ErrorResponseManager",
+        function ($scope, $route, $location, $params, service, parcelService, expirationSrv, accessManager, errorResponseManager) {
 
             console.log("PlantingRecordCtrl cargado, accion: " + $params.action);
 
@@ -27,8 +27,6 @@ app.controller(
                 service.find(id, function (error, data) {
                     if (error) {
                         console.log(error);
-                        alert(error.data.message);
-                        $location.path("/home/plantingRecord");
                         return;
                     }
 
@@ -48,21 +46,21 @@ app.controller(
             $scope.save = function () {
                 service.create($scope.plantingRecord, function (error, data) {
                     if (error) {
-                        alert(error.statusText);
+                        console.log(error);
+                        errorResponseManager.checkResponse(error);
                         return;
                     }
 
                     $scope.plantingRecord = data;
+                    $location.path("/home/plantingRecord");
                 });
-
-                $location.path("/home/plantingRecord");
-                $route.reload();
             }
 
             $scope.modify = function () {
                 service.modify($scope.plantingRecord, function (error, data) {
                     if (error) {
                         console.log(error);
+                        errorResponseManager.checkResponse(error);
                         return;
                     }
 
@@ -76,7 +74,7 @@ app.controller(
             function findAllParcels() {
                 parcelService.findAll(function (error, parcels) {
                     if (error) {
-                        alert(error);
+                        console.log(error);
                         return;
                     }
 
@@ -103,6 +101,26 @@ app.controller(
             $scope.action = $params.action;
 
             if ($scope.action == 'new' || $scope.action == 'edit' || $scope.action == 'view') {
+                /*
+                Cada vez que el usuario presiona los botones para crear, editar o
+                ver un dato correspondiente a este controller, se debe comprobar
+                si su JWT expiro o no. En el caso en el que JWT expiro, se redirige
+                al usuario a la pagina web de inicio de sesion correspondiente. En caso
+                contrario, se realiza la accion solicitada por el usuario mediante
+                el boton pulsado.
+
+                De esta manera, este control tambien se realiza para las funciones
+                find y findAllParcels. Este es el motivo por el cual no se invoca
+                la funcion checkResponse de la factory ErrorResponseManager, en
+                dichas funciones.
+                */
+                expirationSrv.checkExpiration(function (error) {
+                    if (error) {
+                        console.log(error);
+                        errorResponseManager.checkResponse(error);
+                    }
+                });
+
                 /*
                 Si el usuario que tiene una sesion abierta tiene permiso de
                 administrador, se lo redirige a la pagina de inicio del

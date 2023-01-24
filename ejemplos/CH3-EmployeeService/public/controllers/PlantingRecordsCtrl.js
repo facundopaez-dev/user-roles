@@ -1,13 +1,14 @@
 app.controller(
     "PlantingRecordsCtrl",
-    ["$scope", "$route", "$location", "PlantingRecordSrv", "ParcelSrv", "AccessManager",
-        function ($scope, $route, $location, service, parcelSrv, accessManager) {
+    ["$scope", "$route", "$location", "PlantingRecordSrv", "ParcelSrv", "AccessManager", "ErrorResponseManager",
+        function ($scope, $route, $location, service, parcelSrv, accessManager, errorResponseManager) {
             console.log("Cargando PlantingRecordsCtrl...")
 
             function findAll() {
                 service.findAll(function (error, plantingRecords) {
                     if (error) {
-                        alert("Ocurrió un error: " + error);
+                        console.log(error);
+                        errorResponseManager.checkResponse(error);
                         return;
                     }
 
@@ -33,6 +34,7 @@ app.controller(
                 service.delete(id, function (error, data) {
                     if (error) {
                         console.log(error);
+                        errorResponseManager.checkResponse(error);
                         return;
                     }
 

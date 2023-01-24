@@ -1,7 +1,7 @@
 app.controller(
     "UserCtrl",
-    ["$scope", "$location", "$routeParams", "UserSrv", "AccessManager",
-        function ($scope, $location, $params, service, accessManager) {
+    ["$scope", "$location", "$routeParams", "UserSrv", "AccessManager", "ErrorResponseManager",
+        function ($scope, $location, $params, service, accessManager, errorResponseManager) {
 
             console.log("UserCtrl cargado, accion: " + $params.action);
 
@@ -38,6 +38,7 @@ app.controller(
                 service.find(id, function (error, data) {
                     if (error) {
                         console.log(error);
+                        errorResponseManager.checkResponse(error);
                         return;
                     }
 

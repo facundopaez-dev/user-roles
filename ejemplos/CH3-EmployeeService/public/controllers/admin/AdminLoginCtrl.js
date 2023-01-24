@@ -1,7 +1,7 @@
 app.controller(
     "AdminLoginCtrl",
-    ["$scope", "$location", "AuthSrv", "JwtManager", "AuthHeaderManager", "AccessManager",
-        function ($scope, $location, authService, jwtManager, authHeaderManager, accessManager) {
+    ["$scope", "$location", "AuthSrv", "JwtManager", "AuthHeaderManager", "AccessManager", "ErrorResponseManager",
+        function ($scope, $location, authService, jwtManager, authHeaderManager, accessManager, errorResponseManager) {
 
             /*
             Este control es para evitar que el administrador que tiene una
@@ -28,8 +28,8 @@ app.controller(
                     mostrar la pagina de inicio del administrador.
                     */
                     if (error) {
-                        alert(error.data.message);
                         console.log(error);
+                        errorResponseManager.checkResponse(error);
                         return;
                     }
 

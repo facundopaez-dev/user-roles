@@ -1,13 +1,14 @@
 app.controller(
     "CropsCtrl",
-    ["$scope", "$location", "$route", "CropSrv", "AccessManager",
-        function ($scope, $location, $route, service, accessManager) {
+    ["$scope", "$location", "$route", "CropSrv", "AccessManager", "ErrorResponseManager",
+        function ($scope, $location, $route, service, accessManager, errorResponseManager) {
             console.log("CropsCtrl loaded...");
 
             function findAll() {
                 service.findAll(function (error, data) {
                     if (error) {
-                        alert("Ocurrió un error: " + error);
+                        console.log(error);
+                        errorResponseManager.checkResponse(error);
                         return;
                     }
 
@@ -21,6 +22,7 @@ app.controller(
                 service.remove(id, function (error, data) {
                     if (error) {
                         console.log(error);
+                        errorResponseManager.checkResponse(error);
                         return;
                     }
 

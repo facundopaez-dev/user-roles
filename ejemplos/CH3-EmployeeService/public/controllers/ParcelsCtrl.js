@@ -1,13 +1,14 @@
 app.controller(
     "ParcelsCtrl",
-    ["$scope", "$location", "$route", "ParcelSrv", "AccessManager",
-        function ($scope, $location, $route, service, accessManager) {
+    ["$scope", "$location", "$route", "ParcelSrv", "AccessManager", "ErrorResponseManager",
+        function ($scope, $location, $route, service, accessManager, errorResponseManager) {
             console.log("ParcelsCtrl loaded...")
 
             function findAll() {
                 service.findAll(function (error, data) {
                     if (error) {
-                        alert("Ocurrió un error: " + error);
+                        console.log(error);
+                        errorResponseManager.checkResponse(error);
                         return;
                     }
                     $scope.data = data;
@@ -20,6 +21,7 @@ app.controller(
                 service.delete(id, function (error, data) {
                     if (error) {
                         console.log(error);
+                        errorResponseManager.checkResponse(error);
                         return;
                     }
 

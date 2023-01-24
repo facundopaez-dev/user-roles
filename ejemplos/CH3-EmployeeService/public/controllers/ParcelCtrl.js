@@ -1,7 +1,7 @@
 app.controller(
     "ParcelCtrl",
-    ["$scope", "$location", "$routeParams", "ParcelSrv", "AccessManager",
-        function ($scope, $location, $params, service, accessManager) {
+    ["$scope", "$location", "$routeParams", "ExpirationSrv", "ParcelSrv", "AccessManager", "ErrorResponseManager",
+        function ($scope, $location, $params, expirationSrv, service, accessManager, errorResponseManager) {
 
             console.log("ParcelCtrl loaded with action: " + $params.action);
 
@@ -27,8 +27,6 @@ app.controller(
                 service.find(id, function (error, data) {
                     if (error) {
                         console.log(error);
-                        alert(error.data.message);
-                        $location.path("/home/parcel");
                         return;
                     }
 
@@ -49,6 +47,7 @@ app.controller(
                 service.save($scope.data, function (error, data) {
                     if (error) {
                         console.log(error);
+                        errorResponseManager.checkResponse(error);
                         return;
                     }
                     $scope.data = data;
@@ -60,6 +59,7 @@ app.controller(
                 service.update($scope.data, function (error, data) {
                     if (error) {
                         console.log(error);
+                        errorResponseManager.checkResponse(error);
                         return;
                     }
                     $scope.data = data;
@@ -95,6 +95,25 @@ app.controller(
             $scope.action = $params.action;
 
             if ($scope.action == 'new' || $scope.action == 'edit' || $scope.action == 'view') {
+                /*
+                Cada vez que el usuario presiona los botones para crear, editar o
+                ver un dato correspondiente a este controller, se debe comprobar
+                si su JWT expiro o no. En el caso en el que JWT expiro, se redirige
+                al usuario a la pagina web de inicio de sesion correspondiente. En caso
+                contrario, se realiza la accion solicitada por el usuario mediante
+                el boton pulsado.
+
+                De esta manera, este control tambien se realiza para la funcion find.
+                Este es el motivo por el cual no se invoca la funcion checkResponse
+                de la factory ErrorResponseManager, en dicha funcion.
+                */
+                expirationSrv.checkExpiration(function (error) {
+                    if (error) {
+                        console.log(error);
+                        errorResponseManager.checkResponse(error);
+                    }
+                });
+
                 /*
                 Si el usuario que tiene una sesion abierta tiene permiso de
                 administrador, se lo redirige a la pagina de inicio del

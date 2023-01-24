@@ -1,19 +1,19 @@
 app.controller(
-	"UsersCtrl",
-	["$scope", "$location", "UserSrv", "AccessManager",
-		function ($scope, $location, service, accessManager) {
-			console.log("UsersCtrl loaded...")
+    "UsersCtrl",
+    ["$scope", "$location", "UserSrv", "AccessManager",
+        function ($scope, $location, service, accessManager) {
+            console.log("UsersCtrl loaded...")
 
-			function findAll() {
-				service.findAll(function (error, data) {
-					if (error) {
-						alert("Ocurrió un error: " + error);
-						return;
-					}
-					
-					$scope.data = data;
-				})
-			}
+            function findAll() {
+                service.findAll(function (error, data) {
+                    if (error) {
+                        alert("Ocurrió un error: " + error);
+                        return;
+                    }
+
+                    $scope.data = data;
+                })
+            }
 
             $scope.logout = function () {
                 /*
@@ -51,9 +51,9 @@ app.controller(
             }
 
             /*
-			Si el flujo de ejecucion llega a este punto, se debe a que
-			el administrador inicio sesion, por lo tanto, se debe mostrar
-			esta lista
-			*/
-			findAll();
-		}]);
+            Si el flujo de ejecucion llega a este punto, se debe a que
+            el administrador inicio sesion, por lo tanto, se debe mostrar
+            esta lista
+            */
+            findAll();
+        }]);

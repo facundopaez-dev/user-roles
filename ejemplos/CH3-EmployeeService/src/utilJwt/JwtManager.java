@@ -24,7 +24,7 @@ public class JwtManager {
    */
   private static final String USER_ID = "userId";
   private static final String SUPERUSER = "superuser";
-  
+
   /*
    * La fecha de emision se utiliza para establecer el tiempo en el
    * que se crea un JWT y la fecha de expiracion se utiliza para
@@ -152,16 +152,16 @@ public class JwtManager {
    */
   public static boolean validateJwt(String jwt, String secretKey) {
     JWTVerifier jwtVerifier = buildJwtVerifier(secretKey);
-    boolean result = false;
+    boolean valid = false;
 
     try {
       jwtVerifier.verify(jwt);
-      result = true;      
+      valid = true;      
     } catch (JWTVerificationException e) {
       e.printStackTrace();
     }
 
-    return result;
+    return valid;
   }
 
   /**

@@ -17,7 +17,7 @@ app.controller(
 
             $scope.delete = function (id) {
                 console.log("Deleting: " + id);
-                
+
                 service.remove(id, function (error, data) {
                     if (error) {
                         console.log(error);
@@ -65,9 +65,9 @@ app.controller(
             }
 
             /*
-			Si el flujo de ejecucion llega a este punto, se debe a que
-			el administrador inicio sesion, por lo tanto, se debe mostrar
-			esta lista
-			*/
+            Si el flujo de ejecucion llega a este punto, se debe a que
+            el administrador inicio sesion, por lo tanto, se debe mostrar
+            esta lista
+            */
             findAll();
         }]);

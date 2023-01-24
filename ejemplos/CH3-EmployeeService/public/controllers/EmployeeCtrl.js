@@ -91,12 +91,12 @@ app.controller(
         a este controller.
         */
         if (accessManager.isUserLoggedIn() && accessManager.loggedAsAdmin()) {
-            $location.path("/adminHome");
-            return;
+          $location.path("/adminHome");
+          return;
         }
-    }
+      }
 
-    if ($scope.action == 'edit' || $scope.action == 'view') {
+      if ($scope.action == 'edit' || $scope.action == 'view') {
         find($params.id);
       }
 

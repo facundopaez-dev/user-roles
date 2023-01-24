@@ -104,17 +104,42 @@ public class JwtManager {
    * @return true si el JWT dado expiro, false en caso contrario
    */
   public static boolean isExpired(String jwt, String secretKey) {
-    JWTVerifier jwtVerifier = buildJwtVerifier(secretKey);
-    boolean result = true;
+    boolean expired = true;
 
     try {
-      jwtVerifier.verify(jwt);
-      result = false;      
+      checkExpiration(jwt, secretKey);
+      expired = false;      
     } catch (TokenExpiredException e) {
       e.printStackTrace();
     }
 
-    return result;
+    return expired;
+  }
+
+  /**
+   * Comprueba si un JWT ha expirado o no
+   * 
+   * @param jwt
+   * @param secretKey clave secreta con la que se firma un JWT
+   */
+  private static void checkExpiration(String jwt, String secretKey) {
+    JWTVerifier jwtVerifier = buildJwtVerifier(secretKey);
+
+    try {
+      jwtVerifier.verify(jwt);
+    } catch (JWTVerificationException givenException) {
+      /*
+       * Comprueba si la referencia almacenada en givenException
+       * es del tipo TokenExpiredException. De ser asi, lanza
+       * una excepcion TokenExpiredException.
+       */
+      if (givenException instanceof TokenExpiredException) {
+        throw givenException;
+      }
+
+      givenException.printStackTrace();
+    }
+
   }
 
   /**

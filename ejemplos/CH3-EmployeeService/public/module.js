@@ -193,7 +193,7 @@ app.factory('JwtManager', function ($window) {
 		de sesion del navegador web
 		*/
 		setJwt: function (jwt) {
-			$window.sessionStorage.setItem(KEY, jwt);
+			$window.localStorage.setItem(KEY, jwt);
 		},
 
 		/*
@@ -203,7 +203,7 @@ app.factory('JwtManager', function ($window) {
 		sea, un navegador web, una aplicacion del estilo POSTMAN, etc.
 		*/
 		getJwt: function () {
-			return $window.sessionStorage.getItem(KEY);
+			return $window.localStorage.getItem(KEY);
 		},
 
 		/*
@@ -212,7 +212,7 @@ app.factory('JwtManager', function ($window) {
 		almacenamiento de sesion del navegador web
 		*/
 		removeJwt: function () {
-			$window.sessionStorage.removeItem(KEY);
+			$window.localStorage.removeItem(KEY);
 		}
 	}
 });

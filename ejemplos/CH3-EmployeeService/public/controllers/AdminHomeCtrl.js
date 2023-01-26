@@ -1,7 +1,7 @@
 app.controller(
     "AdminHomeCtrl",
-    ["$scope", "$rootScope", "$location", "ExpirationSrv", "JwtManager", "AuthHeaderManager", "AccessManager", "ErrorResponseManager",
-        function ($scope, $rootScope, $location, expirationSrv, jwtManager, authHeaderManager, accessManager, errorResponseManager) {
+    ["$scope", "$rootScope", "$location", "ExpirationSrv", "LogoutSrv", "JwtManager", "AuthHeaderManager", "AccessManager", "ErrorResponseManager",
+        function ($scope, $rootScope, $location, expirationSrv, logoutSrv, jwtManager, authHeaderManager, accessManager, errorResponseManager) {
 
             /*
             Se comprueba si el JWT del administrador que tiene una sesion abierta, expiro
@@ -38,6 +38,26 @@ app.controller(
             }
 
             $scope.logout = function () {
+                /*
+                Con esta peticion se elimina logicamente de la base de datos
+                (en el backend) la sesion activa del usuario. Si no se hace
+                esta eliminacion lo que sucedera es que, cuando el usuario
+                que abrio y cerro su sesion, intente abrir otra sesion, la
+                aplicacion no se lo permitira, ya que la sesion anteriormente
+                cerrada aun sigue activa.
+
+                Cuando se elimina logicamente una sesion activa de la base
+                de datos subyacente (en el backend), la sesion pasa a estar
+                inactiva. De esta manera, el usuario que abrio y cerro su
+                sesion, puede abrir nuevamente otra sesion.
+                */
+                logoutSrv.logout(function (error) {
+                    if (error) {
+                        console.log(error);
+                        errorResponseManager.checkResponse(error);
+                    }
+                });
+
                 /*
                 Cuando el administrador cierra su sesion, se elimina su JWT
                 del almacenamiento de sesion del navegador web

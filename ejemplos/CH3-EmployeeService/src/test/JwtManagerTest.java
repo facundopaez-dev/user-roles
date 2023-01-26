@@ -919,7 +919,7 @@ public class JwtManagerTest {
   }
 
   /**
-   * Imprime el encabezado de un JWT decodificado de base64
+   * Imprime el encabezado de un JWT decodificado de Base64
    * 
    * @param jwt
    */
@@ -929,7 +929,7 @@ public class JwtManagerTest {
   }
 
   /**
-   * Imprime el encabezado decodificado de base64 de un JWT
+   * Imprime el encabezado decodificado de Base64 de un JWT
    * creado con el algoritmo HMAC384
    * 
    * @param jwt
@@ -940,7 +940,7 @@ public class JwtManagerTest {
   }
 
   /**
-   * Imprime la carga util de un JWT decodificada de base64
+   * Imprime la carga util de un JWT decodificada de Base64
    * 
    * @param jwt
    */
@@ -990,7 +990,7 @@ public class JwtManagerTest {
   }
   
   /**
-   * Imprime el encabezado en base64 de un JWT creado
+   * Imprime el encabezado en Base64 de un JWT creado
    * con el algoritmo HMAC256
    * 
    * @param jwt
@@ -1001,7 +1001,7 @@ public class JwtManagerTest {
   }
 
   /**
-   * Imprime la carga util en base64 de un JWT creado
+   * Imprime la carga util en Base64 de un JWT creado
    * con el algoritmo HMAC256
    * 
    * @param jwt
@@ -1012,7 +1012,7 @@ public class JwtManagerTest {
   }
 
   /**
-   * Imprime la firma en base64 de un JWT creado
+   * Imprime la firma en Base64 de un JWT creado
    * con el algoritmo HMAC256
    * 
    * @param jwt
@@ -1023,7 +1023,7 @@ public class JwtManagerTest {
   }
 
   /**
-   * Imprime el encabezado en base64 de un JWT creado
+   * Imprime el encabezado en Base64 de un JWT creado
    * con el algoritmo HMAC384
    * 
    * @param jwt
@@ -1034,7 +1034,7 @@ public class JwtManagerTest {
   }
 
   /**
-   * Imprime la carga util en base64 de un JWT creado
+   * Imprime la carga util en Base64 de un JWT creado
    * con el algoritmo HMAC384
    * 
    * @param jwt

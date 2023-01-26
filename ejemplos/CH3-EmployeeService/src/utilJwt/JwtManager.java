@@ -215,7 +215,7 @@ public class JwtManager {
   public static Calendar getDateIssue(String jwt, String secretKey) {
     /*
      * Obtiene la carga util de un JWT, pero decodificada
-     * de base64
+     * de Base64
      */
     String payload = getDecodedPayload(jwt, secretKey);
     long issuedTime = Long.parseLong(getValueKey(ISSUED_AT_KEY, payload));
@@ -242,7 +242,7 @@ public class JwtManager {
   public static Calendar getExpirationDate(String jwt, String secretKey) {
     /*
      * Obtiene la carga util de un JWT, pero decodificada
-     * de base64
+     * de Base64
      */
     String payload = getDecodedPayload(jwt, secretKey);
     long expirationTime = Long.parseLong(getValueKey(EXPIRES_AT_KEY, payload));
@@ -328,11 +328,11 @@ public class JwtManager {
   }
 
   /**
-   * Obtiene la carga util decodificada de un JWT
+   * Obtiene la carga util de un JWT, pero decodificada de Base64
    * 
    * @param jwt
    * @return referencia a un objeto de tipo String que contiene la carga
-   * util decodificada de un JWT
+   * util de un JWT, pero decodificada de Base64
    */
   private static String getDecodedPayload(String jwt, String secretKey) {
 		JWTVerifier jwtVerifier = buildJwtVerifier(secretKey);

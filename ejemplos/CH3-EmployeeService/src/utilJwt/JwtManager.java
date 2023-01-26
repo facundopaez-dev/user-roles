@@ -10,6 +10,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.Verification;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -40,14 +41,15 @@ public class JwtManager {
   private static final int OFFSET = 900000;
 
   /*
-   * Estas constantes se utilizan para obtener el ID de usuario
-   * y el permiso de administrador (super usuario) contenidos
-   * en la carga util de un JWT
+   * Estas constantes se utilizan para recuperar los datos de
+   * la carga util de un JWT, como el ID de usuario, por ejemplo
    */
   private static final String COMMA = ",";
   private static final String TWO_POINTS = ":";
   private static final String USER_ID_KEY = "\"userId\"";
   private static final String SUPERUSER_KEY = "\"superuser\"";
+  private static final String ISSUED_AT_KEY = "\"iat\"";
+  private static final String EXPIRES_AT_KEY = "\"exp\"";
 
   /*
    * El metodo constructor tiene el modificador de acceso 'private'
@@ -199,6 +201,60 @@ public class JwtManager {
   public static boolean getSuperuser(String jwt, String secretKey) {
     String payload = getDecodedPayload(jwt, secretKey);
     return Boolean.parseBoolean(getValueKey(SUPERUSER_KEY, payload));
+  }
+
+  /**
+   * Retorna la fecha de emision contenida en la carga util de un
+   * JWT
+   * 
+   * @param jwt
+   * @param secretKey clave secreta con la que se firma un JWT
+   * @return referencia a un objeto de tipo Calendar que contiene
+   * la fecha de emision de un JWT
+   */
+  public static Calendar getDateIssue(String jwt, String secretKey) {
+    /*
+     * Obtiene la carga util de un JWT, pero decodificada
+     * de base64
+     */
+    String payload = getDecodedPayload(jwt, secretKey);
+    long issuedTime = Long.parseLong(getValueKey(ISSUED_AT_KEY, payload));
+
+    /*
+     * El tiempo de emision es multiplicado por 1000 para
+     * convetirlo de segundos a milisegundos
+     */
+    Calendar dateIssue = Calendar.getInstance();
+    dateIssue.setTimeInMillis(issuedTime * 1000);
+
+    return dateIssue;
+  }
+
+  /**
+   * Retorna la fecha de expiracion contenida en la carga util de un
+   * JWT
+   * 
+   * @param jwt
+   * @param secretKey clave secreta con la que se firma un JWT
+   * @return referencia a un objeto de tipo Calendar que contiene
+   * la fecha de expiracion de un JWT
+   */
+  public static Calendar getExpirationDate(String jwt, String secretKey) {
+    /*
+     * Obtiene la carga util de un JWT, pero decodificada
+     * de base64
+     */
+    String payload = getDecodedPayload(jwt, secretKey);
+    long expirationTime = Long.parseLong(getValueKey(EXPIRES_AT_KEY, payload));
+
+    /*
+     * El tiempo de expiracion es multiplicado por 1000 para
+     * convertirlo de segundos a milisegundos
+     */
+    Calendar expirationDate = Calendar.getInstance();
+    expirationDate.setTimeInMillis(expirationTime * 1000);
+
+    return expirationDate;
   }
 
   /**

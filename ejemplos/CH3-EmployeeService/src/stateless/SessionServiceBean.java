@@ -1,5 +1,6 @@
 package stateless;
 
+import java.util.Calendar;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -64,6 +65,69 @@ public class SessionServiceBean {
     }
 
     return null;
+  }
+
+  /**
+   * Retorna true si y solo si el usuario con el ID dado tiene
+   * una sesion activa.
+   * 
+   * Se denomina "sesion activa" a la sesion abierta que no ha
+   * expirado o que sin haber expirado no ha sido cerrada por
+   * el usuario que la abrio.
+   * 
+   * Una sesion expira cuando su fecha de expiracion esta antes
+   * de la fecha actual.
+   * 
+   * @param userId
+   * @return true si el usuario con el ID dado tiene una sesion
+   * activa, false en caso contrario
+   */
+  public boolean checkActiveSession(int userId) {
+    Session lastSession = findLastSession(userId);
+
+    /*
+     * Cuando el usuario inicia sesion por primera vez, no tiene
+     * ninguna sesion registrada en la base de datos subyacente,
+     * ni activa ni inactiva. Por lo tanto, se retorna false
+     * como indicador de que el usuario que inicia sesion por
+     * primera vez, NO tiene una sesion activa.
+     */
+    if (lastSession == null) {
+      return false;
+    }
+
+    /*
+     * Si la fecha de expiracion de la ultima sesion registrada del
+     * usuario, esta antes de la fecha actual del sistema, se
+     * retorna false. El metodo getInstance de la clase Calendar
+     * retorna una referencia a un objeto de tipo Calendar que tiene
+     * la fecha actual.
+     * 
+     * Una sesion que tiene su fecha de expiracion antes de la fecha
+     * actual, es una sesion inactiva.
+     */
+    if (lastSession.getExpirationDate().before(Calendar.getInstance())) {
+      return false;
+    }
+
+    /*
+     * Si el usuario tiene abierta una sesion que no ha expirado (lo cual,
+     * se sabe por el control anterior) y la cierra el mismo, se retorna
+     * false.
+     * 
+     * Una sesion que no ha expirado, pero que ha sido cerrada por el
+     * usuario que la abrio, es una sesion inactiva.
+     */
+    if (lastSession.getClosed()) {
+      return false;
+    }
+
+    /*
+     * Si el usuario que intenta abrir una sesion con su cuenta,
+     * tiene una sesion activa, se retorna true como indicador
+     * de esto
+     */
+    return true;
   }
 
   /**

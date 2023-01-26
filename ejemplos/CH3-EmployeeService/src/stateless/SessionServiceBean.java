@@ -7,6 +7,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import model.Session;
+import model.User;
 
 @Stateless
 public class SessionServiceBean {
@@ -26,6 +27,23 @@ public class SessionServiceBean {
   }
 
   public Session create(Session newSession) {
+    getEntityManager().persist(newSession);
+    return newSession;
+  }
+
+  /**
+   * @param user
+   * @param dateIssue
+   * @param expirationDate
+   * @return referencia a un objeto de tipo Session creado
+   * con los datos provistos mediante los parametros
+   */
+  public Session create(User user, Calendar dateIssue, Calendar expirationDate) {
+    Session newSession = new Session();
+    newSession.setUser(user);
+    newSession.setDateIssue(dateIssue);
+    newSession.setExpirationDate(expirationDate);
+
     getEntityManager().persist(newSession);
     return newSession;
   }

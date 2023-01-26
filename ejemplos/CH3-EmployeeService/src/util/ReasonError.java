@@ -10,7 +10,7 @@ public enum ReasonError {
   SESSION_EXPIRED("Sesión expirada"),
   UNAUTHORIZED_ACCESS("Acceso no autorizado"),
   RESOURCE_NOT_FOUND("Recurso no encontrado"),
-  MULTIPLE_SESSIONS("No es posible tener mas de una sesión abierta simultáneamente");
+  MULTIPLE_SESSIONS("No es posible tener más de una sesión abierta simultáneamente");
 
   private final String reason;
 

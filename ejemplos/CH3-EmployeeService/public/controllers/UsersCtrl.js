@@ -1,8 +1,31 @@
 app.controller(
     "UsersCtrl",
-    ["$scope", "$location", "UserSrv", "AccessManager", "ErrorResponseManager",
-        function ($scope, $location, service, accessManager, errorResponseManager) {
+    ["$scope", "$location", "UserSrv", "AccessManager", "ErrorResponseManager", "AuthHeaderManager",
+        function ($scope, $location, service, accessManager, errorResponseManager, authHeaderManager) {
             console.log("UsersCtrl loaded...")
+
+            /*
+            Cuando el usuario abre una sesion satisfactoriamente y no la cierra,
+            y accede a la aplicacion web mediante una nueva pestaña, el encabezado
+            de autorizacion HTTP tiene el valor undefined. En consecuencia, las
+            peticiones HTTP con este encabezado no seran respondidas por la
+            aplicacion del lado servidor, ya que esta opera con JWT para la
+            autenticacion, la autorizacion y las operaciones con recursos
+            (lectura, modificacion y creacion).
+
+			Este es el motivo por el cual se hace este control. Si el encabezado
+			HTTP de autorizacion tiene el valor undefined, se le asigna el JWT
+			del usuario.
+
+            De esta manera, cuando el usuario abre una sesion satisfactoriamente
+            y no la cierra, y accede a la aplicacion web mediante una nueva pestaña,
+            el encabezado HTTP de autorizacion contiene el JWT del usuario, y, por
+            ende, la peticion HTTP que se realice en la nueva pestaña, sera respondida
+            por la aplicacion del lado servidor.
+            */
+            if (authHeaderManager.isEmpty()) {
+                authHeaderManager.setJwtAuthHeader();
+            }
 
             function findAll() {
                 service.findAll(function (error, data) {

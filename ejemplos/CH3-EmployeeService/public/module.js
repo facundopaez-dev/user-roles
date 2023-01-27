@@ -256,6 +256,18 @@ app.factory('AuthHeaderManager', ['$http', 'JwtManager', function ($http, jwtMan
 		*/
 		clearAuthHeader: function () {
 			$http.defaults.headers.common.Authorization = '';
+		},
+
+		/**
+		 * @returns true si el encabezado HTTP de autorizacion tiene el
+		 * valor undefined, false en caso contrario
+		 */
+		isEmpty: function () {
+			if ($http.defaults.headers.common.Authorization === undefined) {
+				return true;
+			}
+
+			return false;
 		}
 	}
 }]);

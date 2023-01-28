@@ -1,7 +1,7 @@
 app.controller(
     "HomeCtrl",
     ["$scope", "$rootScope", "$location", "ExpirationSrv", "LogoutSrv", "JwtManager", "AuthHeaderManager", "AccessManager", "ErrorResponseManager",
-        function ($scope, $rootScope, $location, expirationSrv, logoutSrv, jwtManger, authHeaderManager, accessManager, errorResponseManager) {
+        function ($scope, $rootScope, $location, expirationSrv, logoutSrv, jwtManager, authHeaderManager, accessManager, errorResponseManager) {
 
             console.log("HomeCtrl loaded");
 
@@ -91,7 +91,7 @@ app.controller(
                 Cuando el usuario cliente cierra su sesion, se elimina su JWT
                 del almacenamiento de sesion del navegador web
                 */
-                jwtManger.removeJwt();
+                jwtManager.removeJwt();
 
                 /*
                 Cuando el usuario cierra su sesion, se elimina el contenido

@@ -27,6 +27,16 @@ app.controller(
             }
 
             /*
+            Si el administrador no tiene una sesion abierta, no se le da acceso
+            a la pagina de inicio del administrador y se lo redirige a la pagina
+            de inicio de sesion del administrador
+            */
+            if (!accessManager.isUserLoggedIn()) {
+                $location.path("/admin");
+                return;
+            }
+
+            /*
             Se comprueba si el JWT del administrador que tiene una sesion abierta, expiro
             o no. En el caso en el que JWT expiro, se redirige al administrador a la
             pagina web de inicio de sesion del administrador. En caso contrario,
@@ -39,16 +49,6 @@ app.controller(
                     errorResponseManager.checkResponse(error);
                 }
             });
-
-            /*
-            Si el administrador no tiene una sesion abierta, no se le da acceso
-            a la pagina de inicio del administrador y se lo redirige a la pagina
-            de inicio de sesion del administrador
-            */
-            if (!accessManager.isUserLoggedIn()) {
-                $location.path("/admin");
-                return;
-            }
 
             /*
             Si el usuario que tiene una sesion abierta no tiene permiso de administrador,

@@ -29,6 +29,16 @@ app.controller(
             }
 
             /*
+            Si el usuario no tiene una sesion abierta, no se le da acceso
+            a la pagina de inicio y se lo redirige a la pagina de inicio
+            de sesion
+            */
+            if (!accessManager.isUserLoggedIn()) {
+                $location.path("/");
+                return;
+            }
+
+            /*
             Se comprueba si el JWT del usuario que tiene una sesion abierta, expiro
             o no. En el caso en el que JWT expiro, se redirige al usuario a la
             pagina web de inicio de sesion del usuario. En caso contrario,
@@ -41,16 +51,6 @@ app.controller(
                     errorResponseManager.checkResponse(error);
                 }
             });
-
-            /*
-            Si el usuario no tiene una sesion abierta, no se le da acceso
-            a la pagina de inicio y se lo redirige a la pagina de inicio
-            de sesion
-            */
-            if (!accessManager.isUserLoggedIn()) {
-                $location.path("/");
-                return;
-            }
 
             /*
             Si el usuario que tiene una sesion abierta tiene permiso de

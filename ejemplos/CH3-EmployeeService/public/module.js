@@ -110,16 +110,18 @@ AccessManager es la factory que se utiliza para controlar el acceso a
 las paginas web dependiendo si el usuario tiene una sesion abierta o no,
 y si tiene permiso de administrador o no
 */
-app.factory('AccessManager', ['JwtManager', function (jwtManager) {
+app.factory('AccessManager', ['JwtManager', '$window', function (jwtManager, $window) {
 	/*
-	Esta variable se utiliza para evitar que un administrador con una sesion
-	abierta como administrador, acceda a las paginas web a las que accede
-	un usuario. De esta manera, un administrador debe cerrar la sesion que
-	abrio a traves de la pagina web de inicio de sesion de administrador, y
-	luego abrir una sesion a traves de la pagina web de inicio de sesion de
-	usuario, para acceder a las paginas web a las que accede un usuario.
+	El valor booleano establecido y accedido en el almacenamiento local del
+	navegador web a traves de esta constante, se utiliza para evitar que un
+	administrador con una sesion abierta como administrador, acceda a las
+	paginas web a las que accede un usuario. De esta manera, un administrador
+	debe cerrar la sesion que abrio a traves de la pagina web de inicio de
+	sesion de administrador, y luego abrir una sesion a traves de la pagina
+	web de inicio de sesion de usuario, para acceder a las paginas web a las
+	que accede un usuario.
 	*/
-	var loggedAsSuperuser = false;
+	const KEY = "superuser";
 
 	return {
 		/**
@@ -154,7 +156,7 @@ app.factory('AccessManager', ['JwtManager', function (jwtManager) {
 		 * permiso de administrador, false en caso contrario
 		 */
 		loggedAsAdmin: function () {
-			return loggedAsSuperuser;
+			return JSON.parse($window.localStorage.getItem(KEY));
 		},
 
 		/**
@@ -162,7 +164,7 @@ app.factory('AccessManager', ['JwtManager', function (jwtManager) {
 		 * tiene permiso de administrador
 		 */
 		setAsAdmin: function () {
-			loggedAsSuperuser = true;
+			$window.localStorage.setItem(KEY, JSON.stringify(true));
 		},
 
 		/**
@@ -170,7 +172,7 @@ app.factory('AccessManager', ['JwtManager', function (jwtManager) {
 		 * tiene permiso de administrador
 		 */
 		clearAsAdmin: function () {
-			loggedAsSuperuser = false;
+			$window.localStorage.setItem(KEY, JSON.stringify(false));
 		}
 	}
 }]);

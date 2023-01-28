@@ -22,7 +22,7 @@ app.controller(
             ende, la peticion HTTP que se realice en la nueva pestaña, sera respondida
             por la aplicacion del lado servidor.
             */
-            if (authHeaderManager.isEmpty()) {
+            if (authHeaderManager.isUndefined()) {
                 authHeaderManager.setJwtAuthHeader();
             }
 

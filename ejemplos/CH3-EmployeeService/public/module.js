@@ -262,7 +262,7 @@ app.factory('AuthHeaderManager', ['$http', 'JwtManager', function ($http, jwtMan
 		 * @returns true si el encabezado HTTP de autorizacion tiene el
 		 * valor undefined, false en caso contrario
 		 */
-		isEmpty: function () {
+		isUndefined: function () {
 			if ($http.defaults.headers.common.Authorization === undefined) {
 				return true;
 			}

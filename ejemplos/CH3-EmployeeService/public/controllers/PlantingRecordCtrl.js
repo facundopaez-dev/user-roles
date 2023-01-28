@@ -3,7 +3,35 @@ app.controller(
     ["$scope", "$route", "$location", "$routeParams", "PlantingRecordSrv", "ParcelSrv", "ExpirationSrv", "AccessManager", "ErrorResponseManager", "AuthHeaderManager",
         function ($scope, $route, $location, $params, service, parcelService, expirationSrv, accessManager, errorResponseManager, authHeaderManager) {
 
-            console.log("PlantingRecordCtrl cargado, accion: " + $params.action);
+            console.log("PlantingRecordCtrl loaded with action: " + $params.action);
+
+            /*
+            Con el uso de JWT se evita que el usuario cree, edite o visualice
+            un dato, correspondiente a este controller, sin tener una sesion
+            abierta, pero sin este control, el usuario puede acceder la pagina
+            de inicio sin tener una sesion abierta. Por lo tanto, si el
+            usuario NO tiene una sesion abierta, se le impide el acceso a la
+            pagina de inicio y se lo redirige a la pagina de inicio de sesion.
+            */
+            if (!accessManager.isUserLoggedIn()) {
+                $location.path("/");
+                return;
+            }
+
+            /*
+            Si el usuario que tiene una sesion abierta tiene permiso de
+            administrador, se lo redirige a la pagina de inicio del
+            administrador. De esta manera, un administrador debe cerrar
+            la sesion que abrio a traves de la pagina web de inicio de sesion
+            del administrador, y luego abrir una sesion a traves de la pagina
+            web de inicio de sesion del usuario para poder acceder a la pagina web
+            de creacion, edicion o visualizacion de un dato correspondiente
+            a este controller.
+            */
+            if (accessManager.isUserLoggedIn() && accessManager.loggedAsAdmin()) {
+                $location.path("/adminHome");
+                return;
+            }
 
             /*
             Cuando el usuario abre una sesion satisfactoriamente y no la cierra,
@@ -29,17 +57,24 @@ app.controller(
             }
 
             /*
-            Con el uso de JWT se evita que el usuario cree, edite o visualice
-            un dato, correspondiente a este controller, sin tener una sesion
-            abierta, pero sin este control, el usuario puede acceder la pagina
-            de inicio sin tener una sesion abierta. Por lo tanto, si el
-            usuario NO tiene una sesion abierta, se le impide el acceso a la
-            pagina de inicio y se lo redirige a la pagina de inicio de sesion.
+            Cada vez que el usuario presiona los botones para crear, editar o
+            ver un dato correspondiente a este controller, se debe comprobar
+            si su JWT expiro o no. En el caso en el que JWT expiro, se redirige
+            al usuario a la pagina web de inicio de sesion correspondiente. En caso
+            contrario, se realiza la accion solicitada por el usuario mediante
+            el boton pulsado.
+
+            De esta manera, este control tambien se realiza para las funciones
+            find y findAllParcels. Este es el motivo por el cual no se invoca
+            la funcion checkResponse de la factory ErrorResponseManager, en
+            dichas funciones.
             */
-            if (!accessManager.isUserLoggedIn()) {
-                $location.path("/");
-                return;
-            }
+            expirationSrv.checkExpiration(function (error) {
+                if (error) {
+                    console.log(error);
+                    errorResponseManager.checkResponse(error);
+                }
+            });
 
             if (['new', 'edit', 'view'].indexOf($params.action) == -1) {
                 alert("Acción inválida: " + $params.action);
@@ -124,41 +159,6 @@ app.controller(
             $scope.action = $params.action;
 
             if ($scope.action == 'new' || $scope.action == 'edit' || $scope.action == 'view') {
-                /*
-                Cada vez que el usuario presiona los botones para crear, editar o
-                ver un dato correspondiente a este controller, se debe comprobar
-                si su JWT expiro o no. En el caso en el que JWT expiro, se redirige
-                al usuario a la pagina web de inicio de sesion correspondiente. En caso
-                contrario, se realiza la accion solicitada por el usuario mediante
-                el boton pulsado.
-
-                De esta manera, este control tambien se realiza para las funciones
-                find y findAllParcels. Este es el motivo por el cual no se invoca
-                la funcion checkResponse de la factory ErrorResponseManager, en
-                dichas funciones.
-                */
-                expirationSrv.checkExpiration(function (error) {
-                    if (error) {
-                        console.log(error);
-                        errorResponseManager.checkResponse(error);
-                    }
-                });
-
-                /*
-                Si el usuario que tiene una sesion abierta tiene permiso de
-                administrador, se lo redirige a la pagina de inicio del
-                administrador. De esta manera, un administrador debe cerrar
-                la sesion que abrio a traves de la pagina web de inicio de sesion
-                del administrador, y luego abrir una sesion a traves de la pagina
-                web de inicio de sesion del usuario para poder acceder a la pagina web
-                de creacion, edicion o visualizacion de un dato correspondiente
-                a este controller.
-                */
-                if (accessManager.isUserLoggedIn() && accessManager.loggedAsAdmin()) {
-                    $location.path("/adminHome");
-                    return;
-                }
-
                 findAllParcels();
             }
 

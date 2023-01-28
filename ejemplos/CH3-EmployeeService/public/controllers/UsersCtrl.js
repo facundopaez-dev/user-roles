@@ -5,6 +5,29 @@ app.controller(
             console.log("UsersCtrl loaded...")
 
             /*
+            Con el uso de JWT se evita que el administrador visualice el listado de
+            los datos correspondientes a este controller sin tener una sesion
+            abierta, pero sin este control, el administrador puede acceder a la pagina
+            de inicio sin tener una sesion abierta. Por lo tanto, si el administrador
+            NO tiene una sesion abierta, se le impide el acceso a la pagina de inicio
+            y se lo redirige a la pagina de inicio de sesion del administrador.
+            */
+            if (!accessManager.isUserLoggedIn()) {
+                $location.path("/admin");
+                return;
+            }
+
+            /*
+            Si el usuario que tiene una sesion abierta no tiene permiso de administrador,
+            no se le da acceso a la pagina correspondiente a este controller y se lo redirige
+            a la pagina de inicio del usuario
+            */
+            if (accessManager.isUserLoggedIn() && !accessManager.loggedAsAdmin()) {
+                $location.path("/home");
+                return;
+            }
+
+            /*
             Cuando el usuario abre una sesion satisfactoriamente y no la cierra,
             y accede a la aplicacion web mediante una nueva pestaña, el encabezado
             de autorizacion HTTP tiene el valor undefined. En consecuencia, las
@@ -49,29 +72,6 @@ app.controller(
                 invoca a la funcion logout(), la cual esta definida en el archivo mencionado.
                 */
                 $scope.$emit("AdminLogoutCall", {});
-            }
-
-            /*
-            Con el uso de JWT se evita que el administrador visualice el listado de
-            los datos correspondientes a este controller sin tener una sesion
-            abierta, pero sin este control, el administrador puede acceder a la pagina
-            de inicio sin tener una sesion abierta. Por lo tanto, si el administrador
-            NO tiene una sesion abierta, se le impide el acceso a la pagina de inicio
-            y se lo redirige a la pagina de inicio de sesion del administrador.
-            */
-            if (!accessManager.isUserLoggedIn()) {
-                $location.path("/admin");
-                return;
-            }
-
-            /*
-            Si el usuario que tiene una sesion abierta no tiene permiso de administrador,
-            no se le da acceso a la pagina correspondiente a este controller y se lo redirige
-            a la pagina de inicio del usuario
-            */
-            if (accessManager.isUserLoggedIn() && !accessManager.loggedAsAdmin()) {
-                $location.path("/home");
-                return;
             }
 
             /*

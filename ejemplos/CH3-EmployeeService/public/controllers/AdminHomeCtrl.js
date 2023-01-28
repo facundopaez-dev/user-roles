@@ -4,6 +4,26 @@ app.controller(
         function ($scope, $rootScope, $location, expirationSrv, logoutSrv, jwtManager, authHeaderManager, accessManager, errorResponseManager) {
 
             /*
+            Si el administrador no tiene una sesion abierta, no se le da acceso
+            a la pagina de inicio del administrador y se lo redirige a la pagina
+            de inicio de sesion del administrador
+            */
+            if (!accessManager.isUserLoggedIn()) {
+                $location.path("/admin");
+                return;
+            }
+
+            /*
+            Si el usuario que tiene una sesion abierta no tiene permiso de administrador,
+            no se le da acceso a la pagina correspondiente a este controller y se lo redirige
+            a la pagina de inicio del usuario
+             */
+            if (accessManager.isUserLoggedIn() && !accessManager.loggedAsAdmin()) {
+                $location.path("/home");
+                return;
+            }
+
+            /*
             Cuando el usuario abre una sesion satisfactoriamente y no la cierra,
             y accede a la aplicacion web mediante una nueva pestaña, el encabezado
             de autorizacion HTTP tiene el valor undefined. En consecuencia, las
@@ -12,9 +32,9 @@ app.controller(
             autenticacion, la autorizacion y las operaciones con recursos
             (lectura, modificacion y creacion).
 
-			Este es el motivo por el cual se hace este control. Si el encabezado
-			HTTP de autorizacion tiene el valor undefined, se le asigna el JWT
-			del usuario.
+            Este es el motivo por el cual se hace este control. Si el encabezado
+            HTTP de autorizacion tiene el valor undefined, se le asigna el JWT
+            del usuario.
 
             De esta manera, cuando el usuario abre una sesion satisfactoriamente
             y no la cierra, y accede a la aplicacion web mediante una nueva pestaña,
@@ -24,16 +44,6 @@ app.controller(
             */
             if (authHeaderManager.isUndefined()) {
                 authHeaderManager.setJwtAuthHeader();
-            }
-
-            /*
-            Si el administrador no tiene una sesion abierta, no se le da acceso
-            a la pagina de inicio del administrador y se lo redirige a la pagina
-            de inicio de sesion del administrador
-            */
-            if (!accessManager.isUserLoggedIn()) {
-                $location.path("/admin");
-                return;
             }
 
             /*
@@ -49,16 +59,6 @@ app.controller(
                     errorResponseManager.checkResponse(error);
                 }
             });
-
-            /*
-            Si el usuario que tiene una sesion abierta no tiene permiso de administrador,
-            no se le da acceso a la pagina correspondiente a este controller y se lo redirige
-            a la pagina de inicio del usuario
-             */
-            if (accessManager.isUserLoggedIn() && !accessManager.loggedAsAdmin()) {
-                $location.path("/home");
-                return;
-            }
 
             $scope.logout = function () {
                 /*

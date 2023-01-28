@@ -6,6 +6,30 @@ app.controller(
             console.log("HomeCtrl loaded");
 
             /*
+            Si el usuario no tiene una sesion abierta, no se le da acceso
+            a la pagina de inicio y se lo redirige a la pagina de inicio
+            de sesion
+            */
+            if (!accessManager.isUserLoggedIn()) {
+                $location.path("/");
+                return;
+            }
+
+            /*
+            Si el usuario que tiene una sesion abierta tiene permiso de
+            administrador, se lo redirige a la pagina de inicio del
+            administrador. De esta manera, un administrador debe cerrar
+            la sesion que abrio a traves de la pagina web de inicio de sesion
+            del administrador, y luego abrir una sesion a traves de la pagina
+            web de inicio de sesion del usuario para poder acceder a la pagina
+            de inicio del usuario.
+            */
+            if (accessManager.isUserLoggedIn() && accessManager.loggedAsAdmin()) {
+                $location.path("/adminHome");
+                return;
+            }
+
+            /*
             Cuando el usuario abre una sesion satisfactoriamente y no la cierra,
             y accede a la aplicacion web mediante una nueva pestaña, el encabezado
             de autorizacion HTTP tiene el valor undefined. En consecuencia, las
@@ -29,16 +53,6 @@ app.controller(
             }
 
             /*
-            Si el usuario no tiene una sesion abierta, no se le da acceso
-            a la pagina de inicio y se lo redirige a la pagina de inicio
-            de sesion
-            */
-            if (!accessManager.isUserLoggedIn()) {
-                $location.path("/");
-                return;
-            }
-
-            /*
             Se comprueba si el JWT del usuario que tiene una sesion abierta, expiro
             o no. En el caso en el que JWT expiro, se redirige al usuario a la
             pagina web de inicio de sesion del usuario. En caso contrario,
@@ -51,20 +65,6 @@ app.controller(
                     errorResponseManager.checkResponse(error);
                 }
             });
-
-            /*
-            Si el usuario que tiene una sesion abierta tiene permiso de
-            administrador, se lo redirige a la pagina de inicio del
-            administrador. De esta manera, un administrador debe cerrar
-            la sesion que abrio a traves de la pagina web de inicio de sesion
-            del administrador, y luego abrir una sesion a traves de la pagina
-            web de inicio de sesion del usuario para poder acceder a la pagina
-            de inicio del usuario.
-            */
-            if (accessManager.isUserLoggedIn() && accessManager.loggedAsAdmin()) {
-                $location.path("/adminHome");
-                return;
-            }
 
             $scope.logout = function () {
                 /*

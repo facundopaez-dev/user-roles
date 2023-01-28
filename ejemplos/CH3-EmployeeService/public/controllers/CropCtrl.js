@@ -6,29 +6,6 @@ app.controller(
             console.log("CropCtrl cargado, accion: " + $params.action)
 
             /*
-            Cuando el usuario abre una sesion satisfactoriamente y no la cierra,
-            y accede a la aplicacion web mediante una nueva pestaña, el encabezado
-            de autorizacion HTTP tiene el valor undefined. En consecuencia, las
-            peticiones HTTP con este encabezado no seran respondidas por la
-            aplicacion del lado servidor, ya que esta opera con JWT para la
-            autenticacion, la autorizacion y las operaciones con recursos
-            (lectura, modificacion y creacion).
-
-			Este es el motivo por el cual se hace este control. Si el encabezado
-			HTTP de autorizacion tiene el valor undefined, se le asigna el JWT
-			del usuario.
-
-            De esta manera, cuando el usuario abre una sesion satisfactoriamente
-            y no la cierra, y accede a la aplicacion web mediante una nueva pestaña,
-            el encabezado HTTP de autorizacion contiene el JWT del usuario, y, por
-            ende, la peticion HTTP que se realice en la nueva pestaña, sera respondida
-            por la aplicacion del lado servidor.
-            */
-            if (authHeaderManager.isUndefined()) {
-                authHeaderManager.setJwtAuthHeader();
-            }
-
-            /*
             Con el uso de JWT se evita que el administrador cree, edite o visualice
             un dato, correspondiente a este controller, sin tener una sesion
             abierta, pero sin este control, el administrador puede acceder la pagina
@@ -51,6 +28,48 @@ app.controller(
                 $location.path("/home");
                 return;
             }
+
+            /*
+            Cuando el usuario abre una sesion satisfactoriamente y no la cierra,
+            y accede a la aplicacion web mediante una nueva pestaña, el encabezado
+            de autorizacion HTTP tiene el valor undefined. En consecuencia, las
+            peticiones HTTP con este encabezado no seran respondidas por la
+            aplicacion del lado servidor, ya que esta opera con JWT para la
+            autenticacion, la autorizacion y las operaciones con recursos
+            (lectura, modificacion y creacion).
+
+            Este es el motivo por el cual se hace este control. Si el encabezado
+            HTTP de autorizacion tiene el valor undefined, se le asigna el JWT
+            del usuario.
+
+            De esta manera, cuando el usuario abre una sesion satisfactoriamente
+            y no la cierra, y accede a la aplicacion web mediante una nueva pestaña,
+            el encabezado HTTP de autorizacion contiene el JWT del usuario, y, por
+            ende, la peticion HTTP que se realice en la nueva pestaña, sera respondida
+            por la aplicacion del lado servidor.
+            */
+            if (authHeaderManager.isUndefined()) {
+                authHeaderManager.setJwtAuthHeader();
+            }
+
+            /*
+            Cada vez que el usuario presiona los botones para crear, editar o
+            ver un dato correspondiente a este controller, se debe comprobar
+            si su JWT expiro o no. En el caso en el que JWT expiro, se redirige
+            al usuario a la pagina web de inicio de sesion correspondiente. En caso
+            contrario, se realiza la accion solicitada por el usuario mediante
+            el boton pulsado.
+
+            De esta manera, este control tambien se realiza para la funcion find.
+            Este es el motivo por el cual no se invoca la funcion checkResponse
+            de la factory ErrorResponseManager, en dicha funcion.
+            */
+            expirationSrv.checkExpiration(function (error) {
+                if (error) {
+                    console.log(error);
+                    errorResponseManager.checkResponse(error);
+                }
+            });
 
             if (['new', 'edit', 'view'].indexOf($params.action) == -1) {
                 alert("Acción inválida: " + $params.action);
@@ -111,27 +130,6 @@ app.controller(
             }
 
             $scope.action = $params.action;
-
-            if ($scope.action == 'new' || $scope.action == 'edit' || $scope.action == 'view') {
-                /*
-                Cada vez que el usuario presiona los botones para crear, editar o
-                ver un dato correspondiente a este controller, se debe comprobar
-                si su JWT expiro o no. En el caso en el que JWT expiro, se redirige
-                al usuario a la pagina web de inicio de sesion correspondiente. En caso
-                contrario, se realiza la accion solicitada por el usuario mediante
-                el boton pulsado.
-
-                De esta manera, este control tambien se realiza para la funcion find.
-                Este es el motivo por el cual no se invoca la funcion checkResponse
-                de la factory ErrorResponseManager, en dicha funcion.
-                */
-                expirationSrv.checkExpiration(function (error) {
-                    if (error) {
-                        console.log(error);
-                        errorResponseManager.checkResponse(error);
-                    }
-                });
-            }
 
             if ($scope.action == 'edit' || $scope.action == 'view') {
                 find($params.id);

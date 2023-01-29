@@ -1,7 +1,7 @@
 app.controller(
     "AdminHomeCtrl",
-    ["$scope", "$rootScope", "$location", "ExpirationSrv", "LogoutSrv", "JwtManager", "AuthHeaderManager", "AccessManager", "ErrorResponseManager",
-        function ($scope, $rootScope, $location, expirationSrv, logoutSrv, jwtManager, authHeaderManager, accessManager, errorResponseManager) {
+    ["$scope", "$location", "ExpirationSrv", "AuthHeaderManager", "AccessManager", "ErrorResponseManager", "LogoutManager",
+        function ($scope, $location, expirationSrv, authHeaderManager, accessManager, errorResponseManager, logoutManager) {
 
             /*
             Si el administrador no tiene una sesion abierta, no se le da acceso
@@ -62,61 +62,19 @@ app.controller(
 
             $scope.logout = function () {
                 /*
-                Con esta peticion se elimina logicamente de la base de datos
-                (en el backend) la sesion activa del usuario. Si no se hace
-                esta eliminacion lo que sucedera es que, cuando el usuario
-                que abrio y cerro su sesion, intente abrir otra sesion, la
-                aplicacion no se lo permitira, ya que la sesion anteriormente
-                cerrada aun sigue activa.
-
-                Cuando se elimina logicamente una sesion activa de la base
-                de datos subyacente (en el backend), la sesion pasa a estar
-                inactiva. De esta manera, el usuario que abrio y cerro su
-                sesion, puede abrir nuevamente otra sesion.
+                LogoutManager es la factory encargada de realizar el cierre de
+                sesion del usuario. Durante el cierre de sesion, la funcion
+                logout de la factory mencionada, realiza la peticion HTTP de
+                cierre de sesion (elimina logicamente la sesion activa del
+                usuario en la base de datos, la cual, esta en el lado servidor),
+                la eliminacion del JWT del usuario, el borrado del contenido del
+                encabezado HTTP de autorizacion, el establecimiento en false del
+                valor asociado a la clave "superuser" del almacenamiento local del
+                navegador web y la redireccion a la pagina web de inicio de sesion
+                correspondiente dependiendo si el usuario inicio sesion como
+                administrador o no.
                 */
-                logoutSrv.logout(function (error) {
-                    if (error) {
-                        console.log(error);
-                        errorResponseManager.checkResponse(error);
-                    }
-                });
-
-                /*
-                Cuando el administrador cierra su sesion, se elimina su JWT
-                del almacenamiento de sesion del navegador web
-                */
-                jwtManager.removeJwt();
-
-                /*
-                Cuando el administrador cierra su sesion, se elimina el contenido
-                del encabezado de autorizacion HTTP
-                */
-                authHeaderManager.clearAuthHeader();
-
-                /*
-                Cuando un administrador cierra su sesion, la variable booleana que se utiliza
-                para controlar su acceso a las paginas web a las que accede un usuario, se
-                establece en false, ya que de no hacerlo dicha variable tendria el valor
-                true y se le impediria el acceso a dichas paginas web a un administrador
-                cuando inicie sesion a traves de la pagina de inicio de sesion del usuario
-                */
-                accessManager.clearAsAdmin();
-
-                /*
-                Cuando el administrador cierra su sesion, se lo redirige a la pagina de
-                inicio de sesion del administrador
-                */
-                $location.path("/admin");
+                logoutManager.logout();
             }
-
-            /*
-            El objeto $rootScope esta suscrito al evento "AdminLogoutCall". Esto es necesario
-            para implementar el cierre de sesion del administrador. Cuando el objeto $rootScope
-            escucha el evento "AdminLogoutCall", invoca a la funcion logout(), la cual, como su
-            nombre lo indica, realiza el cierre de sesion del administrador.
-            */
-            $rootScope.$on("AdminLogoutCall", function () {
-                $scope.logout();
-            });
 
         }]);

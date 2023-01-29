@@ -1,7 +1,7 @@
 app.controller(
     "UserCtrl",
-    ["$scope", "$location", "$routeParams", "UserSrv", "AccessManager", "ErrorResponseManager", "AuthHeaderManager",
-        function ($scope, $location, $params, service, accessManager, errorResponseManager, authHeaderManager) {
+    ["$scope", "$location", "$routeParams", "UserSrv", "AccessManager", "ErrorResponseManager", "AuthHeaderManager", "LogoutManager",
+        function ($scope, $location, $params, service, accessManager, errorResponseManager, authHeaderManager, logoutManager) {
 
             console.log("UserCtrl cargado, accion: " + $params.action);
 
@@ -38,9 +38,9 @@ app.controller(
             autenticacion, la autorizacion y las operaciones con recursos
             (lectura, modificacion y creacion).
 
-			Este es el motivo por el cual se hace este control. Si el encabezado
-			HTTP de autorizacion tiene el valor undefined, se le asigna el JWT
-			del usuario.
+            Este es el motivo por el cual se hace este control. Si el encabezado
+            HTTP de autorizacion tiene el valor undefined, se le asigna el JWT
+            del usuario.
 
             De esta manera, cuando el usuario abre una sesion satisfactoriamente
             y no la cierra, y accede a la aplicacion web mediante una nueva pestaña,
@@ -75,14 +75,19 @@ app.controller(
 
             $scope.logout = function () {
                 /*
-                El objeto $scope envia el evento llamado "AdminLogoutCall" hacia arriba
-                en la jerarquia de objetos $scope. Esto es necesario para implementar
-                el cierre de sesion del administrador, cierre que es llevado a cabo por el
-                archivo AdminHomeCtrl, en el cual esta suscrito el objeto $rootScope al evento
-                "AdminLogoutCall". Cuando el objeto $rootScope escucha el evento "AdminLogoutCall",
-                invoca a la funcion logout(), la cual esta definida en el archivo mencionado.
+                LogoutManager es la factory encargada de realizar el cierre de
+                sesion del usuario. Durante el cierre de sesion, la funcion
+                logout de la factory mencionada, realiza la peticion HTTP de
+                cierre de sesion (elimina logicamente la sesion activa del
+                usuario en la base de datos, la cual, esta en el lado servidor),
+                la eliminacion del JWT del usuario, el borrado del contenido del
+                encabezado HTTP de autorizacion, el establecimiento en false del
+                valor asociado a la clave "superuser" del almacenamiento local del
+                navegador web y la redireccion a la pagina web de inicio de sesion
+                correspondiente dependiendo si el usuario inicio sesion como
+                administrador o no.
                 */
-                $scope.$emit("AdminLogoutCall", {});
+                logoutManager.logout();
             }
 
             $scope.action = $params.action;

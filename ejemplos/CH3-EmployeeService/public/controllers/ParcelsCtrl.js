@@ -1,7 +1,7 @@
 app.controller(
     "ParcelsCtrl",
-    ["$scope", "$location", "$route", "ParcelSrv", "AccessManager", "ErrorResponseManager", "AuthHeaderManager",
-        function ($scope, $location, $route, service, accessManager, errorResponseManager, authHeaderManager) {
+    ["$scope", "$location", "$route", "ParcelSrv", "AccessManager", "ErrorResponseManager", "AuthHeaderManager", "LogoutManager",
+        function ($scope, $location, $route, service, accessManager, errorResponseManager, authHeaderManager, logoutManager) {
             console.log("ParcelsCtrl loaded...")
 
             /*
@@ -82,14 +82,19 @@ app.controller(
 
             $scope.logout = function () {
                 /*
-                El objeto $scope envia el evento llamado "CallLogout" hacia arriba
-                en la jerarquia de objetos $scope. Esto es necesario para implementar
-                el cierre de sesion del usuario cliente, cierre que es llevado a cabo por el
-                archivo HomeCtrl, en el cual esta suscrito el objeto $rootScope al evento
-                "CallLogout". Cuando el objeto $rootScope escucha el evento "CallLogout",
-                invoca a la funcion logout(), la cual esta definida en el archivo mencionado.
+                LogoutManager es la factory encargada de realizar el cierre de
+                sesion del usuario. Durante el cierre de sesion, la funcion
+                logout de la factory mencionada, realiza la peticion HTTP de
+                cierre de sesion (elimina logicamente la sesion activa del
+                usuario en la base de datos, la cual, esta en el lado servidor),
+                la eliminacion del JWT del usuario, el borrado del contenido del
+                encabezado HTTP de autorizacion, el establecimiento en false del
+                valor asociado a la clave "superuser" del almacenamiento local del
+                navegador web y la redireccion a la pagina web de inicio de sesion
+                correspondiente dependiendo si el usuario inicio sesion como
+                administrador o no.
                 */
-                $scope.$emit("CallLogout", {});
+                logoutManager.logout();
             }
 
             /*

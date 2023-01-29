@@ -35,7 +35,7 @@ app.controller(
                     /*
                     Si el flujo de ejecucion de esta funcion llega a este punto, es porque la autenticacion
                     del usuario fue exitosa. Por lo tanto, se almacena el JWT, devuelto por el servidor,
-                    en el almacenamiento de sesion del navegador web y se redirecciona al usuario a la
+                    en el almacenamiento local del navegador web y se redirecciona al usuario a la
                     pagina de inicio.
                     */
                     jwtManager.setJwt(data.jwt);

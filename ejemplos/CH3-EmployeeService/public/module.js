@@ -127,7 +127,7 @@ app.factory('AccessManager', ['JwtManager', '$window', function (jwtManager, $wi
 		/**
 		 * Cuando el usuario inicia sesion satisfactoriamente, la aplicacion
 		 * del lado servidor devuelve un JWT, el cual, es almacenado en el
-		 * almacenamiento de sesion del navegador web por la funcion setJwt
+		 * almacenamiento local del navegador web por la funcion setJwt
 		 * de la factory JwtManager
 		 * 
 		 * @returns true si el usuario tiene una sesion abierta, false
@@ -211,7 +211,7 @@ app.factory('JwtManager', function ($window) {
 		/*
 		Esta funcion debe ser invocada cuando el usuario cierra su
 		sesion, momento en el cual se debe eliminar su JWT del
-		almacenamiento de sesion del navegador web
+		almacenamiento local del navegador web
 		*/
 		removeJwt: function () {
 			$window.localStorage.removeItem(KEY);
@@ -499,3 +499,91 @@ app.factory('ErrorResponseManager', ['$location', 'AccessManager', 'JwtManager',
 		}
 	}
 }]);
+
+/*
+LogoutManager es la factory que se utiliza para realizar el cierre
+de sesion del usuario tenga este o no permiso de administrador
+*/
+app.factory('LogoutManager', ['JwtManager', 'ErrorResponseManager', 'AuthHeaderManager', 'AccessManager', 'LogoutSrv', '$location',
+	function (jwtManager, errorResponseManager, authHeaderManager, accessManager, logoutSrv, $location) {
+		return {
+			/**
+			 * Esta funcion realiza el cierre de sesion del usuario. Durante
+			 * este cierre realiza la peticion HTTP de cierre de sesion (elimina
+			 * logicamente la sesion activa del usuario en la base de datos, la
+			 * cual, esta en el lado servidor), la eliminacion del JWT del usuario,
+			 * el borrado del contenido del encabezado HTTP de autorizacion, el
+			 * establecimiento en false del valor asociado a la clave "superuser"
+			 * del almacenamiento local del navegador web y la redireccion a la
+			 * pagina web de inicio de sesion correspondiente dependiendo si el
+			 * usuario inicio sesion como administrador o no.
+			 */
+			logout: function () {
+				/*
+				Con esta peticion se elimina logicamente de la base de datos
+				(en el backend) la sesion activa del usuario. Si no se hace
+				esta eliminacion lo que sucedera es que, cuando el usuario
+				que abrio y cerro su sesion, intente abrir otra sesion, la
+				aplicacion no se lo permitira, ya que la sesion anteriormente
+				cerrada aun sigue activa.
+		
+				Cuando se elimina logicamente una sesion activa de la base
+				de datos subyacente (en el backend), la sesion pasa a estar
+				inactiva. De esta manera, el usuario que abrio y cerro su
+				sesion, puede abrir nuevamente otra sesion.
+				*/
+				logoutSrv.logout(function (error) {
+					if (error) {
+						console.log(error);
+						errorResponseManager.checkResponse(error);
+					}
+				});
+
+				/*
+				Cuando el usuario cliente cierra su sesion, se elimina su JWT
+				del almacenamiento local del navegador web
+				*/
+				jwtManager.removeJwt();
+
+				/*
+				Cuando el usuario cierra su sesion, se elimina el contenido
+				del encabezado de autorizacion HTTP, ya que de no hacerlo la
+				aplicacion usara el mismo JWT para todas las peticiones HTTP,
+				lo cual, producira que la aplicacion del lado servidor
+				devuelva datos que no pertenecen al usuario que tiene una
+				sesion abierta
+				*/
+				authHeaderManager.clearAuthHeader();
+
+				/*
+				Si el usuario inicio sesion como administrador (siempre y cuando
+				tenga permiso de administrador), se establece en false el valor
+				asociado a la clave "superuser" y se redirige al usuario a la
+				pagina web de inicio de sesion del administrador
+				*/
+				if (accessManager.loggedAsAdmin()) {
+					/*
+					Cuando un administrador cierra su sesion, la variable booleana que se utiliza
+					para controlar su acceso a las paginas web a las que accede un usuario, se
+					establece en false, ya que de no hacerlo dicha variable tendria el valor
+					true y se le impediria el acceso a dichas paginas web a un administrador
+					cuando inicie sesion a traves de la pagina de inicio de sesion del usuario
+					*/
+					accessManager.clearAsAdmin();
+
+					/*
+					Cuando el administrador cierra su sesion, se lo redirige a la pagina web
+					de inicio de sesion del administrador
+					*/
+					$location.path("/admin");
+					return;
+				}
+
+				/*
+				Cuando el usuario cliente cierra su sesion, se lo redirige a la pagina de
+				inicio de sesion
+				*/
+				$location.path("/");
+			}
+		}
+	}]);

@@ -22,10 +22,13 @@ public class User {
   @Column(name = "PASSWORD", nullable = false)
   private String password;
 
-  @Column(name = "EMAIL")
+  @Column(name = "EMAIL", nullable = false)
   private String email;
 
-  @Column(name = "SUPERUSER")
+  @Column(name = "ACTIVE", nullable = false)
+  private boolean active;
+
+  @Column(name = "SUPERUSER", nullable = false)
   private boolean superuser;
 
   public User() {}
@@ -66,6 +69,14 @@ public class User {
     this.email = email;
   }
 
+  public boolean getActive() {
+    return active;
+  }
+
+  public void setActive(boolean active) {
+    this.active = active;
+  }
+
   public boolean getSuperuser() {
     return superuser;
   }
@@ -76,7 +87,7 @@ public class User {
 
   public String toString() {
     return "User id: " + id + " username: " + username + " password: " + password + " email: " + email
-    + " superuser: " + superuser;
+    + "active: " + active + " superuser: " + superuser;
   }
   
 }

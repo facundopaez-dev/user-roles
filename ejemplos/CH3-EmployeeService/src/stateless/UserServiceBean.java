@@ -71,6 +71,50 @@ public class UserServiceBean {
   }
 
   /**
+   * Retorna el usuario que tiene el correo electronico dado si y solo
+   * existe un usuario con ese correo electronico en la base de datos
+   * subyacente.
+   * 
+   * @param email
+   * @return referencia a un objeto de tipo User que contiene el usuario
+   * correspondiente al correo electronico dado, si existe en la base de
+   * datos subyacente un usuario con dicho correo electronico. En caso
+   * contrario, null.
+   */
+  private User findByEmail(String email) {
+    Query query = getEntityManager().createQuery("SELECT u FROM User u WHERE UPPER(u.email) = UPPER(:email)");
+    query.setParameter("email", email);
+
+    User user = null;
+
+    try {
+      user = (User) query.getSingleResult();
+    } catch (NoResultException e) {
+      e.printStackTrace();
+    }
+
+    return user;
+  }
+
+  /**
+   * Retorna true si y solo si existe un usuario con el correo electronico
+   * dado, registrado en la base de datos subyacente
+   * 
+   * @param email
+   * @return true si hay un usuario con el correo electronico dado,
+   * registrado en la base de datos subyacente. En caso contrario, false.
+   */
+  public boolean emailIsRegistered(String email) {
+    User givenUser = findByEmail(email);
+
+    if (givenUser == null) {
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
    * Comprueba si el usuario con el nombre de usuario provisto, tiene el permiso de administrador (super usuario)
    *
    * @param username el nombre de usuario que se usa para comprobar si el usuario con el nombre de usuario

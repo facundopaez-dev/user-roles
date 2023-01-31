@@ -129,6 +129,83 @@ public class UserServiceBeanTest {
     System.out.println();
   }
 
+  @Test
+  public void testOneEmailIsRegistered() {
+    System.out.println("*************************** Prueba uno del metodo emailIsRegistered ***************************");
+    System.out.println("- En esta prueba se comprueba la existencia de un correo electronico en la base de datos");
+    System.out.println("subyacente utilizando el correo electronico de un usuario registrado en la misma.");
+    System.out.println("El metodo emailIsRegistered retorna true si un correo electronico esta registrado en la base de");
+    System.out.println("datos subyacente, y false en caso contrario.");
+    System.out.println();
+    System.out.println("En este caso, el metodo emailIsRegistered retorna el valor booleano true.");
+    System.out.println();
+
+    /*
+     * Se imprime por pantalla los datos de todos los
+     * usuarios registrados en la base de datos subyacente
+     */
+    System.out.println("Usuarios registrados en la base de datos subyacente");
+    printAllUsers();
+
+    /*
+     * Obtencion de un usuario registrado en la base
+     * de datos subyacente
+     */
+    System.out.println("* Usuario de prueba");
+    User givenUser = userService.find(2);
+    printUserData(givenUser);
+
+    /*
+     * Seccion de prueba
+     */
+    boolean emailRegistered = userService.emailIsRegistered(givenUser.getEmail());
+
+    System.out.println("Resultado esperado: " + true);
+    System.out.println("* Valor obtenido: " + emailRegistered);
+
+    assertTrue(emailRegistered);
+
+    System.out.println("* Prueba ejecutada satisfactoriamente *");
+  }
+
+  @Test
+  public void testTwoEmailIsRegistered() {
+    System.out.println("*************************** Prueba dos del metodo emailIsRegistered ***************************");
+    System.out.println("- En esta prueba se comprueba la existencia de un correo electronico en la base de datos");
+    System.out.println("subyacente utilizando un correo electronico inexistente en la misma.");
+    System.out.println("El metodo emailIsRegistered retorna true si un correo electronico esta registrado en la base de");
+    System.out.println("datos subyacente, y false en caso contrario.");
+    System.out.println();
+    System.out.println("En este caso, el metodo emailIsRegistered retorna el valor booleano false.");
+    System.out.println();
+
+    /*
+     * Se imprime por pantalla los datos de todos los
+     * usuarios registrados en la base de datos subyacente
+     */
+    System.out.println("Usuarios registrados en la base de datos subyacente");
+    printAllUsers();
+
+    /*
+     * Correo electronico inexistente de prueba
+     */
+    String nonexistentEmail = "ghostemail@eservice.com";
+    System.out.println("* Correo electronico inexistente en la base de datos subyacente: " + nonexistentEmail);
+    System.out.println();
+
+    /*
+     * Seccion de prueba
+     */
+    boolean emailRegistered = userService.emailIsRegistered(nonexistentEmail);
+
+    System.out.println("Resultado esperado: " + false);
+    System.out.println("* Valor obtenido: " + emailRegistered);
+
+    assertFalse(emailRegistered);
+
+    System.out.println("* Prueba ejecutada satisfactoriamente *");
+  }
+
   @AfterClass
   public static void postTest() {
     entityManager.getTransaction().begin();
@@ -148,6 +225,34 @@ public class UserServiceBeanTest {
     // Cierra las conexiones
     entityManager.close();
     entityManagerFactory.close();
+  }
+
+  /**
+   * Imprime los datos de un usuario
+   * 
+   * @param givenUser
+   */
+  private void printUserData(User givenUser) {
+    System.out.println("Datos de un usuario");
+    System.out.println("ID: " + givenUser.getId());
+    System.out.println("Nombre de usuario: " + givenUser.getUsername());
+    System.out.println("Contraseña: " + givenUser.getPassword());
+    System.out.println("Correo electronico: " + givenUser.getEmail());
+    System.out.println("Permiso de super usuario (administrador): " + givenUser.getSuperuser());
+    System.out.println();
+  }
+
+  /**
+   * Imprime los datos de todos los usuarios registrados en
+   * la base de datos subyacente
+   */
+  private void printAllUsers() {
+    Collection<User> users = userService.findAll();
+
+    for (User currentUser : users) {
+      printUserData(currentUser);
+    }
+
   }
 
 }

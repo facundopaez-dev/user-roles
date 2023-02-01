@@ -206,6 +206,121 @@ public class UserServiceBeanTest {
     System.out.println("* Prueba ejecutada satisfactoriamente *");
   }
 
+  @Test
+  public void testOneIsActive() {
+    System.out.println("************************** Prueba uno del metodo isActive **************************");
+    System.out.println("- En esta prueba se utiliza un usuario registrado en la base de datos subyacente, el");
+    System.out.println("cual, esta activo. El metodo isActive de la clase UserServiceBean retorna true si un");
+    System.out.println("usuario esta activo, y false si un usuario NO esta activo o si NO esta registrado en");
+    System.out.println("la base de datos subyacente.");
+    System.out.println();
+    System.out.println("En este caso, el metodo isActive retorna el valor booleano true.");
+    System.out.println();
+
+    /*
+     * Se imprime por pantalla los datos de todos los
+     * usuarios registrados en la base de datos subyacente
+     */
+    System.out.println("Usuarios registrados en la base de datos subyacente");
+    printAllUsers();
+
+    /*
+     * Obtencion de un usuario registrado en la base
+     * de datos subyacente
+     */
+    System.out.println("* Usuario de prueba");
+    User givenUser = userService.find(2);
+    printUserData(givenUser);
+
+    /*
+     * Seccion de prueba
+     */
+    boolean activeUser = userService.isActive(givenUser.getEmail());
+
+    System.out.println("Resultado esperado: " + true);
+    System.out.println("* Valor obtenido: " + activeUser);
+
+    assertTrue(activeUser);
+
+    System.out.println("* Prueba ejecutada satisfactoriamente *");
+  }
+
+  @Test
+  public void testTwoIsActive() {
+    System.out.println("************************** Prueba dos del metodo isActive **************************");
+    System.out.println("- En esta prueba se utiliza un usuario registrado en la base de datos subyacente, el");
+    System.out.println("cual, NO esta activo. El metodo isActive de la clase UserServiceBean retorna true si un");
+    System.out.println("usuario esta activo, y false si un usuario NO esta activo o si NO esta registrado en");
+    System.out.println("la base de datos subyacente.");
+    System.out.println();
+    System.out.println("En este caso, el metodo isActive retorna el valor booleano false.");
+    System.out.println();
+
+    /*
+     * Se imprime por pantalla los datos de todos los
+     * usuarios registrados en la base de datos subyacente
+     */
+    System.out.println("Usuarios registrados en la base de datos subyacente");
+    printAllUsers();
+
+    /*
+     * Obtencion de un usuario registrado en la base
+     * de datos subyacente
+     */
+    System.out.println("* Usuario de prueba");
+    User givenUser = userService.find(6);
+    printUserData(givenUser);
+
+    /*
+     * Seccion de prueba
+     */
+    boolean activeUser = userService.isActive(givenUser.getEmail());
+
+    System.out.println("Resultado esperado: " + false);
+    System.out.println("* Valor obtenido: " + activeUser);
+
+    assertFalse(activeUser);
+
+    System.out.println("* Prueba ejecutada satisfactoriamente *");
+  }
+
+  @Test
+  public void testThreeIsActive() {
+    System.out.println("************************** Prueba tres del metodo isActive **************************");
+    System.out.println("- En esta prueba se utiliza un usuario NO registrado en la base de datos subyacente.");
+    System.out.println("El metodo isActive de la clase UserServiceBean retorna true si un usuario esta activo,");
+    System.out.println("y false si un usuario NO esta activo o si NO esta registrado en la base de datos subyacente.");
+    System.out.println();
+    System.out.println("En este caso, el metodo isActive retorna el valor booleano false.");
+    System.out.println();
+
+    /*
+     * Se imprime por pantalla los datos de todos los
+     * usuarios registrados en la base de datos subyacente
+     */
+    System.out.println("Usuarios registrados en la base de datos subyacente");
+    printAllUsers();
+
+    /*
+     * Correo electronico inexistente de prueba
+     */
+    String nonexistentEmail = "ghostemail@eservice.com";
+    System.out.println("* Correo electronico inexistente en la base de datos subyacente: " + nonexistentEmail);
+    System.out.println();
+
+    /*
+     * Seccion de prueba
+     */
+    boolean activeUser = userService.isActive(nonexistentEmail);
+
+    System.out.println("Resultado esperado: " + false);
+    System.out.println("* Valor obtenido: " + activeUser);
+
+    assertFalse(activeUser);
+
+    System.out.println("* Prueba ejecutada satisfactoriamente *");
+  }
+
   @AfterClass
   public static void postTest() {
     entityManager.getTransaction().begin();
@@ -238,6 +353,7 @@ public class UserServiceBeanTest {
     System.out.println("Nombre de usuario: " + givenUser.getUsername());
     System.out.println("Contraseña: " + givenUser.getPassword());
     System.out.println("Correo electronico: " + givenUser.getEmail());
+    System.out.println("Activo: " + givenUser.getActive());
     System.out.println("Permiso de super usuario (administrador): " + givenUser.getSuperuser());
     System.out.println();
   }

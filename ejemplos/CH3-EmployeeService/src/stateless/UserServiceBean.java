@@ -164,4 +164,29 @@ public class UserServiceBean {
     return (getEntityManager().find(User.class, id) != null);
   }
 
+  /**
+   * Retorna true si y solo si el usuario asociado a la direccion de
+   * correo electronico dada, esta registrado en la base de datos
+   * subyacente y esta acitvo
+   * 
+   * @param email
+   * @return true si el usuario correspondiente a la direccion de
+   * correo electronico dada, esta activo, y false en el caso en el que
+   * NO esta activo o NO esta registrado en la base de datos subyacente.
+   */
+  public boolean isActive(String email) {
+    User givenUser = findByEmail(email);
+
+    /*
+     * Si el usuario correspondiente a la direccion de correo
+     * electronico dada, existe y esta activo, se retorna el
+     * valor booleano true
+     */
+    if (givenUser != null && givenUser.getActive()) {
+      return true;
+    }
+
+    return false;
+  }
+
 }

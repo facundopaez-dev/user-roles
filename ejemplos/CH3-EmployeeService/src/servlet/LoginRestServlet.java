@@ -54,6 +54,34 @@ public class LoginRestServlet {
 
     User givenUser = mapper.readValue(json, User.class);
 
+    /*
+     * Se recupera el usuario completo de la base de datos subyacente,
+     * ya que el usuario obtenido como resultado del mapeo JSON a POJO
+     * solo contiene el nombre de usuario y la contraseña ingresados
+     * por el usuario en la pagina web de inicio de sesion
+     */
+    givenUser = userService.findByUsername(givenUser.getUsername());
+
+    /*
+     * Si la cuenta con la que el usuario intenta iniciar sesion NO
+     * esta activada, la aplicacion del lado servidor retorna el
+     * mensaje HTTP 401 (Unauthorized) junto con el mensaje "Nombre
+     * de usuario o contraseña incorrectos" y no se inicia la sesion
+     * solicitada
+     */
+    if (!userService.isActive(givenUser.getEmail())) {
+      return Response.status(Response.Status.UNAUTHORIZED)
+      .entity(new ErrorResponse(ReasonError.USERNAME_OR_PASSWORD_INCORRECT)).build();
+    }
+
+    /*
+     * Si el usuario que inicia sesion NO es autentico (es decir, el
+     * nombre de usuario y la contraseña ingresados no coinciden con
+     * ninguno de los que estan registrados en la base de datos
+     * subyacente), la aplicacion del lado servidor retorna el mensaje
+     * HTTP 401 (Unauthorized) junto con el mensaje "Nombre de usuario
+     * o contraseña incorrectos" y no se inicia la sesion solicitada
+     */
     if (!userService.authenticate(givenUser.getUsername(), givenUser.getPassword())) {
       return Response.status(Response.Status.UNAUTHORIZED)
       .entity(new ErrorResponse(ReasonError.USERNAME_OR_PASSWORD_INCORRECT)).build();
@@ -61,11 +89,10 @@ public class LoginRestServlet {
 
     /*
      * Si el flujo de ejecucion de este metodo llega a este punto, es
-     * debido a que el usuario que inicia sesion es autentico, por lo
-     * tanto, se lo recupera de la base de datos subyacente para usar
-     * su ID y su permiso en un JWT
+     * debido a que la cuenta con la que el usuario inicia sesion esta
+     * activada y el usuario es autentico, por lo tanto, se inicia la
+     * sesion solicitada
      */
-    givenUser = userService.findByUsername(givenUser.getUsername());
 
     /*
      * Si el usuario tiene una sesion abierta e intenta abrir otra
@@ -140,6 +167,34 @@ public class LoginRestServlet {
 
     User givenUser = mapper.readValue(json, User.class);
 
+    /*
+     * Se recupera el usuario completo de la base de datos subyacente,
+     * ya que el usuario obtenido como resultado del mapeo JSON a POJO
+     * solo contiene el nombre de usuario y la contraseña ingresados
+     * por el usuario en la pagina web de inicio de sesion
+     */
+    givenUser = userService.findByUsername(givenUser.getUsername());
+
+    /*
+     * Si la cuenta con la que el usuario intenta iniciar sesion NO
+     * esta activada, la aplicacion del lado servidor retorna el
+     * mensaje HTTP 401 (Unauthorized) junto con el mensaje "Nombre
+     * de usuario o contraseña incorrectos" y no se inicia la sesion
+     * solicitada
+     */
+    if (!userService.isActive(givenUser.getEmail())) {
+      return Response.status(Response.Status.UNAUTHORIZED)
+      .entity(new ErrorResponse(ReasonError.USERNAME_OR_PASSWORD_INCORRECT)).build();
+    }
+
+    /*
+     * Si el usuario que inicia sesion NO es autentico (es decir, el
+     * nombre de usuario y la contraseña ingresados no coinciden con
+     * ninguno de los que estan registrados en la base de datos
+     * subyacente), la aplicacion del lado servidor retorna el mensaje
+     * HTTP 401 (Unauthorized) junto con el mensaje "Nombre de usuario
+     * o contraseña incorrectos" y no se inicia la sesion solicitada
+     */
     if (!userService.authenticate(givenUser.getUsername(), givenUser.getPassword())) {
       return Response.status(Response.Status.UNAUTHORIZED)
       .entity(new ErrorResponse(ReasonError.USERNAME_OR_PASSWORD_INCORRECT)).build();
@@ -161,12 +216,11 @@ public class LoginRestServlet {
 
     /*
      * Si el flujo de ejecucion de este metodo llega a este punto, es
-     * debido a que el usuario que inicia sesion es autentico y tiene
-     * el permiso de super usuario (administrador), por lo tanto, se
-     * lo recupera de la base de datos subyacente para usar su ID y su
-     * permiso en un JWT
+     * debido a que la cuenta con la que el usuario inicia sesion esta
+     * activada, el usuario es autentico y tiene el permiso de super
+     * usuario (administrador), por lo tanto, se inicia la sesion
+     * solicitada
      */
-    givenUser = userService.findByUsername(givenUser.getUsername());
 
     /*
      * Si el usuario tiene una sesion abierta e intenta abrir otra

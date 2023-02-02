@@ -79,9 +79,27 @@ public class UserServiceBean {
    * @return referencia a un objeto de tipo User que contiene el usuario
    * correspondiente al correo electronico dado, si existe en la base de
    * datos subyacente un usuario con dicho correo electronico. En caso
-   * contrario, null.
+   * contrario, null. Tambien retorna null en el caso en el que el
+   * parametro contenga el valor null.
    */
   private User findByEmail(String email) {
+    /*
+     * Si la variable de tipo por referencia email de tipo String
+     * contiene el valor null, se retorna el valor null.
+     * 
+     * Con este control se evita realizar una consulta a la base
+     * de datos comparando el correo electronico con el valor
+     * null. Si no se realiza este control y se realiza esta
+     * consulta a la base de datos comparando el correo
+     * electronico con el valor null, ocurre la excepcion
+     * SQLSyntaxErrorException, debido a que la comparacion de
+     * un atributo con el valor null incumple la sintaxis del
+     * proveedor del motor de base de datos.
+     */
+    if (email == null) {
+      return null;
+    }
+
     Query query = getEntityManager().createQuery("SELECT u FROM User u WHERE UPPER(u.email) = UPPER(:email)");
     query.setParameter("email", email);
 

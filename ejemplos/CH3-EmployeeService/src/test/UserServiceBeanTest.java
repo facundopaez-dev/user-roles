@@ -207,6 +207,31 @@ public class UserServiceBeanTest {
   }
 
   @Test
+  public void testThreeEmailIsRegistered() {
+    System.out.println("*************************** Prueba tres del metodo emailIsRegistered ***************************");
+    System.out.println("- En esta prueba se invoca al metodo emailIsRegistered de la clase UserServieceBean con el valor");
+    System.out.println("null como argumento. Este metodo retorna true si un correo electronico esta registrado en la base");
+    System.out.println("de datos subyacente, y false en caso contrario.");
+    System.out.println();
+    System.out.println("En este caso, el metodo emailIsRegistered retorna el valor booleano false porque invocarlo con el");
+    System.out.println("valor null como argumento es como invocarlo con un correo electronico que NO esta registrado en la");
+    System.out.println("base de datos subyacente.");
+    System.out.println();
+
+    /*
+     * Seccion de prueba
+     */
+    boolean emailRegistered = userService.emailIsRegistered(null);
+
+    System.out.println("Resultado esperado: " + false);
+    System.out.println("* Valor obtenido: " + emailRegistered);
+
+    assertFalse(emailRegistered);
+
+    System.out.println("* Prueba ejecutada satisfactoriamente *");
+  }
+
+  @Test
   public void testOneIsActive() {
     System.out.println("************************** Prueba uno del metodo isActive **************************");
     System.out.println("- En esta prueba se utiliza un usuario registrado en la base de datos subyacente, el");
@@ -312,6 +337,31 @@ public class UserServiceBeanTest {
      * Seccion de prueba
      */
     boolean activeUser = userService.isActive(nonexistentEmail);
+
+    System.out.println("Resultado esperado: " + false);
+    System.out.println("* Valor obtenido: " + activeUser);
+
+    assertFalse(activeUser);
+
+    System.out.println("* Prueba ejecutada satisfactoriamente *");
+  }
+
+  @Test
+  public void testFourIsActive() {
+    System.out.println("************************** Prueba cuatro del metodo isActive **************************");
+    System.out.println("- En esta prueba se invoca al metodo isActive de la clase UserServiceBean con el valor");
+    System.out.println("null como argumento. Este metodo retorna true si un usuario esta activo, y false si un");
+    System.out.println("usuario NO esta activo o si NO esta registrado en la base de datos subyacente.");
+    System.out.println();
+    System.out.println("En este caso, el metodo isActive retorna el valor booleano false porque invocarlo con el");
+    System.out.println("valor null como argumento es como invocarlo con un usuario que NO esta registrado en la");
+    System.out.println("base de datos subyacente.");
+    System.out.println();
+
+    /*
+     * Seccion de prueba
+     */
+    boolean activeUser = userService.isActive(null);
 
     System.out.println("Resultado esperado: " + false);
     System.out.println("* Valor obtenido: " + activeUser);

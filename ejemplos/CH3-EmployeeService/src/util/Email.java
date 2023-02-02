@@ -47,6 +47,12 @@ public class Email {
   private static final Properties PROPERTIES = new Properties();
 
   /*
+   * Constante utilizada para establecer el asunto de un correo electronico
+   * de confirmacion de registro
+   */
+  private static final String CONFIRMATION_REGISTRATION = "Confirmación de registro";
+
+  /*
    * Esta constante contiene una referencia a un objeto de tipo Authenticator
    * que se utiliza para realizar la autenticacion de una cuenta de correo
    * electronico, la cual, se utiliza para el envio de un correo electronico
@@ -143,6 +149,31 @@ public class Email {
       e.printStackTrace();
     }
 
+  }
+
+  /**
+   * Realiza el envio de un correo electronico de confirmacion de
+   * registro a la direccion de correo electronico con la que un
+   * usuario se registro en la aplicacion. Este paso es para que
+   * el usuario registrado active su cuenta en la aplicacion, ya
+   * que de no activarla no la podra utilizar para iniciar sesion.
+   * 
+   * @param recipientEmail
+   */
+  public static void sendConfirmationEmail(String recipientEmail) {
+    sendEmail(recipientEmail, CONFIRMATION_REGISTRATION, createConfirmationMessage(recipientEmail));
+  }
+
+  /**
+   * @param recipientEmail
+   * @return referencia a un objeto de tipo String que contiene
+   * el mensaje (cuerpo) de un correo electronico de confirmacion
+   * de registro
+   */
+  private static String createConfirmationMessage(String recipientEmail) {
+    return new String("Haga clic en el siguiente enlace para confirmar su registro: http://localhost:8080/employeeService_ch3/rest/activateAccount?email="
+    + recipientEmail
+    + "\n\nSi no confirma el registro de su cuenta, la misma no se activará. En consecuencia, no la podrá utilizar para iniciar sesión en la aplicación.");
   }
 
 }

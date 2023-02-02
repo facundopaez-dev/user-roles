@@ -367,6 +367,72 @@ public class UserServiceBeanTest {
     System.out.println("* Valor obtenido: " + activeUser);
 
     assertFalse(activeUser);
+  }
+
+  public void testActivateUser() {
+    System.out.println("****************************** Prueba del metodo activateUser ******************************");
+    System.out.println("- En esta prueba se persiste un usuario inactivo, el cual, luego sera activado mediante el");
+    System.out.println("metodo activateUser de la clase UserServiceBean.");
+    System.out.println();
+
+    /*
+     * Creacion de un usuario
+     */
+    User newUser = new User();
+    newUser.setUsername("Peter");
+    newUser.setPassword("Peter");
+    newUser.setEmail("peter@eservice.com");
+
+    /*
+     * Persistencia del usuario creado
+     */
+    entityManager.getTransaction().begin();
+    newUser = userService.create(newUser);
+    entityManager.getTransaction().commit();
+
+    /*
+     * El dato persistido es agregado a una coleccion para
+     * su posterior eliminacion de la base de datos
+     * subyacente
+     */
+    users.add(newUser);
+
+    /*
+     * Impresion de los datos del usuario creado
+     */
+    System.out.println("* Usuario de prueba");
+    printUserData(newUser);
+
+    /*
+     * Seccion de prueba
+     */
+    entityManager.getTransaction().begin();
+    userService.activateUser(newUser.getEmail());
+    entityManager.getTransaction().commit();
+
+    /*
+     * Borra el contexto de persistencia, lo que hace que
+     * todas las entidades administradas se desvinculen.
+     * 
+     * Si no se borra el contexto de persistencia luego de
+     * activar el usuario, lo que se obtiene es el usuario
+     * con el atributo "active" en false. Es decir, se
+     * obtiene un usuario que no tiene los cambios que se
+     * le realizaron en la base de datos subyacente. Por lo
+     * tanto, es necesario ejecutar esta instruccion para
+     * obtener el usuario actualizado, debido a que cuando
+     * se borra el contexto de persistencia y se obtiene
+     * un dato de la base de datos subyacente, se obtiene
+     * el dato actual.
+     */
+    entityManager.clear();
+
+    newUser = userService.find(newUser.getId());
+
+    System.out.println("Valor esperado luego de la activacion: " + true);
+    System.out.println("* Valor obtenido luego de la activacion: " + newUser.getActive());
+
+    assertTrue(newUser.getActive());
 
     System.out.println("* Prueba ejecutada satisfactoriamente *");
   }

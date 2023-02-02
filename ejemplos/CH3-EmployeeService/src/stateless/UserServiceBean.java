@@ -207,4 +207,30 @@ public class UserServiceBean {
     return false;
   }
 
+  /**
+   * Establece el atributo "active" del usuario correpondiente a
+   * la direccion de correo electronico dada, en 1. En otras palabras,
+   * activa la cuenta de un usuario.
+   * 
+   * Hay que tener en cuenta que este metodo debe ser invocado despues
+   * de invocar al metodo emailIsRegistered de esta clase, debido a que
+   * emailIsRegistered contempla el caso en el que el usuario asociado
+   * a un correo electronico dado NO existe, mientras que activateUser
+   * no lo hace.
+   * 
+   * Si se invoca el metodo activateUser sin invocar primero al metodo
+   * emailIsRegistered, puede ocurrir la excepcion NullPointerException,
+   * debido a que el metodo findByEmail retorna el valor null cuando no
+   * encuentra el usuario correspondiente a un correo electronico dado
+   * y cuando se lo invoca con el valor null como argumento.
+   * 
+   * @param email
+   */
+  public void activateUser(String email) {
+    User givenUser = findByEmail(email);
+    Query query = getEntityManager().createQuery("UPDATE User u SET u.active = 1 WHERE u.id = :userId");
+    query.setParameter("userId", givenUser.getId());
+    query.executeUpdate();
+  }
+
 }

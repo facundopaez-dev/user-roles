@@ -6,7 +6,8 @@ package util;
  * peticion HTTP, es realizada satisfactoriamente
  */
 public enum ReasonSatisfaction {
-  ACCOUNT_ACTIVATED("Cuenta activada");
+  ACCOUNT_ACTIVATED("Cuenta activada"),
+  SUCCESSFULLY_REGISTERED_USER("Usuario registrado, revise su casilla de correo electrónico para activar su cuenta");
 
   private final String reason;
 

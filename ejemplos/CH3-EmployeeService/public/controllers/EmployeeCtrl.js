@@ -84,6 +84,7 @@ app.controller(
         servicio.find(id, function (error, data) {
           if (error) {
             console.log(error);
+            errorResponseManager.checkResponse(error);
             return;
           }
 

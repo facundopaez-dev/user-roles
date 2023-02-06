@@ -53,8 +53,8 @@ app.controller(
             function findAll() {
                 service.findAll(function (error, data) {
                     if (error) {
-                        console.log(error),
-                            errorResponseManager.checkResponse(error);
+                        console.log(error);
+                        errorResponseManager.checkResponse(error);
                         return;
                     }
 
